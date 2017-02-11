@@ -51,6 +51,18 @@ create table logradouro (
 	numero varchar(45) not null
 );
 
+create table estado_carona (
+	id serial primary key,
+	nome varchar(45) not null,
+	pode_entrar boolean not null,
+	pode_avaliar boolean not null
+);
+
+insert into estado_carona (nome, pode_entrar, pode_avaliar) values 
+	('Ativa', true, false), 
+	('Cancelada', false, false),
+	('Concluída', false, true);
+
 create table carona (
 	id serial primary key,
 	veiculo_id integer not null references veiculo (id),
@@ -59,5 +71,6 @@ create table carona (
 		references logradouro (id),
 	logradouro_destino_id integer not null 
 		references logradouro (id),
-	ativo boolean not null default true
+	estado_carona_id int not null default 1
+		references estado_carona (id)
 );
