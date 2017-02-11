@@ -6,7 +6,8 @@ Caro? Não.
 Cara, carona cara, cara? Pô.
 
 ## Padrões arquiteturais
-A ser definido.
+Camada de lógica de negócio: Módulo de tabela
+Camada de dados: Portão de acesso de dados por tabelas
 
 ## Requisitos
 ### Grupo
