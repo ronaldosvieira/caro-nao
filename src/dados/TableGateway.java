@@ -1,4 +1,4 @@
-package gateway;
+package dados;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
