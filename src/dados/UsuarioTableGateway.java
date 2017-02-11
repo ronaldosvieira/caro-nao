@@ -12,10 +12,9 @@ public class UsuarioTableGateway extends TableGateway {
 
 	public ResultSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.select);
-		
-		stmt.setString(1, this.getTableName());
+			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
@@ -24,11 +23,11 @@ public class UsuarioTableGateway extends TableGateway {
 
 	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectId);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -37,11 +36,11 @@ public class UsuarioTableGateway extends TableGateway {
 	}
 
 	public void inserir(String nome, String email, String telefone) throws SQLException {
+		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(this.insert);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setString(2, "nome, email, telefone");
+		stmt.setString(1, "nome, email, telefone");
 		
 		StringBuilder data = new StringBuilder();
 		
@@ -49,17 +48,16 @@ public class UsuarioTableGateway extends TableGateway {
 		data.append(email); data.append(", ");
 		data.append(telefone);
 		
-		stmt.setString(3, data.toString());
+		stmt.setString(2, data.toString());
 		
 		stmt.executeUpdate();
 	}
 
 	public void atualizar(int id, String nome, String email, String telefone) 
 			throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.updateId, this.getTableName());
 		PreparedStatement stmt = 
-				this.getConnection().prepareStatement(this.updateId);
-		
-		stmt.setString(1, this.getTableName());
+				this.getConnection().prepareStatement(sql);
 		
 		StringBuilder data = new StringBuilder();
 		
@@ -67,18 +65,18 @@ public class UsuarioTableGateway extends TableGateway {
 		data.append("email = "); data.append(email); data.append(", ");
 		data.append("telefone = "); data.append(telefone);
 		
-		stmt.setString(2, data.toString());
-		stmt.setInt(3, id);
+		stmt.setString(1, data.toString());
+		stmt.setInt(2, id);
 		
 		stmt.executeUpdate();
 	}
 
 	public void excluir(int id) throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.deleteId, this.getTableName());
 		PreparedStatement stmt = 
-				this.getConnection().prepareStatement(this.deleteId);
+				this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		stmt.executeUpdate();
 	}

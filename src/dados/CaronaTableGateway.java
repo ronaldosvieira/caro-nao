@@ -13,10 +13,9 @@ public class CaronaTableGateway extends TableGateway {
 	
 	public ResultSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.select);
-		
-		stmt.setString(1, this.getTableName());
+			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
@@ -25,11 +24,11 @@ public class CaronaTableGateway extends TableGateway {
 
 	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectId);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -39,12 +38,12 @@ public class CaronaTableGateway extends TableGateway {
 	
 	public ResultSet obterPorVeiculo(int idVeiculo) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectColumn);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setString(2, "veiculo_id");
-		stmt.setInt(3, idVeiculo);
+		stmt.setString(1, "veiculo_id");
+		stmt.setInt(2, idVeiculo);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -55,11 +54,11 @@ public class CaronaTableGateway extends TableGateway {
 	public void inserir(int idVeiculo, Date horario, 
 			int idLogradouroOrigem, int idLogradouroDestino) 
 			throws SQLException {
+		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.insert);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setString(2, "veiculo_id, horario, logradouro_origem_id, logradouro_destino_id");
+		stmt.setString(1, "veiculo_id, horario, logradouro_origem_id, logradouro_destino_id");
 		
 		StringBuilder data = new StringBuilder();
 		
@@ -68,7 +67,7 @@ public class CaronaTableGateway extends TableGateway {
 		data.append(idLogradouroOrigem); data.append(", ");
 		data.append(idLogradouroDestino);
 		
-		stmt.setString(3, data.toString());
+		stmt.setString(2, data.toString());
 		
 		stmt.executeUpdate();
 	}
@@ -76,10 +75,9 @@ public class CaronaTableGateway extends TableGateway {
 	public void atualizar(int id, int idVeiculo, Date horario, 
 			int idLogradouroOrigem, int idLogradouroDestino, int idEstadoCarona) 
 			throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.updateId, this.getTableName());
 		PreparedStatement stmt = 
-				this.getConnection().prepareStatement(this.updateId);
-		
-		stmt.setString(1, this.getTableName());
+				this.getConnection().prepareStatement(sql);
 		
 		StringBuilder data = new StringBuilder();
 		
@@ -89,18 +87,18 @@ public class CaronaTableGateway extends TableGateway {
 		data.append("logradouro_destino_id = "); data.append(idLogradouroDestino); data.append(", ");
 		data.append("estado_carona_id = "); data.append(idEstadoCarona);
 		
-		stmt.setString(2, data.toString());
-		stmt.setInt(3, id);
+		stmt.setString(1, data.toString());
+		stmt.setInt(2, id);
 		
 		stmt.executeUpdate();
 	}
 
 	public void excluir(int id) throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.deleteId, this.getTableName());
 		PreparedStatement stmt = 
-				this.getConnection().prepareStatement(this.deleteId);
+				this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		stmt.executeUpdate();
 	}

@@ -12,10 +12,9 @@ public class EstadoCaronaTableGateway extends TableGateway {
 
 	public ResultSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.select);
-		
-		stmt.setString(1, this.getTableName());
+			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
@@ -24,11 +23,11 @@ public class EstadoCaronaTableGateway extends TableGateway {
 
 	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectId);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();

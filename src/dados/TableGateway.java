@@ -8,13 +8,13 @@ public abstract class TableGateway implements AutoCloseable {
 	private Connection conn;
 	private String table;
 	
-	protected String select = "select * from ?;";
-	protected String selectId = "select * from ? where id = ?;";
-	protected String selectColumn = "select * from ? where ? = ?";
-	protected String insert = "insert into ? (?) values (?);";
-	protected String insertMany = "insert into ? (?) values ?;";
-	protected String updateId = "update ? set ? where id = ?;";
-	protected String deleteId = "delete from ? where id = ?";
+	protected String select = "select * from %s;";
+	protected String selectId = "select * from %s where id = ?;";
+	protected String selectColumn = "select * from %s where ? = ?";
+	protected String insert = "insert into %s (?) values (?);";
+	protected String insertMany = "insert into %s (?) values ?;";
+	protected String updateId = "update %s set ? where id = ?;";
+	protected String deleteId = "delete from %s where id = ?";
 	
 	public TableGateway(String table) 
 			throws ClassNotFoundException, SQLException {

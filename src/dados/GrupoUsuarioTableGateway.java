@@ -12,10 +12,9 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 
 	public ResultSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.select);
-		
-		stmt.setString(1, this.getTableName());
+			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
@@ -24,11 +23,11 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 
 	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectId);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -38,12 +37,12 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		
 	public ResultSet obterPorGrupo(int idGrupo) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectColumn);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setString(2, "grupo_id");
-		stmt.setInt(3, idGrupo);
+		stmt.setString(1, "grupo_id");
+		stmt.setInt(2, idGrupo);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -53,12 +52,12 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 	
 	public ResultSet obterPorUsuario(int idUsuario) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.selectColumn);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setString(2, "usuario_id");
-		stmt.setInt(3, idUsuario);
+		stmt.setString(1, "usuario_id");
+		stmt.setInt(2, idUsuario);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -68,11 +67,11 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 
 	public void inserir(int idGrupo, int idUsuario, boolean ativo) 
 			throws SQLException {
+		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.insert);
+			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setString(2, "grupo_id, usuario_id, ativo");
+		stmt.setString(1, "grupo_id, usuario_id, ativo");
 		
 		StringBuilder data = new StringBuilder();
 		
@@ -80,34 +79,33 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		data.append(idUsuario); data.append(", ");
 		data.append(ativo);
 		
-		stmt.setString(3, data.toString());
+		stmt.setString(2, data.toString());
 		
 		stmt.executeUpdate();
 	}
 
 	public void atualizar(int id, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.updateId, this.getTableName());
 		PreparedStatement stmt = 
-				this.getConnection().prepareStatement(this.updateId);
-		
-		stmt.setString(1, this.getTableName());
+				this.getConnection().prepareStatement(sql);
 		
 		StringBuilder data = new StringBuilder();
 		
 		data.append("ativo = "); data.append(ativo);
 		
-		stmt.setString(2, data.toString());
-		stmt.setInt(3, id);
+		stmt.setString(1, data.toString());
+		stmt.setInt(2, id);
 		
 		stmt.executeUpdate();
 	}
 
 	public void excluir(int id) throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.deleteId, this.getTableName());
 		PreparedStatement stmt = 
-				this.getConnection().prepareStatement(this.deleteId);
+				this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, this.getTableName());
-		stmt.setInt(2, id);
+		stmt.setInt(1, id);
 		
 		stmt.executeUpdate();
 	}
