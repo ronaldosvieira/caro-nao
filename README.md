@@ -1,9 +1,6 @@
 # Caronão
-Carona (ou não ( ͡° ͜ʖ ͡°)).
 
-Caro? Não.
-
-Cara, carona cara, cara? Pô.
+Sistema gerenciador de grupos de caronas. Trabalho da disciplina Computação III do curso de Ciência da Computação da UFRRJ, período 2016.2.
 
 ## Padrões arquiteturais
 Camada de lógica de negócio: Módulo de tabela
