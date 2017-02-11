@@ -23,12 +23,14 @@ create table grupo_usuario (
 	ativo boolean not null default true
 );
 
-create table grupo_usuario_avaliacao (
+create table avaliacao (
+	id serial primary key,
 	avaliador_id integer not null 
 		references grupo_usuario (id),
 	avaliado_id integer not null
 		references grupo_usuario (id),
-	nota integer not null
+	nota integer not null,
+	data timestamp not null default NOW()
 );
 
 create table veiculo (
