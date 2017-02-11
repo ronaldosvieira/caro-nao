@@ -36,7 +36,7 @@ create table veiculo (
 	modelo varchar(45) not null,
 	placa varchar(45) not null,
 	vagas integer not null,
-	motorista_id integer not null references usuario (id),
+	usuario_id integer not null references usuario (id),
 	ativo boolean not null default true
 );
 
