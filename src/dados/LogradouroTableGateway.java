@@ -1,8 +1,11 @@
 package dados;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.sql.rowset.CachedRowSet;
+
+import com.sun.rowset.CachedRowSetImpl;
 
 public class LogradouroTableGateway extends TableGateway {
 
@@ -10,33 +13,33 @@ public class LogradouroTableGateway extends TableGateway {
 		super("logradouro");
 	}
 
-	public ResultSet obterTodos() throws SQLException {
-		ResultSet rs = null;
+	public CachedRowSet obterTodos() throws SQLException {
+		CachedRowSet crs = new CachedRowSetImpl();
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		if (stmt.execute()) rs = stmt.getResultSet();
+		if (stmt.execute()) crs.populate(stmt.getResultSet());
 		
-		return rs;
+		return crs;
 	}
 
-	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
-		ResultSet rs = null;
+	public CachedRowSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+		CachedRowSet crs = new CachedRowSetImpl();
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		stmt.setInt(1, id);
 		
-		if (stmt.execute()) rs = stmt.getResultSet();
+		if (stmt.execute()) crs.populate(stmt.getResultSet());
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		return crs;
 	}
 	
-	public ResultSet obterPorCEP(String cep) throws SQLException, IndexOutOfBoundsException {
-		ResultSet rs = null;
+	public CachedRowSet obterPorCEP(String cep) throws SQLException, IndexOutOfBoundsException {
+		CachedRowSet crs = new CachedRowSetImpl();
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -44,10 +47,10 @@ public class LogradouroTableGateway extends TableGateway {
 		stmt.setString(1, "cep");
 		stmt.setString(2, cep);
 		
-		if (stmt.execute()) rs = stmt.getResultSet();
+		if (stmt.execute()) crs.populate(stmt.getResultSet());
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		return crs;
 	}
 
 	public void inserir(String cep, String estado, String distrito, 
