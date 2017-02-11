@@ -1,12 +1,9 @@
 package dados;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-
-import javax.sql.rowset.CachedRowSet;
-
-import com.sun.rowset.CachedRowSetImpl;
 
 public class CaronaTableGateway extends TableGateway {
 
@@ -14,33 +11,33 @@ public class CaronaTableGateway extends TableGateway {
 		super("carona");
 	}
 	
-	public CachedRowSet obterTodos() throws SQLException {
-		CachedRowSet crs = new CachedRowSetImpl();
+	public ResultSet obterTodos() throws SQLException {
+		ResultSet rs = null;
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		if (stmt.execute()) crs.populate(stmt.getResultSet());
+		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return crs;
+		return rs;
 	}
 
-	public CachedRowSet obter(int id) throws SQLException, IndexOutOfBoundsException {
-		CachedRowSet crs = new CachedRowSetImpl();
+	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+		ResultSet rs = null;
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		stmt.setInt(1, id);
 		
-		if (stmt.execute()) crs.populate(stmt.getResultSet());
+		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return crs;
+		return rs;
 	}
 	
-	public CachedRowSet obterPorVeiculo(int idVeiculo) throws SQLException, IndexOutOfBoundsException {
-		CachedRowSet crs = new CachedRowSetImpl();
+	public ResultSet obterPorVeiculo(int idVeiculo) throws SQLException, IndexOutOfBoundsException {
+		ResultSet rs = null;
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -48,10 +45,10 @@ public class CaronaTableGateway extends TableGateway {
 		stmt.setString(1, "veiculo_id");
 		stmt.setInt(2, idVeiculo);
 		
-		if (stmt.execute()) crs.populate(stmt.getResultSet());
+		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return crs;
+		return rs;
 	}
 
 	public void inserir(int idVeiculo, Date horario, 

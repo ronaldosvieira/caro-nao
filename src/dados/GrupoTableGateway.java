@@ -1,11 +1,8 @@
 package dados;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.sql.rowset.CachedRowSet;
-
-import com.sun.rowset.CachedRowSetImpl;
 
 public class GrupoTableGateway extends TableGateway {
 
@@ -13,29 +10,29 @@ public class GrupoTableGateway extends TableGateway {
 		super("grupo");
 	}
 	
-	public CachedRowSet obterTodos() throws SQLException {
-		CachedRowSet crs = new CachedRowSetImpl();
+	public ResultSet obterTodos() throws SQLException {
+		ResultSet rs = null;
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		if (stmt.execute()) crs.populate(stmt.getResultSet());
+		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return crs;
+		return rs;
 	}
 
-	public CachedRowSet obter(int id) throws SQLException, IndexOutOfBoundsException {
-		CachedRowSet crs = new CachedRowSetImpl();
+	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+		ResultSet rs = null;
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		stmt.setInt(1, id);
 		
-		if (stmt.execute()) crs.populate(stmt.getResultSet());
+		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return crs;
+		return rs;
 	}
 
 	public void inserir(String nome, String descricao, String regras, int limite, boolean ativo) 
