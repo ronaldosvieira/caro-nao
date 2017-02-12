@@ -41,9 +41,11 @@ public class VeiculoModule {
 		for (Row row : this.dataset) {
 			if (!row.containsKey(column)) continue;
 			
-			Row veiculo = this.vtg.obterPorUsuario(row.getInt(column)).get(0);
+			RecordSet veiculos = this.vtg.obterPorUsuario(row.getInt(column));
 			
-			resultado.add(veiculo);
+			for (Row veiculo : veiculos) {
+				resultado.add(veiculo);
+			}
 		}
 		
 		return resultado;
