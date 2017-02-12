@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import dados.UsuarioTableGateway;
 import excecoes.EmailJaCadastradoException;
+import excecoes.GrupoNaoAutorizadoException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoAutorizadoException;
 import util.RecordSet;
@@ -110,5 +111,21 @@ public class UsuarioModule {
 		
 		if (veiculo.isEmpty()) throw new VeiculoNaoAutorizadoException();
 		else return veiculo;
+	}
+	
+	public RecordSet validarGrupo(int id, int idGrupo) throws GrupoNaoAutorizadoException, ClassNotFoundException, SQLException {
+		RecordSet gruposDoUsuario = this.listarGrupos(id);
+		RecordSet grupo = new RecordSet();
+		
+		for (Row grupoDoUsuario : gruposDoUsuario) {
+			if (grupoDoUsuario.getInt("id") == idGrupo) {
+				grupo.add(grupoDoUsuario);
+				
+				break;
+			}
+		}
+		
+		if (grupo.isEmpty()) throw new GrupoNaoAutorizadoException();
+		else return grupo;
 	}
 }
