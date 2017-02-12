@@ -29,6 +29,7 @@ public class VeiculoTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("modelo", rs.getString("modelo"));
 			row.put("placa", rs.getString("placa"));
+			row.put("cor", rs.getString("cor"));
 			row.put("vagas", rs.getInt("vagas"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("ativo", rs.getBoolean("ativo"));
@@ -57,6 +58,7 @@ public class VeiculoTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("modelo", rs.getString("modelo"));
 			row.put("placa", rs.getString("placa"));
+			row.put("cor", rs.getString("cor"));
 			row.put("vagas", rs.getInt("vagas"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("ativo", rs.getBoolean("ativo"));
@@ -86,6 +88,7 @@ public class VeiculoTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("modelo", rs.getString("modelo"));
 			row.put("placa", rs.getString("placa"));
+			row.put("cor", rs.getString("cor"));
 			row.put("vagas", rs.getInt("vagas"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("ativo", rs.getBoolean("ativo"));
@@ -96,21 +99,23 @@ public class VeiculoTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public int inserir(String modelo, String placa, int vagas, int idUsuario, boolean ativo) 
+	public int inserir(String modelo, String placa, String cor, 
+			int vagas, int idUsuario, boolean ativo) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
 				this.getTableName(),
-				"modelo, placa, vagas, usuario_id, ativo",
-				"?, ?, ?, ?, ?");
+				"modelo, placa, cor, vagas, usuario_id, ativo",
+				"?, ?, ?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, Statement.RETURN_GENERATED_KEYS);
 
 		stmt.setString(1, modelo);
 		stmt.setString(2, placa);
-		stmt.setInt(3, vagas);
-		stmt.setInt(4, idUsuario);
-		stmt.setBoolean(5, ativo);
+		stmt.setString(3, cor);
+		stmt.setInt(4, vagas);
+		stmt.setInt(5, idUsuario);
+		stmt.setBoolean(6, ativo);
 		
 		int affectedRows = stmt.executeUpdate();
 		
@@ -127,22 +132,23 @@ public class VeiculoTableGateway extends TableGateway {
         }
 	}
 
-	public void atualizar(int id, String modelo, String placa, int vagas, 
-			int idUsuario, boolean ativo) 
+	public void atualizar(int id, String modelo, String placa, String cor, 
+			int vagas, int idUsuario, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
 		String sql = String.format(this.updateId, 
 				this.getTableName(),
-				"modelo = ?, placa = ?, vagas = ?,"
+				"modelo = ?, placa = ?, cor = ?, vagas = ?,"
 				+ " usuario_id = ?, ativo = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
 		stmt.setString(1, modelo);
 		stmt.setString(2, placa);
-		stmt.setInt(3, vagas);
-		stmt.setInt(4, idUsuario);
-		stmt.setBoolean(5, ativo);
-		stmt.setInt(6, id);
+		stmt.setString(3, cor);
+		stmt.setInt(4, vagas);
+		stmt.setInt(5, idUsuario);
+		stmt.setBoolean(6, ativo);
+		stmt.setInt(7, id);
 		
 		stmt.executeUpdate();
 	}
