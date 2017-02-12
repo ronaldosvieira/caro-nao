@@ -75,7 +75,7 @@ public class VeiculoModule {
 		
 		Row veiculo = jaExiste.get(0);
 		
-		veiculo.put("nome", cor);
+		veiculo.put("cor", cor);
 		
 		if (dataset.contains("id", id)) {
 			dataset.set(dataset.find("id", id), veiculo);

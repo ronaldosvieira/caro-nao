@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import dados.UsuarioTableGateway;
 import excecoes.EmailJaCadastradoException;
 import excecoes.UsuarioNaoExisteException;
+import excecoes.VeiculoNaoAutorizadoException;
 import util.RecordSet;
 import util.Row;
 
@@ -89,6 +90,22 @@ public class UsuarioModule {
 		} else {
 			dataset.add(usuario);
 		}
+	}
+	
+	public RecordSet validarVeiculo(int id, int idVeiculo) throws ClassNotFoundException, SQLException, VeiculoNaoAutorizadoException {
+		RecordSet veiculosDoUsuario = this.listarVeiculos(id);
+		RecordSet veiculo = new RecordSet();
+		
+		for (Row veiculoDoUsuario : veiculosDoUsuario) {
+			if (veiculoDoUsuario.getInt("id") == idVeiculo) {
+				veiculo.add(veiculoDoUsuario);
+				
+				break;
+			}
+		}
+		
+		if (veiculo.isEmpty()) throw new VeiculoNaoAutorizadoException();
+		else return veiculo;
 	}
 	
 	public void armazenar() throws IndexOutOfBoundsException, SQLException {
