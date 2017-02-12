@@ -24,6 +24,30 @@ public class UsuarioModule {
 		else throw new UsuarioNaoExisteException();
 	}
 	
+	public RecordSet obter(int id) throws SQLException {
+		return this.utg.obter(id);
+	}
+	
+	public RecordSet obterVarios(String column) throws SQLException {
+		RecordSet resultado = new RecordSet();
+		
+		for (Row row : this.dataset) {
+			if (!row.containsKey(column)) continue;
+			
+			Row usuario = this.utg.obter(row.getInt(column)).get(0);
+			
+			resultado.add(usuario);
+		}
+		
+		return resultado;
+	}
+	
+	public RecordSet listarGrupos(int id) throws SQLException, ClassNotFoundException {
+		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		
+		return gum.listarGruposPorUsuario(id);
+	}
+	
 	public void inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
 		RecordSet jaExiste = utg.obterPeloEmail(email);
 		
@@ -52,7 +76,11 @@ public class UsuarioModule {
 		usuario.put("nome", nome);
 		usuario.put("telefone", telefone);
 		
-		dataset.add(usuario);
+		if (dataset.contains("id", id)) {
+			dataset.set(dataset.find("id", id), usuario);
+		} else {
+			dataset.add(usuario);
+		}
 	}
 	
 	public void armazenar() throws IndexOutOfBoundsException, SQLException {

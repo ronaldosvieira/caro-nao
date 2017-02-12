@@ -11,9 +11,6 @@
     <!-- Bootstrap -->
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- CSS do caronão -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -28,7 +25,8 @@
   
   <% 
   String erro = (String) request.getAttribute("erro");
-  Row usuario = ((RecordSet) request.getAttribute("usuario")).get(0);
+  RecordSet usuario = (RecordSet) request.getAttribute("usuario");
+  RecordSet grupos = (RecordSet) request.getAttribute("grupos");
   %>
   
 	<header class="text-center">
@@ -37,8 +35,7 @@
 		</h1>
 	 </header>
 	<div class="container">
-		<div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6
-			col-lg-offset-4 col-lg-4 text-center">
+		<div class="col-md-offset-2 col-md-8 text-center">
 			
 			<% if (erro != null) { %>
 				<div class="text-center text-danger">
@@ -46,7 +43,7 @@
 				</div>
 			<% } %>
 			
-			<span>Bem vindo(a), <%= usuario.getString("nome") %>!</span>
+			<span>Bem vindo(a), <%= usuario.get(0).getString("nome") %>!</span>
 			
 			<form action="${pageContext.request.contextPath}/sair"
 				method="post">
@@ -55,6 +52,49 @@
 				</a>
 				<button type="submit" class="btn btn-link">Sair</button>
 			</form>
+			
+			<h4>Meus grupos</h4>
+			
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th class="text-center col-sm-1">Cód.</th>
+					<th class="text-center col-sm-3">Nome</th>
+					<th class="text-center col-sm-5">Descrição</th>
+					<th class="text-center col-sm-3">Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<% if (grupos.isEmpty()) { %>
+				<tr>
+					<td colspan="4">
+						Você ainda não participa de grupos.<br> 
+						Peça convites aos seus amigos ou <a>crie um novo grupo.</a>
+					</td>
+				</tr>
+				<% } else { %>
+					<% for (Row grupo : grupos) { %>
+						<% if (grupo.getBoolean("ativo")) { %>
+						<tr>
+							<td><%= grupo.getInt("id") %></td>
+							<td><%= grupo.getString("nome") %></td>
+							<td class="text-left"><%= grupo.getString("descricao") %></td>
+							<td>
+								<a href="${pageContext.request.contextPath}/grupo/ver?id=<%= grupo.getInt("id") %>"
+									class="btn btn-link">
+									Ver
+								</a>
+								<a href="${pageContext.request.contextPath}/grupo/convidar?id=<%= grupo.getInt("id") %>"
+									class="btn btn-link">
+									Convidar
+								</a>
+							</td>
+						</tr>
+						<% } %>
+					<% } %>
+				<% } %>
+				</tbody>
+			</table>
 		</div>
 	</div>
 

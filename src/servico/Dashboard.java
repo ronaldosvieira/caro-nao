@@ -1,6 +1,7 @@
 package servico;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dominio.UsuarioModule;
 import excecoes.UsuarioNaoLogadoException;
 import util.RecordSet;
 
@@ -29,10 +31,18 @@ public class Dashboard extends HttpServlet {
 			
 			request.setAttribute("usuario", usuario);
 			
+			UsuarioModule um = new UsuarioModule(new RecordSet());
+			RecordSet grupos = um.listarGrupos(usuario.get(0).getInt("id"));
+			
+			request.setAttribute("grupos", grupos);
+			
 			RequestDispatcher rd = request.getRequestDispatcher("views/dashboard.jsp");
 			rd.forward(request, response);
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
+		} catch (ClassNotFoundException | SQLException e) {
+			response.getWriter().append("Erro ao acessar o banco de dados.");
+			e.printStackTrace();
 		}
 	}
 
