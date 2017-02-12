@@ -51,7 +51,7 @@ public class VeiculoModule {
 		return resultado;
 	}
 	
-	public void inserirVeiculo(String modelo, String placa, 
+	public int inserirVeiculo(String modelo, String placa, 
 			String cor, int vagas, int idUsuario) 
 			throws SQLException {
 		Row veiculo = new Row();
@@ -63,6 +63,8 @@ public class VeiculoModule {
 		veiculo.put("usuario_id", idUsuario);
 		
 		dataset.add(veiculo);
+		
+		return vtg.inserir(modelo, placa, cor, vagas, idUsuario, true);
 	}
 	
 	public void atualizarVeiculo(int id, String cor) 
@@ -82,32 +84,10 @@ public class VeiculoModule {
 		} else {
 			dataset.add(veiculo);
 		}
-	}
-	
-	public void armazenar() throws SQLException {
-		for (int i = 0; i < dataset.size(); ++i) {
-			Row veiculo = dataset.get(i);
-			boolean jaExiste = veiculo.containsKey("id");
-			
-			if (jaExiste) {
-				vtg.atualizar(veiculo.getInt("id"), 
-						veiculo.getString("modelo"), 
-						veiculo.getString("placa"), 
-						veiculo.getString("cor"),
-						veiculo.getInt("vagas"),
-						veiculo.getInt("usuario_id"),
-						veiculo.getBoolean("ativo"));
-			} else {
-				int id = vtg.inserir(veiculo.getString("modelo"), 
-						veiculo.getString("placa"), 
-						veiculo.getString("cor"),
-						veiculo.getInt("vagas"),
-						veiculo.getInt("usuario_id"),
-						true);
-				
-				veiculo.put("id", id);
-				dataset.set(i, veiculo);
-			}
-		}
+		
+		vtg.atualizar(id, veiculo.getString("modelo"), 
+				veiculo.getString("placa"), cor, 
+				veiculo.getInt("vagas"), veiculo.getInt("usuario_id"),
+				veiculo.getBoolean("ativo"));
 	}
 }

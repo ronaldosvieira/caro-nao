@@ -51,7 +51,7 @@ public class EditarPerfil extends HttpServlet {
 			Row usuario = Autenticacao.autenticar(request, response).get(0);
 			
 			um.atualizarUsuario(usuario.getInt("id"), nome, telefone);
-			um.armazenar();
+			
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");

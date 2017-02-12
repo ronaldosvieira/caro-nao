@@ -47,7 +47,6 @@ public class CadastrarUsuario extends HttpServlet {
 			UsuarioModule um = new UsuarioModule(new RecordSet());
 			
 			um.inserirUsuario(nome, email, telefone);
-			um.armazenar();
 			
 			Cookie cookie = new Cookie("caronao-login", email);
 			cookie.setMaxAge(24 * 60 * 60);

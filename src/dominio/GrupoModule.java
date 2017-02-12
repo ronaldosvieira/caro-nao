@@ -3,7 +3,6 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.GrupoTableGateway;
-import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -35,7 +34,7 @@ public class GrupoModule {
 		return resultado;
 	}
 	
-	public void inserirGrupo(String nome, String descricao, String regras, int limite) throws SQLException {
+	public int inserirGrupo(int idUsuario, String nome, String descricao, String regras, int limite) throws SQLException, ClassNotFoundException {
 		Row grupo = new Row();
 		
 		grupo.put("nome", nome);
@@ -44,6 +43,13 @@ public class GrupoModule {
 		grupo.put("limite", limite);
 		
 		dataset.add(grupo);
+		
+		int idGrupo = gtg.inserir(nome, descricao, regras, limite, true);
+		
+		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		gum.inserirGrupoUsuario(idGrupo, idUsuario);
+		
+		return idGrupo;
 	}
 	
 	public void atualizarGrupo(int id, String nome, String descricao, int limite) throws SQLException, GrupoNaoExisteException {
@@ -64,30 +70,9 @@ public class GrupoModule {
 		} else {
 			dataset.add(grupo);
 		}
-	}
-	
-	public void armazenar() throws SQLException {
-		for (int i = 0; i < dataset.size(); ++i) {
-			Row grupo = dataset.get(i);
-			boolean jaExiste = grupo.containsKey("id");
-			
-			if (jaExiste) {
-				gtg.atualizar(grupo.getInt("id"), 
-						grupo.getString("nome"), 
-						grupo.getString("descricao"), 
-						grupo.getString("regras"),
-						grupo.getInt("limite"),
-						grupo.getBoolean("ativo"));
-			} else {
-				int id = gtg.inserir(grupo.getString("nome"), 
-						grupo.getString("descricao"), 
-						grupo.getString("regras"),
-						grupo.getInt("limite"),
-						grupo.getBoolean("ativo"));
-				
-				grupo.put("id", id);
-				dataset.set(i, grupo);
-			}
-		}
+		
+		gtg.atualizar(id, nome, descricao, 
+				grupo.getString("regras"), limite, 
+				grupo.getBoolean("ativo"));
 	}
 }

@@ -68,7 +68,6 @@ public class EditarVeiculo extends HttpServlet {
 			VeiculoModule vm = new VeiculoModule(new RecordSet());
 			
 			vm.atualizarVeiculo(Integer.parseInt(idVeiculo), cor);
-			vm.armazenar();
 			
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ClassNotFoundException | SQLException e) {

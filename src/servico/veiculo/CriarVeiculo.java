@@ -50,7 +50,6 @@ public class CriarVeiculo extends HttpServlet {
 			
 			vm.inserirVeiculo(modelo, placa, cor, vagas, 
 					usuario.get(0).getInt("id"));
-			vm.armazenar();
 			
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ClassNotFoundException | SQLException e) {
