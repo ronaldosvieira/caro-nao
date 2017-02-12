@@ -35,7 +35,7 @@ public class GrupoModule {
 		return resultado;
 	}
 	
-	public void inserirGrupo(String nome, String descricao, String regras, int limite) throws EmailJaCadastradoException, SQLException {
+	public void inserirGrupo(String nome, String descricao, String regras, int limite) throws SQLException {
 		Row grupo = new Row();
 		
 		grupo.put("nome", nome);

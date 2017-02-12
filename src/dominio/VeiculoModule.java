@@ -53,7 +53,7 @@ public class VeiculoModule {
 	
 	public void inserirVeiculo(String modelo, String placa, 
 			String cor, int vagas, int idUsuario) 
-			throws EmailJaCadastradoException, SQLException {
+			throws SQLException {
 		Row veiculo = new Row();
 		
 		veiculo.put("modelo", modelo);
@@ -103,7 +103,7 @@ public class VeiculoModule {
 						veiculo.getString("cor"),
 						veiculo.getInt("vagas"),
 						veiculo.getInt("usuario_id"),
-						veiculo.getBoolean("ativo"));
+						true);
 				
 				veiculo.put("id", id);
 				dataset.set(i, veiculo);
