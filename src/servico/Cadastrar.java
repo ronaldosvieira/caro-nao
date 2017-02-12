@@ -31,7 +31,8 @@ public class Cadastrar extends HttpServlet {
 			
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (UsuarioNaoLogadoException e) {
-			RequestDispatcher rd = request.getRequestDispatcher("cadastrar.jsp");
+			RequestDispatcher rd = 
+					request.getRequestDispatcher("views/cadastrar.jsp");
 			rd.forward(request, response);
 		}
 	}
@@ -43,8 +44,6 @@ public class Cadastrar extends HttpServlet {
 		
 		try {
 			UsuarioModule um = new UsuarioModule(new RecordSet());
-			
-			System.out.println(nome + " " + email + " " + telefone);
 			
 			um.inserirUsuario(nome, email, telefone);
 			um.armazenar();
@@ -61,7 +60,8 @@ public class Cadastrar extends HttpServlet {
 		} catch (EmailJaCadastradoException e) {
 			request.setAttribute("erro", "O email informado já foi cadastrado.");
 			
-			RequestDispatcher rd = request.getRequestDispatcher("cadastrar.jsp");
+			RequestDispatcher rd = 
+					request.getRequestDispatcher("views/cadastrar.jsp");
 			rd.forward(request, response);
 		}
 	}

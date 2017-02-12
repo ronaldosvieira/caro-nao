@@ -46,13 +46,39 @@
 				</div>
 			<% } %>
 			
-			<span>Bem vindo(a), <%= usuario.getString("nome") %>!</span>
-			<span>
-				<form action="${pageContext.request.contextPath}/sair"
-					method="post">
-					<button type="submit" class="btn btn-link">Sair</button>
-				</form>
-			</span>
+			<h4>Editar perfil</h4>
+			
+			<form action="${pageContext.request.contextPath}/perfil/editar"
+				method="post" class="form-horizontal">
+				<div class="form-group">
+					<label for="nome">Nome</label>
+					<input type="text" name="nome" class="form-control text-center" 
+					placeholder="ex: Tio do Bandejão" required
+					value="<%= usuario.getString("nome") %>">
+				</div>
+				
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input type="email" name="email" class="form-control text-center" 
+					placeholder="ex: tio-do-bandejao@ufrrj.br" required readonly
+					value="<%= usuario.getString("email") %>" data-toggle="tooltip" 
+					data-placement="bottom" title="Não é possível alterar o email">
+				</div>
+				
+				<div class="form-group">
+					<label for="telefone">Telefone</label>
+					<input type="text" name="telefone" class="form-control text-center" 
+					placeholder="ex: (21) 1 2345-6789" required
+					value="<%= usuario.getString("telefone") %>">
+				</div>
+				
+				<div class="form-group">
+					<button class="btn btn-default btn-block" 
+						type="submit">Salvar</button>
+					<a href="${pageContext.request.contextPath}" 
+						class="btn btn-block btn-link">Voltar</a>
+				</div>
+			</form>
 		</div>
 	</div>
 
@@ -60,5 +86,8 @@
     <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script>
+    	$('input[type="email"]').tooltip();
+    </script>
   </body>
 </html>

@@ -24,10 +24,10 @@ public class UsuarioModule {
 		else throw new UsuarioNaoExisteException();
 	}
 	
-	public void inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, IndexOutOfBoundsException, SQLException {
+	public void inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
 		RecordSet jaExiste = utg.obterPeloEmail(email);
 		
-		if (jaExiste.size() > 0) {
+		if (!jaExiste.isEmpty()) {
 			throw new EmailJaCadastradoException();
 		}
 		
@@ -40,17 +40,32 @@ public class UsuarioModule {
 		dataset.add(usuario);
 	}
 	
+	public void atualizarUsuario(int id, String nome, String telefone) throws SQLException, UsuarioNaoExisteException {
+		RecordSet jaExiste = utg.obter(id);
+		
+		if (jaExiste.isEmpty()) {
+			throw new UsuarioNaoExisteException();
+		}
+		
+		Row usuario = jaExiste.get(0);
+		
+		usuario.put("nome", nome);
+		usuario.put("telefone", telefone);
+		
+		dataset.add(usuario);
+	}
+	
 	public void armazenar() throws IndexOutOfBoundsException, SQLException {
 		for (int i = 0; i < dataset.size(); ++i) {
 			Row usuario = dataset.get(i);
 			boolean jaExiste = usuario.containsKey("id");
 			
-			if (jaExiste) {System.out.println("atualizar " + usuario.getString("nome"));
+			if (jaExiste) {
 				utg.atualizar(usuario.getInt("id"), 
 						usuario.getString("nome"), 
 						usuario.getString("email"), 
 						usuario.getString("telefone"));
-			} else {System.out.println("inserir " + usuario.getString("nome"));
+			} else {
 				int id = utg.inserir(usuario.getString("nome"), 
 						usuario.getString("email"), 
 						usuario.getString("telefone"));

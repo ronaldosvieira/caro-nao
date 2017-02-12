@@ -12,58 +12,57 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
+import excecoes.EmailJaCadastradoException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import util.RecordSet;
+import util.Row;
 
-/**
- * Servlet implementation class Entrar
- */
-@WebServlet("/entrar")
-public class Entrar extends HttpServlet {
+@WebServlet("/perfil/editar")
+public class EditarPerfil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
-    public Entrar() {
+    public EditarPerfil() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
-
-			response.sendRedirect(request.getContextPath() + "/dashboard");
-		} catch (UsuarioNaoLogadoException e) {
-			RequestDispatcher rd = request.getRequestDispatcher("views/entrar.jsp");
+			
+			request.setAttribute("usuario", usuario);
+			
+			RequestDispatcher rd = 
+					request.getRequestDispatcher("../views/perfil/editar.jsp");
 			rd.forward(request, response);
+		} catch (UsuarioNaoLogadoException e) {
+			response.sendRedirect(request.getContextPath() + "");
 		}
 	}
-
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String email = (String) request.getParameter("email");
+		String nome = (String) request.getParameter("nome");
+		String telefone = (String) request.getParameter("telefone");
 		
 		try {
 			UsuarioModule um = new UsuarioModule(new RecordSet());
 			
-			RecordSet usuario = um.autenticar(email);
+			Row usuario = Autenticacao.autenticar(request, response).get(0);
 			
-			Cookie cookie = new Cookie("caronao-login", email);
-			cookie.setMaxAge(24 * 60 * 60);
-			
-			response.addCookie(cookie);
-			
-			request.setAttribute("usuario", usuario);
-			
+			um.atualizarUsuario(usuario.getInt("id"), nome, telefone);
+			um.armazenar();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
-			
-		} catch (UsuarioNaoExisteException e) {
-			request.setAttribute("erro", "Email não cadastrado.");
-			
-			RequestDispatcher rd = request.getRequestDispatcher("views/entrar.jsp");
-			rd.forward(request, response);
-			
 		} catch (ClassNotFoundException | SQLException e) {
-			response.getWriter().append("Erro ao acessar o banco de dados.");
+			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
+		} catch (UsuarioNaoExisteException e) {
+			request.setAttribute("erro", "Não foi possível editar o perfil.");
+			
+			RequestDispatcher rd = 
+					request.getRequestDispatcher("../views/perfil/editar.jsp");
+			rd.forward(request, response);
+		} catch (UsuarioNaoLogadoException e) {
+			response.sendRedirect(request.getContextPath() + "");
 		}
 	}
 

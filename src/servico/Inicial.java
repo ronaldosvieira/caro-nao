@@ -31,7 +31,7 @@ public class Inicial extends HttpServlet {
 			
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (UsuarioNaoLogadoException e) {
-			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("views/home.jsp");
 			rd.forward(request, response);
 		}
 	}

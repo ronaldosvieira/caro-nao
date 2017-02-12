@@ -29,7 +29,7 @@ public class Dashboard extends HttpServlet {
 			
 			request.setAttribute("usuario", usuario);
 			
-			RequestDispatcher rd = request.getRequestDispatcher("dashboard.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("views/dashboard.jsp");
 			rd.forward(request, response);
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
