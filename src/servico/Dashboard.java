@@ -33,8 +33,10 @@ public class Dashboard extends HttpServlet {
 			
 			UsuarioModule um = new UsuarioModule(new RecordSet());
 			RecordSet grupos = um.listarGrupos(usuario.get(0).getInt("id"));
+			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
 			
 			request.setAttribute("grupos", grupos);
+			request.setAttribute("veiculos", veiculos);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("views/dashboard.jsp");
 			rd.forward(request, response);

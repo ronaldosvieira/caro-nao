@@ -48,6 +48,14 @@ public class UsuarioModule {
 		return gum.listarGruposPorUsuario(id);
 	}
 	
+	public RecordSet listarVeiculos(int id) throws SQLException, ClassNotFoundException {
+		RecordSet usuario = this.obter(id);
+		
+		VeiculoModule vm = new VeiculoModule(usuario);
+		
+		return vm.obterVariosPorUsuario("id");
+	}
+	
 	public void inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
 		RecordSet jaExiste = utg.obterPeloEmail(email);
 		

@@ -27,6 +27,7 @@
   String erro = (String) request.getAttribute("erro");
   RecordSet usuario = (RecordSet) request.getAttribute("usuario");
   RecordSet grupos = (RecordSet) request.getAttribute("grupos");
+  RecordSet veiculos = (RecordSet) request.getAttribute("veiculos");
   %>
   
 	<header class="text-center">
@@ -69,7 +70,10 @@
 				<tr>
 					<td colspan="4">
 						Você ainda não participa de grupos.<br> 
-						Peça convites aos seus amigos ou <a>crie um novo grupo.</a>
+						Peça convites aos seus amigos ou 
+						<a href="${pageContext.request.contextPath}/grupo/criar">
+							crie um novo grupo
+						</a>.
 					</td>
 				</tr>
 				<% } else { %>
@@ -87,6 +91,50 @@
 								<a href="${pageContext.request.contextPath}/grupo/convidar?id=<%= grupo.getInt("id") %>"
 									class="btn btn-link">
 									Convidar
+								</a>
+							</td>
+						</tr>
+						<% } %>
+					<% } %>
+				<% } %>
+				</tbody>
+			</table>
+			
+			<h4>Meus veículos</h4>
+			
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th class="text-center col-sm-3">Modelo</th>
+					<th class="text-center col-sm-3">Placa</th>
+					<th class="text-center col-sm-2">Cor</th>
+					<th class="text-center col-sm-1">Vagas</th>
+					<th class="text-center col-sm-3">Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<% if (veiculos.isEmpty()) { %>
+				<tr>
+					<td colspan="4">
+						Você não possui veículos cadastrados.<br> 
+						Deseja oferecer caronas? Então 
+						<a href="${pageContext.request.contextPath}/veiculo/criar">
+							cadastre um veículo
+						</a>.
+					</td>
+				</tr>
+				<% } else { %>
+					<% for (Row veiculo : veiculos) { %>
+						<% if (veiculo.getBoolean("ativo")) { %>
+						<tr>
+							<td><%= veiculo.getString("modelo") %></td>
+							<td><%= veiculo.getString("placa") %></td>
+							<td><%= veiculo.getString("cor") %></td>
+							<td><%= veiculo.getInt("vagas") %></td>
+							<td>
+								<a href="${pageContext.request.contextPath}/veiculo/ver?id=<%= veiculo.getInt("id") %>"
+									class="btn btn-link">
+									Ver
 								</a>
 							</td>
 						</tr>
