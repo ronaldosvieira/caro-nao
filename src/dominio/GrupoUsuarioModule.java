@@ -17,6 +17,14 @@ public class GrupoUsuarioModule {
 		this.dataset = dataset;
 		this.gutg = new GrupoUsuarioTableGateway();
 	}
+	
+	public RecordSet obterGrupoUsuarioPorUsuario(int idUsuario) throws SQLException {
+		return gutg.obterPorUsuario(idUsuario);
+	}
+	
+	public RecordSet obterGrupoUsuarioPorGrupo(int idGrupo) throws SQLException {
+		return gutg.obterPorGrupo(idGrupo);
+	}
 
 	public RecordSet listarGruposPorUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
 		RecordSet gruposUsuario = gutg.obterPorUsuario(idUsuario);

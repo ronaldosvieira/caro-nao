@@ -34,6 +34,12 @@ public class GrupoModule {
 		return resultado;
 	}
 	
+	public RecordSet listarUsuarios(int id) throws SQLException, ClassNotFoundException {
+		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		
+		return gum.listarUsuariosPorGrupo(id);
+	}
+	
 	public int inserirGrupo(int idUsuario, String nome, String descricao, String regras, int limite) throws SQLException, ClassNotFoundException {
 		Row grupo = new Row();
 		

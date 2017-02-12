@@ -37,7 +37,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int id) throws SQLException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectId, this.getTableName());
@@ -63,7 +63,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 		
-	public RecordSet obterPorGrupo(int idGrupo) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorGrupo(int idGrupo) throws SQLException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, 
@@ -90,7 +90,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 	
-	public RecordSet obterPorUsuario(int idUsuario) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorUsuario(int idUsuario) throws SQLException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, 

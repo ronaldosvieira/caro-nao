@@ -76,7 +76,7 @@
 			
 			<div class="form-group">
 				<a href="${pageContext.request.contextPath}/veiculo/editar?id=<%= veiculo.get(0).getInt("id") %>" 
-					class="btn btn-default btn-block">Editar</button>
+					class="btn btn-default btn-block">Editar</a>
 				<a href="${pageContext.request.contextPath}/dashboard" 
 					class="btn btn-block btn-link">Voltar</a>
 			</div>
