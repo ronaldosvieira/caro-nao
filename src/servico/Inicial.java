@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import excecoes.UsuarioNaoLogadoException;
+import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 
 /**

@@ -1,4 +1,4 @@
-package servico;
+package servico.usuario;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,13 +15,14 @@ import dominio.UsuarioModule;
 import excecoes.EmailJaCadastradoException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
+import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 
 @WebServlet("/cadastrar")
-public class Cadastrar extends HttpServlet {
+public class CadastrarUsuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    public Cadastrar() {
+    public CadastrarUsuario() {
         super();
     }
 

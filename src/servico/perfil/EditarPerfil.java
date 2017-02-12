@@ -1,4 +1,4 @@
-package servico;
+package servico.perfil;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,6 +15,7 @@ import dominio.UsuarioModule;
 import excecoes.EmailJaCadastradoException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
+import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 import util.Row;
 

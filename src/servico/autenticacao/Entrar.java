@@ -1,4 +1,4 @@
-package servico;
+package servico.autenticacao;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package servico;
+package servico.usuario;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
 import excecoes.UsuarioNaoLogadoException;
+import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 
 /**
