@@ -40,8 +40,21 @@
 				</div>
 			<% } %>
 			
-			<a href="${pageContext.request.contextPath}/entrar" class="btn btn-default btn-block">Entrar</a>
-			<a href="${pageContext.request.contextPath}/cadastrar" class="btn btn-default btn-block">Cadastrar-se</a>
+			<form action="${pageContext.request.contextPath}/entrar"
+				method="post" class="form-horizontal">
+				<div class="form-group">
+					<label for="email">Digite seu email</label>
+					<input type="text" name="email" class="form-control text-center" 
+					placeholder="ex: tio-do-bandejao@ufrrj.br" required>
+				</div>
+				
+				<div class="form-group">
+					<button class="btn btn-default btn-block" 
+						type="submit">Entrar</button>
+					<a href="${pageContext.request.contextPath}" 
+						class="btn btn-block btn-link">Voltar</a>
+				</div>
+			</form>
 		</div>
 	</div>
 

@@ -13,13 +13,13 @@ import excecoes.UsuarioNaoLogadoException;
 import util.RecordSet;
 
 /**
- * Servlet implementation class Inicial
+ * Servlet implementation class Dashboard
  */
-@WebServlet("")
-public class Inicial extends HttpServlet {
+@WebServlet("/dashboard")
+public class Dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-    public Inicial() {
+       
+    public Dashboard() {
         super();
     }
 
@@ -29,10 +29,10 @@ public class Inicial extends HttpServlet {
 			
 			request.setAttribute("usuario", usuario);
 			
-			response.sendRedirect(request.getContextPath() + "/dashboard");
-		} catch (UsuarioNaoLogadoException e) {
-			RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("dashboard.jsp");
 			rd.forward(request, response);
+		} catch (UsuarioNaoLogadoException e) {
+			response.sendRedirect(request.getContextPath() + "");
 		}
 	}
 

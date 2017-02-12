@@ -23,7 +23,13 @@
   </head>
   <body>
   
-  <% String erro = (String) request.getAttribute("erro"); %>
+  <%@ page import = "util.RecordSet" %>
+  <%@ page import = "util.Row" %>
+  
+  <% 
+  String erro = (String) request.getAttribute("erro");
+  Row usuario = ((RecordSet) request.getAttribute("usuario")).get(0);
+  %>
   
 	<header class="text-center">
 		<h1>
@@ -40,8 +46,13 @@
 				</div>
 			<% } %>
 			
-			<a href="${pageContext.request.contextPath}/entrar" class="btn btn-default btn-block">Entrar</a>
-			<a href="${pageContext.request.contextPath}/cadastrar" class="btn btn-default btn-block">Cadastrar-se</a>
+			<span>Bem vindo(a), <%= usuario.getString("nome") %>!</span>
+			<span>
+				<form action="${pageContext.request.contextPath}/sair"
+					method="post">
+					<button type="submit" class="btn btn-link">Sair</button>
+				</form>
+			</span>
 		</div>
 	</div>
 
