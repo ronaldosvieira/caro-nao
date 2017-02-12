@@ -126,7 +126,7 @@
 				<tbody>
 				<% if (veiculos.isEmpty()) { %>
 				<tr>
-					<td colspan="4">
+					<td colspan="5">
 						Você não possui veículos cadastrados.<br> 
 						Deseja oferecer caronas? Então 
 						<a href="${pageContext.request.contextPath}/veiculo/criar">
