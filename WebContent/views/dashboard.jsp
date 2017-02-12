@@ -54,6 +54,8 @@
 				<button type="submit" class="btn btn-link">Sair</button>
 			</form>
 			
+			<br>
+
 			<h4>Meus grupos</h4>
 			
 			<table class="table table-hover">
@@ -100,6 +102,15 @@
 				</tbody>
 			</table>
 			
+			<div class="text-right">
+				<a href="${pageContext.request.contextPath}/grupo/criar" 
+				class="btn btn-link">
+					Criar um novo grupo
+				</a>
+			</div>
+			
+			<br>
+			
 			<h4>Meus veículos</h4>
 			
 			<table class="table table-hover">
@@ -143,6 +154,13 @@
 				<% } %>
 				</tbody>
 			</table>
+			
+			<div class="text-right">
+				<a href="${pageContext.request.contextPath}/veiculo/criar" 
+				class="btn btn-link">
+					Cadastrar um veículo
+				</a>
+			</div>
 		</div>
 	</div>
 
