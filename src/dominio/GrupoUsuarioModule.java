@@ -33,4 +33,16 @@ public class GrupoUsuarioModule {
 		
 		return um.obterVarios("usuario_id");
 	}
+	
+	public int inserirGrupoUsuario(int idGrupo, int idUsuario) throws SQLException {
+		Row grupoUsuario = new Row();
+		
+		grupoUsuario.put("grupo_id", idGrupo);
+		grupoUsuario.put("usuario_id", idUsuario);
+		grupoUsuario.put("ativo", true);
+		
+		dataset.add(grupoUsuario);
+		
+		return gutg.inserir(idGrupo, idUsuario, true);
+	}
 }
