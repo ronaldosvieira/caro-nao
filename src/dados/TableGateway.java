@@ -10,11 +10,11 @@ public abstract class TableGateway implements AutoCloseable {
 	
 	protected String select = "select * from %s;";
 	protected String selectId = "select * from %s where id = ?;";
-	protected String selectColumn = "select * from %s where ? = ?";
+	protected String selectColumn = "select * from %s where %s = ?;";
 	protected String insert = "insert into %s (?) values (?);";
 	protected String insertMany = "insert into %s (?) values ?;";
 	protected String updateId = "update %s set ? where id = ?;";
-	protected String deleteId = "delete from %s where id = ?";
+	protected String deleteId = "delete from %s where id = ?;";
 	
 	public TableGateway(String table) 
 			throws ClassNotFoundException, SQLException {

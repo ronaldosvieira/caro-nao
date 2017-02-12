@@ -68,12 +68,12 @@ public class AvaliacaoTableGateway extends TableGateway {
 	public RecordSet obterPorAvaliador(int idAvaliador) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectId, this.getTableName());
+		String sql = String.format(this.selectId, 
+				this.getTableName(), "avaliador_id");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, "avaliador_id");
-		stmt.setInt(2, idAvaliador);
+		stmt.setInt(1, idAvaliador);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -96,12 +96,12 @@ public class AvaliacaoTableGateway extends TableGateway {
 	public RecordSet obterPorAvaliado(int idAvaliado) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectColumn, this.getTableName());
+		String sql = String.format(this.selectColumn, 
+				this.getTableName(), "avaliado_id");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, "avaliado_id");
-		stmt.setInt(2, idAvaliado);
+		stmt.setInt(1, idAvaliado);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();

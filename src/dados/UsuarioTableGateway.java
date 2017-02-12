@@ -66,7 +66,8 @@ public class UsuarioTableGateway extends TableGateway {
 	public RecordSet obterPeloEmail(String email) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectColumn, this.getTableName());
+		String sql = String.format(this.selectColumn, 
+				this.getTableName(), "email");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		

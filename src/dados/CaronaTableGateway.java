@@ -75,12 +75,12 @@ public class CaronaTableGateway extends TableGateway {
 	public RecordSet obterPorVeiculo(int idVeiculo) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectColumn, this.getTableName());
+		String sql = String.format(this.selectColumn, 
+				this.getTableName(), "veiculo_id");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, "veiculo_id");
-		stmt.setInt(2, idVeiculo);
+		stmt.setInt(1, idVeiculo);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();

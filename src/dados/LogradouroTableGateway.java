@@ -70,12 +70,12 @@ public class LogradouroTableGateway extends TableGateway {
 	public RecordSet obterPorCEP(String cep) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectColumn, this.getTableName());
+		String sql = String.format(this.selectColumn, 
+				this.getTableName(), "cep");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		stmt.setString(1, "cep");
-		stmt.setString(2, cep);
+		stmt.setString(1, cep);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
