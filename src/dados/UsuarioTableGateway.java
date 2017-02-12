@@ -62,6 +62,33 @@ public class UsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 
+	public RecordSet obterPeloEmail(String email) throws SQLException, IndexOutOfBoundsException {
+		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
+		String sql = String.format(this.selectColumn, this.getTableName());
+		PreparedStatement stmt = 
+			this.getConnection().prepareStatement(sql);
+		
+		stmt.setString(1, email);
+		
+		if (stmt.execute()) rs = stmt.getResultSet();
+		else throw new IndexOutOfBoundsException();
+		
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("nome", rs.getString("nome"));
+			row.put("email", rs.getString("email"));
+			row.put("telefone", rs.getString("telefone"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
+	}
+
+	
 	public void inserir(String nome, String email, String telefone) throws SQLException {
 		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
