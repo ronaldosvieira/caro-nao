@@ -4,25 +4,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import util.RecordSet;
+import util.Row;
+
 public class LogradouroTableGateway extends TableGateway {
 
 	public LogradouroTableGateway() throws ClassNotFoundException, SQLException {
 		super("logradouro");
 	}
 
-	public ResultSet obterTodos() throws SQLException {
+	public RecordSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("cep", rs.getString("cep"));
+			row.put("estado", rs.getString("estado"));
+			row.put("distrito", rs.getString("distrito"));
+			row.put("endereco", rs.getString("endereco"));
+			row.put("numero", rs.getString("numero"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
-	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -32,11 +50,25 @@ public class LogradouroTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("cep", rs.getString("cep"));
+			row.put("estado", rs.getString("estado"));
+			row.put("distrito", rs.getString("distrito"));
+			row.put("endereco", rs.getString("endereco"));
+			row.put("numero", rs.getString("numero"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 	
-	public ResultSet obterPorCEP(String cep) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorCEP(String cep) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -47,7 +79,20 @@ public class LogradouroTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("cep", rs.getString("cep"));
+			row.put("estado", rs.getString("estado"));
+			row.put("distrito", rs.getString("distrito"));
+			row.put("endereco", rs.getString("endereco"));
+			row.put("numero", rs.getString("numero"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
 	public void inserir(String cep, String estado, String distrito, 

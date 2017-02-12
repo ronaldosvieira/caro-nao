@@ -5,25 +5,45 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import util.RecordSet;
+import util.Row;
+
 public class CaronaTableGateway extends TableGateway {
 
 	public CaronaTableGateway() throws ClassNotFoundException, SQLException {
 		super("carona");
 	}
 	
-	public ResultSet obterTodos() throws SQLException {
+	public RecordSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("veiculo_id", rs.getInt("veiculo_id"));
+			row.put("horario", rs.getDate("horario"));
+			row.put("logradouro_origem_id", 
+					rs.getInt("logradouro_origem_id"));
+			row.put("logradouro_destino_id", 
+					rs.getInt("logradouro_destino_id"));
+			row.put("estado_carona_id", rs.getInt("estado_carona_id"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
-	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -33,11 +53,27 @@ public class CaronaTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("veiculo_id", rs.getInt("veiculo_id"));
+			row.put("horario", rs.getDate("horario"));
+			row.put("logradouro_origem_id", 
+					rs.getInt("logradouro_origem_id"));
+			row.put("logradouro_destino_id", 
+					rs.getInt("logradouro_destino_id"));
+			row.put("estado_carona_id", rs.getInt("estado_carona_id"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 	
-	public ResultSet obterPorVeiculo(int idVeiculo) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorVeiculo(int idVeiculo) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -48,7 +84,22 @@ public class CaronaTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("veiculo_id", rs.getInt("veiculo_id"));
+			row.put("horario", rs.getDate("horario"));
+			row.put("logradouro_origem_id", 
+					rs.getInt("logradouro_origem_id"));
+			row.put("logradouro_destino_id", 
+					rs.getInt("logradouro_destino_id"));
+			row.put("estado_carona_id", rs.getInt("estado_carona_id"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
 	public void inserir(int idVeiculo, Date horario, 

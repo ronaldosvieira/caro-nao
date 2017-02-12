@@ -4,25 +4,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import util.RecordSet;
+import util.Row;
+
 public class VeiculoTableGateway extends TableGateway {
 
 	public VeiculoTableGateway() throws ClassNotFoundException, SQLException {
 		super("veiculo");
 	}
 
-	public ResultSet obterTodos() throws SQLException {
+	public RecordSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("modelo", rs.getString("modelo"));
+			row.put("placa", rs.getString("placa"));
+			row.put("vagas", rs.getInt("vagas"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
-	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -32,11 +50,25 @@ public class VeiculoTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("modelo", rs.getString("modelo"));
+			row.put("placa", rs.getString("placa"));
+			row.put("vagas", rs.getInt("vagas"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 	
-	public ResultSet obterPorUsuario(int idUsuario) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorUsuario(int idUsuario) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -47,7 +79,20 @@ public class VeiculoTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("modelo", rs.getString("modelo"));
+			row.put("placa", rs.getString("placa"));
+			row.put("vagas", rs.getInt("vagas"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
 	public void inserir(String modelo, String placa, int vagas, int idUsuario, boolean ativo) 

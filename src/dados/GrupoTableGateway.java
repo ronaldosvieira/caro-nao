@@ -4,25 +4,46 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import util.RecordSet;
+import util.Row;
+
 public class GrupoTableGateway extends TableGateway {
 
 	public GrupoTableGateway() throws ClassNotFoundException, SQLException {
 		super("grupo");
 	}
 	
-	public ResultSet obterTodos() throws SQLException {
+	public RecordSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("nome", rs.getString("nome"));
+			row.put("descricao", rs.getString("descricao"));
+			row.put("regras", rs.getString("regras"));
+			row.put("limite_avaliacoes_negativas", 
+					rs.getInt("limite_avaliacoes_negativas"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			row.put("criado_em", rs.getDate("criado_em"));
+			row.put("alterado_em", rs.getDate("alterado_em"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
-	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -32,7 +53,23 @@ public class GrupoTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("nome", rs.getString("nome"));
+			row.put("descricao", rs.getString("descricao"));
+			row.put("regras", rs.getString("regras"));
+			row.put("limite_avaliacoes_negativas", 
+					rs.getInt("limite_avaliacoes_negativas"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			row.put("criado_em", rs.getDate("criado_em"));
+			row.put("alterado_em", rs.getDate("alterado_em"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
 	public void inserir(String nome, String descricao, String regras, int limite, boolean ativo) 

@@ -4,25 +4,41 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import util.RecordSet;
+import util.Row;
+
 public class GrupoUsuarioTableGateway extends TableGateway {
 
 	public GrupoUsuarioTableGateway() throws ClassNotFoundException, SQLException {
 		super("grupo_usuario");
 	}
 
-	public ResultSet obterTodos() throws SQLException {
+	public RecordSet obterTodos() throws SQLException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.select, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("grupo_id", rs.getInt("grupo_id"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
-	public ResultSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectId, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -32,11 +48,23 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("grupo_id", rs.getInt("grupo_id"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 		
-	public ResultSet obterPorGrupo(int idGrupo) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorGrupo(int idGrupo) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -47,11 +75,23 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("grupo_id", rs.getInt("grupo_id"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 	
-	public ResultSet obterPorUsuario(int idUsuario) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obterPorUsuario(int idUsuario) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
 		String sql = String.format(this.selectColumn, this.getTableName());
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -62,7 +102,18 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
 		
-		return rs;
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("grupo_id", rs.getInt("grupo_id"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
 	}
 
 	public void inserir(int idGrupo, int idUsuario, boolean ativo) 
