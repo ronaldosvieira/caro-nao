@@ -123,21 +123,18 @@ public class AvaliacaoTableGateway extends TableGateway {
 
 	public int inserir(int idAvaliador, int idAvaliado, int nota) 
 			throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(), 
+				"avaliador_id, avaliado_id, nota",
+				"?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, 
 					Statement.RETURN_GENERATED_KEYS);
-		
-		stmt.setString(1, "avaliador_id, avaliado_id, nota");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(idAvaliador); data.append(", ");
-		data.append(idAvaliado); data.append(", ");
-		data.append(nota);
-		
-		stmt.setString(2, data.toString());
+
+		stmt.setInt(1, idAvaliador);
+		stmt.setInt(2, idAvaliado);
+		stmt.setInt(3, nota);
 		
 		int affectedRows = stmt.executeUpdate();
 		

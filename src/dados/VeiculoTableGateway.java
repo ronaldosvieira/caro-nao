@@ -98,22 +98,19 @@ public class VeiculoTableGateway extends TableGateway {
 
 	public int inserir(String modelo, String placa, int vagas, int idUsuario, boolean ativo) 
 			throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(),
+				"modelo, placa, vagas, usuario_id, ativo",
+				"?, ?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, Statement.RETURN_GENERATED_KEYS);
-		
-		stmt.setString(1, "modelo, placa, vagas, usuario_id, ativo");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(modelo); data.append(", ");
-		data.append(placa); data.append(", ");
-		data.append(vagas); data.append(", ");
-		data.append(idUsuario); data.append(", ");
-		data.append(ativo);
-		
-		stmt.setString(2, data.toString());
+
+		stmt.setString(1, modelo);
+		stmt.setString(2, placa);
+		stmt.setInt(3, vagas);
+		stmt.setInt(4, idUsuario);
+		stmt.setBoolean(5, ativo);
 		
 		int affectedRows = stmt.executeUpdate();
 		

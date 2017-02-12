@@ -1,10 +1,10 @@
 package dados;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Date;
 
 import util.RecordSet;
 import util.Row;
@@ -106,22 +106,20 @@ public class CaronaTableGateway extends TableGateway {
 	public int inserir(int idVeiculo, Date horario, 
 			int idLogradouroOrigem, int idLogradouroDestino) 
 			throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(),
+				"veiculo_id, horario, logradouro_origem_id,"
+				+ " logradouro_destino_id",
+				"?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, 
 					Statement.RETURN_GENERATED_KEYS);
-		
-		stmt.setString(1, "veiculo_id, horario, logradouro_origem_id, logradouro_destino_id");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(idVeiculo); data.append(", ");
-		data.append(horario); data.append(", ");
-		data.append(idLogradouroOrigem); data.append(", ");
-		data.append(idLogradouroDestino);
-		
-		stmt.setString(2, data.toString());
+
+		stmt.setInt(1, idVeiculo);
+		stmt.setDate(2, horario);
+		stmt.setInt(3, idLogradouroOrigem);
+		stmt.setInt(4, idLogradouroDestino);
 		
 		int affectedRows = stmt.executeUpdate();
 		

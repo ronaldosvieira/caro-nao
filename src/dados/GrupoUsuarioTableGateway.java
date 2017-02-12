@@ -119,20 +119,17 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 
 	public int inserir(int idGrupo, int idUsuario, boolean ativo) 
 			throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(), 
+				"grupo_id, usuario_id, ativo",
+				"?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, Statement.RETURN_GENERATED_KEYS);
 		
-		stmt.setString(1, "grupo_id, usuario_id, ativo");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(idGrupo); data.append(", ");
-		data.append(idUsuario); data.append(", ");
-		data.append(ativo);
-		
-		stmt.setString(2, data.toString());
+		stmt.setInt(1, idGrupo);
+		stmt.setInt(2, idUsuario);
+		stmt.setBoolean(3, ativo);
 		
 		int affectedRows = stmt.executeUpdate();
 		

@@ -92,21 +92,18 @@ public class UsuarioTableGateway extends TableGateway {
 
 	
 	public int inserir(String nome, String email, String telefone) throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(), 
+				"nome, email, telefone",
+				"?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, 
 					Statement.RETURN_GENERATED_KEYS);
-		
-		stmt.setString(1, "nome, email, telefone");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(nome); data.append(", ");
-		data.append(email); data.append(", ");
-		data.append(telefone);
-		
-		stmt.setString(2, data.toString());
+
+		stmt.setString(1, nome);
+		stmt.setString(2, email);
+		stmt.setString(3, telefone);
 		
 		int affectedRows = stmt.executeUpdate();
 		

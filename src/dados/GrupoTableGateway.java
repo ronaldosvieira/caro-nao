@@ -75,24 +75,21 @@ public class GrupoTableGateway extends TableGateway {
 
 	public int inserir(String nome, String descricao, String regras, int limite, boolean ativo) 
 			throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(),
+				"nome, descricao, regras, "
+				+ "limite_avaliacoes_negativas, ativo",
+				"?, ?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, 
 					Statement.RETURN_GENERATED_KEYS);
-		
-		stmt.setString(1, "nome, descricao, regras, "
-				+ "limite_avaliacoes_negativas, ativo");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(nome); data.append(", ");
-		data.append(descricao); data.append(", ");
-		data.append(regras); data.append(", ");
-		data.append(limite); data.append(", ");
-		data.append(ativo);
-		
-		stmt.setString(2, data.toString());
+	
+		stmt.setString(1, nome);
+		stmt.setString(2, descricao);
+		stmt.setString(3, regras);
+		stmt.setInt(4, limite);
+		stmt.setBoolean(5, ativo);
 		
 		int affectedRows = stmt.executeUpdate();
 		

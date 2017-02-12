@@ -99,22 +99,19 @@ public class LogradouroTableGateway extends TableGateway {
 	public int inserir(String cep, String estado, String distrito, 
 			String endereco, String numero) 
 			throws SQLException {
-		String sql = String.format(this.insert, this.getTableName());
+		String sql = String.format(this.insert, 
+				this.getTableName(),
+				"cep, estado, distrito, endereco, numero",
+				"?, ?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, Statement.RETURN_GENERATED_KEYS);
-		
-		stmt.setString(1, "cep, estado, distrito, endereco, numero");
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append(cep); data.append(", ");
-		data.append(estado); data.append(", ");
-		data.append(distrito); data.append(", ");
-		data.append(endereco); data.append(", ");
-		data.append(numero);
-		
-		stmt.setString(2, data.toString());
+
+		stmt.setString(1, cep);
+		stmt.setString(2, estado);
+		stmt.setString(3, distrito);
+		stmt.setString(4, endereco);
+		stmt.setString(5, numero);
 		
 		int affectedRows = stmt.executeUpdate();
 		
