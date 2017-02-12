@@ -38,7 +38,26 @@ public class UsuarioModule {
 		usuario.put("telefone", telefone);
 		
 		dataset.add(usuario);
-		
-		utg.inserir(nome, email, telefone);
+	}
+	
+	public void armazenar() throws IndexOutOfBoundsException, SQLException {
+		for (int i = 0; i < dataset.size(); ++i) {
+			Row usuario = dataset.get(i);
+			boolean jaExiste = usuario.containsKey("id");
+			
+			if (jaExiste) {System.out.println("atualizar " + usuario.getString("nome"));
+				utg.atualizar(usuario.getInt("id"), 
+						usuario.getString("nome"), 
+						usuario.getString("email"), 
+						usuario.getString("telefone"));
+			} else {System.out.println("inserir " + usuario.getString("nome"));
+				int id = utg.inserir(usuario.getString("nome"), 
+						usuario.getString("email"), 
+						usuario.getString("telefone"));
+				
+				usuario.put("id", id);
+				dataset.set(i, usuario);
+			}
+		}
 	}
 }
