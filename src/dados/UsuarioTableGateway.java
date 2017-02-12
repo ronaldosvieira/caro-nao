@@ -125,18 +125,15 @@ public class UsuarioTableGateway extends TableGateway {
 
 	public void atualizar(int id, String nome, String email, String telefone) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, this.getTableName());
+		String sql = String.format(this.updateId, 
+				this.getTableName(), "nome = ?, email = ?, telefone = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
-		StringBuilder data = new StringBuilder();
-		
-		data.append("nome = "); data.append(nome); data.append(", ");
-		data.append("email = "); data.append(email); data.append(", ");
-		data.append("telefone = "); data.append(telefone);
-		
-		stmt.setString(1, data.toString());
-		stmt.setInt(2, id);
+		stmt.setString(1, nome);
+		stmt.setString(2, email);
+		stmt.setString(3, telefone);
+		stmt.setInt(4, id);
 		
 		stmt.executeUpdate();
 	}

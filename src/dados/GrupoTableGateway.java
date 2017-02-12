@@ -112,20 +112,19 @@ public class GrupoTableGateway extends TableGateway {
 	public void atualizar(int id, String nome, String descricao, 
 			String regras, int limite, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, this.getTableName());
+		String sql = String.format(this.updateId, 
+				this.getTableName(),
+				"nome = ?, descricao = ?, regras = ?, "
+				+ "limite_avaliacoes_negativas = ?, ativo = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
-		StringBuilder data = new StringBuilder();
-		
-		data.append("nome = "); data.append(nome); data.append(", ");
-		data.append("descricao = "); data.append(descricao); data.append(", ");
-		data.append("regras = "); data.append(regras); data.append(", ");
-		data.append("limite = "); data.append(limite); data.append(", ");
-		data.append("ativo = "); data.append(ativo);
-		
-		stmt.setString(1, data.toString());
-		stmt.setInt(2, id);
+		stmt.setString(1, nome);
+		stmt.setString(2, descricao);
+		stmt.setString(3, regras);
+		stmt.setInt(4, limite);
+		stmt.setBoolean(5, ativo);
+		stmt.setInt(6, id);
 		
 		stmt.executeUpdate();
 	}

@@ -157,18 +157,16 @@ public class AvaliacaoTableGateway extends TableGateway {
 	public void atualizar(int id, int idAvaliador, 
 			int idAvaliado, int nota) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, this.getTableName());
+		String sql = String.format(this.updateId, 
+				this.getTableName(),
+				"avaliador_id = ?, avaliado_id = ?, nota = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
-		StringBuilder data = new StringBuilder();
-		
-		data.append("avaliador_id = "); data.append(idAvaliador); data.append(", ");
-		data.append("avaliado_id = "); data.append(idAvaliado); data.append(", ");
-		data.append("nota = "); data.append(nota);
-		
-		stmt.setString(1, data.toString());
-		stmt.setInt(2, id);
+		stmt.setInt(1, idAvaliador);
+		stmt.setInt(2, idAvaliado);
+		stmt.setInt(3, nota);
+		stmt.setInt(4, id);
 		
 		stmt.executeUpdate();
 	}

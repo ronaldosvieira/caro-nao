@@ -134,20 +134,19 @@ public class LogradouroTableGateway extends TableGateway {
 	public void atualizar(int id, String cep, String estado, 
 			String distrito, String endereco, String numero) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, this.getTableName());
+		String sql = String.format(this.updateId, 
+				this.getTableName(),
+				"cep = ?, estado = ?, distrito = ?, "
+				+ "endereco = ?, numero = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append("cep = "); data.append(cep); data.append(", ");
-		data.append("estado = "); data.append(estado); data.append(", ");
-		data.append("distrito = "); data.append(distrito); data.append(", ");
-		data.append("endereco = "); data.append(endereco); data.append(", ");
-		data.append("numero = "); data.append(numero);
-		
-		stmt.setString(1, data.toString());
-		stmt.setInt(2, id);
+
+		stmt.setString(1, cep);
+		stmt.setString(2, estado);
+		stmt.setString(3, distrito);
+		stmt.setString(4, endereco);
+		stmt.setString(5, numero);
+		stmt.setInt(6, id);
 		
 		stmt.executeUpdate();
 	}

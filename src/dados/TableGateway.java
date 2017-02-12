@@ -13,7 +13,7 @@ public abstract class TableGateway implements AutoCloseable {
 	protected String selectColumn = "select * from %s where %s = ?;";
 	protected String insert = "insert into %s (?) values (?);";
 	protected String insertMany = "insert into %s (?) values ?;";
-	protected String updateId = "update %s set ? where id = ?;";
+	protected String updateId = "update %s set %s where id = ?;";
 	protected String deleteId = "delete from %s where id = ?;";
 	
 	public TableGateway(String table) 

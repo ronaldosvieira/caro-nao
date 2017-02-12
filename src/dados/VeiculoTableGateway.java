@@ -133,20 +133,19 @@ public class VeiculoTableGateway extends TableGateway {
 	public void atualizar(int id, String modelo, String placa, int vagas, 
 			int idUsuario, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, this.getTableName());
+		String sql = String.format(this.updateId, 
+				this.getTableName(),
+				"modelo = ?, placa = ?, vagas = ?,"
+				+ " usuario_id = ?, ativo = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
-		StringBuilder data = new StringBuilder();
-		
-		data.append("modelo = "); data.append(modelo); data.append(", ");
-		data.append("placa = "); data.append(placa); data.append(", ");
-		data.append("vagas = "); data.append(vagas); data.append(", ");
-		data.append("idUsuario = "); data.append(idUsuario); data.append(", ");
-		data.append("ativo = "); data.append(ativo);
-		
-		stmt.setString(1, data.toString());
-		stmt.setInt(2, id);
+		stmt.setString(1, modelo);
+		stmt.setString(2, placa);
+		stmt.setInt(3, vagas);
+		stmt.setInt(4, idUsuario);
+		stmt.setBoolean(5, ativo);
+		stmt.setInt(6, id);
 		
 		stmt.executeUpdate();
 	}

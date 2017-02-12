@@ -151,15 +151,12 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 
 	public void atualizar(int id, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, this.getTableName());
+		String sql = String.format(this.updateId, 
+				this.getTableName(), "ativo = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
-		
-		StringBuilder data = new StringBuilder();
-		
-		data.append("ativo = "); data.append(ativo);
-		
-		stmt.setString(1, data.toString());
+
+		stmt.setBoolean(1, ativo);
 		stmt.setInt(2, id);
 		
 		stmt.executeUpdate();
