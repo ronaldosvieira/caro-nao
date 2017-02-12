@@ -3,6 +3,7 @@ package dados;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 import util.RecordSet;
@@ -102,12 +103,14 @@ public class CaronaTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public void inserir(int idVeiculo, Date horario, 
+	public int inserir(int idVeiculo, Date horario, 
 			int idLogradouroOrigem, int idLogradouroDestino) 
 			throws SQLException {
 		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(sql);
+			this.getConnection().prepareStatement(
+					sql, 
+					Statement.RETURN_GENERATED_KEYS);
 		
 		stmt.setString(1, "veiculo_id, horario, logradouro_origem_id, logradouro_destino_id");
 		
@@ -120,7 +123,19 @@ public class CaronaTableGateway extends TableGateway {
 		
 		stmt.setString(2, data.toString());
 		
-		stmt.executeUpdate();
+		int affectedRows = stmt.executeUpdate();
+		
+		if (affectedRows == 0) {
+            throw new SQLException("Erro ao inserir carona.");
+        }
+
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Erro ao inserir carona.");
+            }
+        }
 	}
 
 	public void atualizar(int id, int idVeiculo, Date horario, 

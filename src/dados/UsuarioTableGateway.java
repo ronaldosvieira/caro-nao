@@ -3,6 +3,7 @@ package dados;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import util.RecordSet;
 import util.Row;
@@ -89,10 +90,12 @@ public class UsuarioTableGateway extends TableGateway {
 	}
 
 	
-	public void inserir(String nome, String email, String telefone) throws SQLException {
+	public int inserir(String nome, String email, String telefone) throws SQLException {
 		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(this.insert);
+			this.getConnection().prepareStatement(
+					sql, 
+					Statement.RETURN_GENERATED_KEYS);
 		
 		stmt.setString(1, "nome, email, telefone");
 		
@@ -104,7 +107,19 @@ public class UsuarioTableGateway extends TableGateway {
 		
 		stmt.setString(2, data.toString());
 		
-		stmt.executeUpdate();
+		int affectedRows = stmt.executeUpdate();
+		
+		if (affectedRows == 0) {
+            throw new SQLException("Erro ao inserir usuário.");
+        }
+
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Erro ao inserir usuário.");
+            }
+        }
 	}
 
 	public void atualizar(int id, String nome, String email, String telefone) 

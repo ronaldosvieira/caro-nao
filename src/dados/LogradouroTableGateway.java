@@ -3,6 +3,7 @@ package dados;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import util.RecordSet;
 import util.Row;
@@ -95,12 +96,13 @@ public class LogradouroTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public void inserir(String cep, String estado, String distrito, 
+	public int inserir(String cep, String estado, String distrito, 
 			String endereco, String numero) 
 			throws SQLException {
 		String sql = String.format(this.insert, this.getTableName());
 		PreparedStatement stmt = 
-			this.getConnection().prepareStatement(sql);
+			this.getConnection().prepareStatement(
+					sql, Statement.RETURN_GENERATED_KEYS);
 		
 		stmt.setString(1, "cep, estado, distrito, endereco, numero");
 		
@@ -114,7 +116,19 @@ public class LogradouroTableGateway extends TableGateway {
 		
 		stmt.setString(2, data.toString());
 		
-		stmt.executeUpdate();
+		int affectedRows = stmt.executeUpdate();
+		
+		if (affectedRows == 0) {
+            throw new SQLException("Erro ao inserir logradouro.");
+        }
+
+        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Erro ao inserir logradouro.");
+            }
+        }
 	}
 
 	public void atualizar(int id, String cep, String estado, 
