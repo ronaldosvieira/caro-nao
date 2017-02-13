@@ -121,6 +121,12 @@ public class UsuarioModule {
 		else return grupo;
 	}
 
+	public boolean isMotorista(int id) throws ClassNotFoundException, SQLException {
+		RecordSet veiculos = listarVeiculos(id);
+		
+		return !veiculos.isEmpty();
+	}
+	
 	public void convidarUsuario(String email, int idGrupo) 
 			throws SQLException, UsuarioNaoExisteException, 
 			ClassNotFoundException, GrupoUsuarioJaExisteException {

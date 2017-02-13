@@ -105,7 +105,7 @@ public class LogradouroTableGateway extends TableGateway {
 		String sql = String.format(this.insert, 
 				this.getTableName(),
 				"cep, estado, cidade, distrito, endereco, numero",
-				"?, ?, ?, ?, ?");
+				"?, ?, ?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, Statement.RETURN_GENERATED_KEYS);

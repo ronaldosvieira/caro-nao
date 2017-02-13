@@ -63,12 +63,12 @@ create table estado_carona (
 insert into estado_carona (nome, pode_entrar, pode_avaliar) values 
 	('Ativa', true, false), 
 	('Cancelada', false, false),
-	('Concluï¿½da', false, true);
+	('Concluída', false, true);
 
 create table carona (
 	id serial primary key,
 	veiculo_id integer not null references veiculo (id),
-	horario timestamp not null,
+	dia_horario timestamp not null,
 	logradouro_origem_id integer not null 
 		references logradouro (id),
 	logradouro_destino_id integer not null 

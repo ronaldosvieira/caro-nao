@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.GrupoModule;
 import dominio.GrupoUsuarioModule;
+import dominio.UsuarioModule;
 import excecoes.GrupoNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
+import util.Row;
 
 @WebServlet("/grupo/ver")
 public class VerGrupo extends HttpServlet {
@@ -33,12 +35,19 @@ public class VerGrupo extends HttpServlet {
 			
 			GrupoModule gm = new GrupoModule();
 			GrupoUsuarioModule gum = new GrupoUsuarioModule();
+			UsuarioModule um = new UsuarioModule();
 			
 			RecordSet grupo = gm.obter(Integer.parseInt(idGrupo));
 			RecordSet usuarios = gm.listarUsuarios(grupo.get(0).getInt("id"));
 			RecordSet usuariosGrupo = 
 					gum.obterGrupoUsuarioPorGrupo(grupo.get(0).getInt("id"));
 			
+			Row usuarioRow = usuario.get(0);
+			usuarioRow.put("motorista", um.isMotorista(usuarioRow.getInt("id")));
+			
+			usuario.set(0, usuarioRow);
+			
+			request.setAttribute("usuario", usuario);
 			request.setAttribute("grupo", grupo);
 			request.setAttribute("usuarios", usuarios);
 			request.setAttribute("usuariosGrupo", usuariosGrupo);

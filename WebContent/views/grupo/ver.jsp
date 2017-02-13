@@ -25,6 +25,7 @@
 	
 	<% 
 	String erro = (String) request.getAttribute("erro");
+	RecordSet usuario = (RecordSet) request.getAttribute("usuario");
 	RecordSet grupo = (RecordSet) request.getAttribute("grupo");
 	RecordSet usuarios = (RecordSet) request.getAttribute("usuarios");
 	RecordSet usuariosGrupo = (RecordSet) request.getAttribute("usuariosGrupo");
@@ -87,16 +88,16 @@
 				</tr>
 				</thead>
 				<tbody>
-				<% for (Row usuario : usuarios) { %>
-					<% Row usuarioGrupo = usuariosGrupo.get(usuariosGrupo.find("usuario_id", usuario.getInt("id"))); %>
+				<% for (Row us : usuarios) { %>
+					<% Row usuarioGrupo = usuariosGrupo.get(usuariosGrupo.find("usuario_id", us.getInt("id"))); %>
 					<% if (usuarioGrupo.getBoolean("ativo")) { %>
 					<tr>
-						<td><%= usuario.getString("nome") %></td>
-						<td><%= usuario.getString("email") %></td>
-						<td><%= usuario.getString("telefone") %></td>
+						<td><%= us.getString("nome") %></td>
+						<td><%= us.getString("email") %></td>
+						<td><%= us.getString("telefone") %></td>
 						<td><%= 5/* todo: colocar nota */ %></td>
 						<td>
-							<a href="${pageContext.request.contextPath}/perfil/ver?id=<%= usuario.getInt("id") %>"
+							<a href="${pageContext.request.contextPath}/perfil/ver?id=<%= us.getInt("id") %>"
 								class="btn btn-link">
 								Ver
 							</a>
@@ -116,8 +117,15 @@
 						</button>
 					</form>
 				</div>
-				
-				<br>
+			<% } %>
+			
+			<% if (usuario.get(0).getBoolean("motorista")) { %>
+				<div class="text-right">
+					<a href="${pageContext.request.contextPath}/carona/criar?id=<%= grupo.get(0).getInt("id") %>"
+						type="submit" class="btn btn-link">
+						Criar carona
+					</a>
+				</div>
 			<% } %>
 			
 			<div class="form-group">

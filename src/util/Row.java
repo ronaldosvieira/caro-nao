@@ -1,5 +1,7 @@
 package util;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 public class Row extends HashMap<String, Object> {
@@ -19,5 +21,13 @@ public class Row extends HashMap<String, Object> {
 	
 	public String getString(String column) {
 		return (String) this.get(column);
+	}
+	
+	public Date getDate(String column) {
+		return (Date) this.get(column);
+	}
+	
+	public Timestamp getTimestamp(String column) {
+		return (Timestamp) this.get(column);
 	}
 }

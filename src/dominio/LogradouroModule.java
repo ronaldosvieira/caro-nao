@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.sql.SQLException;
 
 import dados.LogradouroTableGateway;
+import excecoes.CEPInvalidoException;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import util.RecordSet;
@@ -35,7 +36,8 @@ public class LogradouroModule {
 	}
 	
 	public int inserirLogradouro(String cep, String numero) 
-			throws SQLException, ServicoDeEnderecosInacessivelException {
+			throws SQLException, ServicoDeEnderecosInacessivelException, 
+			CEPInvalidoException {
 		RecordSet logradouro = this.obterLogradouroPeloCEP(cep);
 		Row logr = logradouro.get(0);
 		
@@ -48,13 +50,14 @@ public class LogradouroModule {
 				logr.getString("endereco"), numero);
 	}
 	
-	private RecordSet obterLogradouroPeloCEP(String cep) throws ServicoDeEnderecosInacessivelException {
+	private RecordSet obterLogradouroPeloCEP(String cep) 
+			throws ServicoDeEnderecosInacessivelException, CEPInvalidoException {
 		RecordSet logradouro = new RecordSet();
 		cep = cep.replace("-", "");
 		
 		URLConnection con;
 		try {
-			con = new URL("viacep.com.br/ws/" + 
+			con = new URL("http://viacep.com.br/ws/" + 
 					cep + "/piped/")
 			.openConnection();
 			
@@ -71,8 +74,10 @@ public class LogradouroModule {
 			
 			in.close();
 			
-			String[] logr = response.toString().split("|");
+			String[] logr = response.toString().split("\\|");
 			Row row = new Row();
+			
+			if (logr.length < 6) throw new CEPInvalidoException(cep);
 			
 			row.put("cep", logr[0].replace("cep:", ""));
 			row.put("estado", logr[5].replace("uf:", ""));
@@ -84,6 +89,7 @@ public class LogradouroModule {
 			
 			return logradouro;
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new ServicoDeEnderecosInacessivelException();
 		}
 		
