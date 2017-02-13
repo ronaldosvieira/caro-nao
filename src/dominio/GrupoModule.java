@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import dados.GrupoTableGateway;
 import excecoes.DesativacaoGrupoInvalidaException;
 import excecoes.GrupoNaoExisteException;
+import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -46,7 +47,7 @@ public class GrupoModule {
 		return gum.listarUsuariosPorGrupo(id);
 	}
 	
-	public int inserirGrupo(int idUsuario, String nome, String descricao, String regras, int limite) throws SQLException, ClassNotFoundException {
+	public int inserirGrupo(int idUsuario, String nome, String descricao, String regras, int limite) throws SQLException, ClassNotFoundException, GrupoUsuarioJaExisteException {
 		Row grupo = new Row();
 		
 		grupo.put("nome", nome);
