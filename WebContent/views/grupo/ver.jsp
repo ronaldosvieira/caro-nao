@@ -96,7 +96,7 @@
 						<td><%= usuario.getString("telefone") %></td>
 						<td><%= 5/* todo: colocar nota */ %></td>
 						<td>
-							<a href="${pageContext.request.contextPath}/grupo/ver?id=<%= usuario.getInt("id") %>"
+							<a href="${pageContext.request.contextPath}/perfil/ver?id=<%= usuario.getInt("id") %>"
 								class="btn btn-link">
 								Ver
 							</a>
