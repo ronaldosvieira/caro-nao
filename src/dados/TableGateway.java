@@ -15,7 +15,9 @@ public abstract class TableGateway implements AutoCloseable {
 	protected String insert = "insert into %s (%s) values (%s);";
 	protected String insertMany = "insert into %s (?) values ?;";
 	protected String updateId = "update %s set %s where id = ?;";
+	protected String updateMany = "update %s set %s where %s;";
 	protected String deleteId = "delete from %s where id = ?;";
+	protected String deleteMany = "delete from %s where %s;";
 	
 	public TableGateway(String table) 
 			throws ClassNotFoundException, SQLException {

@@ -77,14 +77,9 @@ create table carona (
 		references estado_carona (id)
 );
 
-create table parada (
-	id serial primary key,
-	carona_id int not null references carona (id),
-	logradouro_id int not null references logradouro (id)
-);
-
 create table carona_usuario (
 	usuario_id int not null references usuario (id),
-	parada_id int not null references parada (id),
-	primary key (usuario_id, parada_id)
+	carona_id int not null references carona (id),
+	logradouro_id int not null references logradouro (id),
+	primary key (usuario_id, carona_id)
 );

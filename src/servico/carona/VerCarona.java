@@ -39,16 +39,19 @@ public class VerCarona extends HttpServlet {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
 			UsuarioModule um = new UsuarioModule();
+			CaronaModule cm = new CaronaModule();
 			
 			RecordSet carona = um.validarCarona(usuario.get(0).getInt("id"), 
 					Integer.parseInt(idCarona));
 			
 			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
+			RecordSet usuariosCarona = cm.listarUsuarios(carona.get(0).getInt("id"));
 			
 			boolean dono = veiculos.contains("id", carona.get(0).getInt("veiculo_id"));
 			
 			request.setAttribute("usuario", usuario);
 			request.setAttribute("carona", carona);
+			request.setAttribute("usuariosCarona", usuariosCarona);
 			request.setAttribute("dono", dono);
 			
 			RequestDispatcher rd = 

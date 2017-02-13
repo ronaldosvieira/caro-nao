@@ -52,6 +52,12 @@ public class CaronaModule {
 		return vm.obterDono(carona.get(0).getInt("veiculo_id"));
 	}
 	
+	public RecordSet listarUsuarios(int id) throws SQLException, ClassNotFoundException {
+		CaronaUsuarioModule gum = new CaronaUsuarioModule();
+		
+		return gum.listarUsuariosPorCarona(id);
+	}
+	
 	public int inserirCarona(int idVeiculo, String data, String horario, 
 			String cepOrigem, String numeroOrigem, String cepDestino,
 			String numeroDestino) 

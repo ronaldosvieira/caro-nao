@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import dados.CaronaUsuarioTableGateway;
 import excecoes.CaronaUsuarioJaExisteException;
+import excecoes.CaronaUsuarioNaoExiste;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
 import util.RecordSet;
@@ -14,6 +15,14 @@ public class CaronaUsuarioModule {
 	
 	public CaronaUsuarioModule() throws ClassNotFoundException, SQLException {
 		this.cutg = new CaronaUsuarioTableGateway();
+	}
+	
+	public RecordSet obter(int idCarona, int idUsuario) throws SQLException, CaronaUsuarioNaoExiste {
+		RecordSet caronaUsuario = cutg.obter(idCarona, idUsuario);
+		
+		if (caronaUsuario.isEmpty()) throw new CaronaUsuarioNaoExiste();
+		
+		return caronaUsuario;
 	}
 	
 	public RecordSet obterCaronaUsuarioPorUsuario(int idUsuario) throws SQLException {
@@ -32,7 +41,7 @@ public class CaronaUsuarioModule {
 		return um.obterVarios("usuario_id", usuariosCarona);
 	}
 	
-	public int inserirCaronaUsuario(int idCarona, int idUsuario) 
+	public int inserirCaronaUsuario(int idCarona, int idUsuario, int idLogradouro) 
 			throws SQLException, CaronaUsuarioJaExisteException {
 		RecordSet jaExiste = cutg.obterPorUsuario(idUsuario);
 		
@@ -43,12 +52,7 @@ public class CaronaUsuarioModule {
 			}
 		}
 		
-		Row caronaUsuario = new Row();
-		
-		caronaUsuario.put("carona_id", idCarona);
-		caronaUsuario.put("usuario_id", idUsuario);
-		
-		return cutg.inserir(idCarona, idUsuario);
+		return cutg.inserir(idCarona, idUsuario, idLogradouro);
 	}
 
 	public void excluirCaronaUsuario(int idCarona, int idUsuario) 
