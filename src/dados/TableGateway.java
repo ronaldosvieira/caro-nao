@@ -11,6 +11,7 @@ public abstract class TableGateway implements AutoCloseable {
 	protected String select = "select * from %s;";
 	protected String selectId = "select * from %s where id = ?;";
 	protected String selectColumn = "select * from %s where %s = ?;";
+	protected String selectMany = "select * from %s where %s;";
 	protected String insert = "insert into %s (%s) values (%s);";
 	protected String insertMany = "insert into %s (?) values ?;";
 	protected String updateId = "update %s set %s where id = ?;";

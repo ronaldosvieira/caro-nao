@@ -62,6 +62,34 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		
 		return dataset;
 	}
+	
+	public RecordSet obter(int idGrupo, int idUsuario) throws SQLException {
+		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
+		String sql = String.format(this.selectMany, 
+				this.getTableName(), "grupo_id = ? and usuario_id = ?");
+		PreparedStatement stmt = 
+			this.getConnection().prepareStatement(sql);
+		
+		stmt.setInt(1, idGrupo);
+		stmt.setInt(2, idUsuario);
+		
+		if (stmt.execute()) rs = stmt.getResultSet();
+		else throw new IndexOutOfBoundsException();
+		
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("id", rs.getInt("id"));
+			row.put("grupo_id", rs.getInt("grupo_id"));
+			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
+	}
 		
 	public RecordSet obterPorGrupo(int idGrupo) throws SQLException {
 		ResultSet rs = null;

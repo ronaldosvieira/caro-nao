@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import dados.GrupoUsuarioTableGateway;
 import dados.UsuarioTableGateway;
 import excecoes.EmailJaCadastradoException;
+import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
 import util.RecordSet;
@@ -53,7 +54,13 @@ public class GrupoUsuarioModule {
 		return um.obterVarios("usuario_id");
 	}
 	
-	public int inserirGrupoUsuario(int idGrupo, int idUsuario) throws SQLException {
+	public int inserirGrupoUsuario(int idGrupo, int idUsuario) throws SQLException, GrupoUsuarioJaExisteException {
+		RecordSet jaExiste = gutg.obter(idGrupo, idUsuario);
+		
+		if (!jaExiste.isEmpty()) {
+			throw new GrupoUsuarioJaExisteException();
+		}
+		
 		Row grupoUsuario = new Row();
 		
 		grupoUsuario.put("grupo_id", idGrupo);
