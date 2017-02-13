@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.GrupoModule;
 import dominio.GrupoUsuarioModule;
+import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
@@ -57,6 +58,8 @@ public class CriarGrupo extends HttpServlet {
 			e.printStackTrace();
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
+		} catch (GrupoUsuarioJaExisteException e) {
+			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}
 
