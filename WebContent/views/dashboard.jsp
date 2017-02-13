@@ -127,33 +127,43 @@
 				</tr>
 				</thead>
 				<tbody>
-				<% for (Row carona : caronas) { %>
-					<% String estado = ""; %>
-					<% switch (carona.getInt("estado_carona_id")) {
-						case 1:
-							estado = "Ativa";
-							break;
-						case 2:
-							estado = "Cancelada";
-							break;
-						case 3:
-							estado = "Concluída";
-							break;
-					} %>
-					<tr>
-						<td><%= carona.getString("veiculo") %></td>
-						<td><%= carona.getTimestamp("dia_horario") %></td>
-						<td><%= carona.getString("origem") %></td>
-						<td><%= carona.getString("destino") %></td>
-						<td><%= carona.getInt("vagas") %></td>
-						<td><%= estado %></td>
-						<td>
-							<a href="${pageContext.request.contextPath}/carona/ver?id=<%= carona.getInt("id") %>"
-								class="btn btn-link">
-								Ver
-							</a>
-						</td>
-					</tr>
+				<% if (caronas.isEmpty()) { %>
+				<tr>
+					<td colspan="5">
+						Nenhuma carona disponível.
+					</td>
+				</tr>
+				<% } else { %>
+					<% for (Row carona : caronas) { %>
+						<% String estado = ""; %>
+						<% 
+						switch (carona.getInt("estado_carona_id")) {
+							case 1:
+								estado = "Ativa";
+								break;
+							case 2:
+								estado = "Cancelada";
+								break;
+							case 3:
+								estado = "Concluída";
+								break;
+						} 
+						%>
+						<tr>
+							<td><%= carona.getString("veiculo") %></td>
+							<td><%= carona.getTimestamp("dia_horario") %></td>
+							<td><%= carona.getString("origem") %></td>
+							<td><%= carona.getString("destino") %></td>
+							<td><%= carona.getInt("vagas") %></td>
+							<td><%= estado %></td>
+							<td>
+								<a href="${pageContext.request.contextPath}/carona/ver?id=<%= carona.getInt("id") %>"
+									class="btn btn-link">
+									Ver
+								</a>
+							</td>
+						</tr>
+					<% } %>
 				<% } %>
 				</tbody>
 			</table>
