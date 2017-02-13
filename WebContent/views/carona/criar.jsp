@@ -27,7 +27,6 @@
   <%@ page import = "util.Row" %>
   
   <% String erro = (String) request.getAttribute("erro"); %>
-  <% RecordSet grupo = (RecordSet) request.getAttribute("grupo"); %>
   <% RecordSet veiculos = (RecordSet) request.getAttribute("veiculos"); %>
   
 	<header class="text-center">
@@ -47,7 +46,7 @@
 			
 			<h4>Criar carona</h4>
 			
-			<form action="${pageContext.request.contextPath}/carona/criar?id=<%= grupo.get(0).getInt("id") %>"
+			<form action="${pageContext.request.contextPath}/carona/criar"
 				method="post" class="form-horizontal">
 				<div class="form-group">
 					<label for="veiculo_id">Veículo</label>
@@ -113,7 +112,7 @@
 				<div class="form-group">
 					<button class="btn btn-default btn-block" 
 						type="submit">Cadastrar</button>
-					<a href="${pageContext.request.contextPath}/grupo/ver?id=<%= grupo.get(0).getInt("id") %>" 
+					<a href="${pageContext.request.contextPath}/dashboard" 
 						class="btn btn-block btn-link">Voltar</a>
 				</div>
 			</form>

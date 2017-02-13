@@ -168,6 +168,17 @@
 				</tbody>
 			</table>
 			
+			<% if (!veiculos.isEmpty()) { %>
+			<div class="text-right">
+				<a href="${pageContext.request.contextPath}/carona/criar" 
+				class="btn btn-link">
+					Criar uma nova carona
+				</a>
+			</div>
+			
+			<br>
+			<% } %>
+			
 			<h4>Meus veículos</h4>
 			
 			<table class="table table-hover">

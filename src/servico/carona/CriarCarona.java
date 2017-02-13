@@ -31,18 +31,14 @@ public class CriarCarona extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idGrupo = request.getParameter("id");
-		
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
 			UsuarioModule um = new UsuarioModule();
 			
-			RecordSet grupo = um.validarGrupo(usuario.get(0).getInt("id"), Integer.parseInt(idGrupo));
 			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
 			
 			request.setAttribute("usuario", usuario);
-			request.setAttribute("grupo", grupo);
 			request.setAttribute("veiculos", veiculos);
 			
 			RequestDispatcher rd = 
@@ -53,7 +49,7 @@ public class CriarCarona extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
-		} catch (NumberFormatException | GrupoNaoAutorizadoException e) {
+		} catch (NumberFormatException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}
@@ -66,7 +62,6 @@ public class CriarCarona extends HttpServlet {
 		String cepDestino = request.getParameter("cep_destino");
 		String numeroOrigem = request.getParameter("numero_origem");
 		String numeroDestino = request.getParameter("numero_destino");
-		String idGrupo = (String) request.getParameter("id");
 
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
@@ -74,13 +69,9 @@ public class CriarCarona extends HttpServlet {
 			CaronaModule cm = new CaronaModule();
 			UsuarioModule um = new UsuarioModule();
 			
-			RecordSet grupo = um.validarGrupo(
-					usuario.get(0).getInt("id"), 
-					Integer.parseInt(idGrupo));
 			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
 			
 			request.setAttribute("usuario", usuario);
-			request.setAttribute("grupo", grupo);
 			request.setAttribute("veiculos", veiculos);
 
 			cm.inserirCarona(Integer.parseInt(idVeiculo), data, 
@@ -93,7 +84,7 @@ public class CriarCarona extends HttpServlet {
 			e.printStackTrace();
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
-		} catch (NumberFormatException | GrupoNaoAutorizadoException e) {
+		} catch (NumberFormatException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (VeiculoJaSelecionadoException e) {
 			request.setAttribute("erro", 
