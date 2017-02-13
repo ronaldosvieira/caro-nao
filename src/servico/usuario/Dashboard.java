@@ -32,7 +32,7 @@ public class Dashboard extends HttpServlet {
 			
 			request.setAttribute("usuario", usuario);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			RecordSet grupos = um.listarGrupos(usuario.get(0).getInt("id"));
 			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
 			

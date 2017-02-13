@@ -46,7 +46,7 @@ public class CriarVeiculo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			VeiculoModule vm = new VeiculoModule(new RecordSet());
+			VeiculoModule vm = new VeiculoModule();
 			
 			vm.inserirVeiculo(modelo, placa, cor, vagas, 
 					usuario.get(0).getInt("id"));

@@ -14,11 +14,9 @@ import util.RecordSet;
 import util.Row;
 
 public class LogradouroModule {
-	private RecordSet dataset;
 	private LogradouroTableGateway ltg;
 	
-	public LogradouroModule(RecordSet dataset) throws ClassNotFoundException, SQLException {
-		this.dataset = dataset;
+	public LogradouroModule() throws ClassNotFoundException, SQLException {
 		this.ltg = new LogradouroTableGateway();
 	}
 	
@@ -44,8 +42,6 @@ public class LogradouroModule {
 		logr.put("numero", numero);
 		
 		logradouro.set(0, logr);
-		
-		dataset.add(logr);
 		
 		return ltg.inserir(cep, logr.getString("estado"), 
 				logr.getString("cidade"), logr.getString("distrito"), 

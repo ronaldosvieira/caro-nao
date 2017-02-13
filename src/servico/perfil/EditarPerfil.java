@@ -46,7 +46,7 @@ public class EditarPerfil extends HttpServlet {
 		String telefone = (String) request.getParameter("telefone");
 		
 		try {
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			Row usuario = Autenticacao.autenticar(request, response).get(0);
 			
@@ -57,7 +57,7 @@ public class EditarPerfil extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (UsuarioNaoExisteException e) {
-			request.setAttribute("erro", "Não foi possível editar o perfil.");
+			request.setAttribute("erro", "Nï¿½o foi possï¿½vel editar o perfil.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/perfil/editar.jsp");

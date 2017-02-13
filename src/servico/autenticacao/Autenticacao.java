@@ -29,7 +29,7 @@ public class Autenticacao {
 		}
 		
 		try {
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			return um.autenticar(emailUsuarioLogado);
 		} catch (UsuarioNaoExisteException | ClassNotFoundException | SQLException e) {

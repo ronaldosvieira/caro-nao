@@ -31,8 +31,8 @@ public class VerGrupo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			GrupoModule gm = new GrupoModule(new RecordSet());
-			GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+			GrupoModule gm = new GrupoModule();
+			GrupoUsuarioModule gum = new GrupoUsuarioModule();
 			
 			RecordSet grupo = gm.obter(Integer.parseInt(idGrupo));
 			RecordSet usuarios = gm.listarUsuarios(grupo.get(0).getInt("id"));

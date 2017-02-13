@@ -12,11 +12,9 @@ import util.RecordSet;
 import util.Row;
 
 public class UsuarioModule {
-	private RecordSet dataset;
 	private UsuarioTableGateway utg;
 	
-	public UsuarioModule(RecordSet dataset) throws ClassNotFoundException, SQLException {
-		this.dataset = dataset;
+	public UsuarioModule() throws ClassNotFoundException, SQLException {
 		this.utg = new UsuarioTableGateway();
 	}
 	
@@ -31,10 +29,11 @@ public class UsuarioModule {
 		return this.utg.obter(id);
 	}
 	
-	public RecordSet obterVarios(String column) throws SQLException {
+	public RecordSet obterVarios(String column, RecordSet dataset) 
+			throws SQLException {
 		RecordSet resultado = new RecordSet();
 		
-		for (Row row : this.dataset) {
+		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
 			Row usuario = this.utg.obter(row.getInt(column)).get(0);
@@ -46,7 +45,7 @@ public class UsuarioModule {
 	}
 	
 	public RecordSet listarGrupos(int id) throws SQLException, ClassNotFoundException {
-		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		GrupoUsuarioModule gum = new GrupoUsuarioModule();
 		
 		return gum.listarGruposPorUsuario(id);
 	}
@@ -54,9 +53,9 @@ public class UsuarioModule {
 	public RecordSet listarVeiculos(int id) throws SQLException, ClassNotFoundException {
 		RecordSet usuario = this.obter(id);
 		
-		VeiculoModule vm = new VeiculoModule(usuario);
+		VeiculoModule vm = new VeiculoModule();
 		
-		return vm.obterVariosPorUsuario("id");
+		return vm.obterVariosPorUsuario("id", usuario);
 	}
 	
 	public int inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
@@ -72,8 +71,6 @@ public class UsuarioModule {
 		usuario.put("email", email);
 		usuario.put("telefone", telefone);
 		
-		dataset.add(usuario);
-		
 		return utg.inserir(nome, email, telefone);
 	}
 	
@@ -88,12 +85,6 @@ public class UsuarioModule {
 		
 		usuario.put("nome", nome);
 		usuario.put("telefone", telefone);
-		
-		if (dataset.contains("id", id)) {
-			dataset.set(dataset.find("id", id), usuario);
-		} else {
-			dataset.add(usuario);
-		}
 		
 		utg.atualizar(id, nome, usuario.getString("email"), telefone);
 	}
@@ -139,7 +130,7 @@ public class UsuarioModule {
 			throw new UsuarioNaoExisteException();
 		}
 		
-		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		GrupoUsuarioModule gum = new GrupoUsuarioModule();
 		
 		gum.inserirGrupoUsuario(idGrupo, 
 				usuario.get(0).getInt("id"));

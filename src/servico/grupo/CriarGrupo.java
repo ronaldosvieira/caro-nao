@@ -46,8 +46,8 @@ public class CriarGrupo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			GrupoModule gm = new GrupoModule(new RecordSet());
-			GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet()); 
+			GrupoModule gm = new GrupoModule();
+			GrupoUsuarioModule gum = new GrupoUsuarioModule(); 
 			
 			gm.inserirGrupo(usuario.get(0).getInt("id"), 
 					nome, descricao, regras, limite);

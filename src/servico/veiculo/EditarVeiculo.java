@@ -32,7 +32,7 @@ public class EditarVeiculo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			RecordSet veiculo = um.validarVeiculo(
 					usuario.get(0).getInt("id"), 
@@ -60,12 +60,12 @@ public class EditarVeiculo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			um.validarVeiculo(
 				usuario.get(0).getInt("id"), 
 				Integer.parseInt(idVeiculo));
 			
-			VeiculoModule vm = new VeiculoModule(new RecordSet());
+			VeiculoModule vm = new VeiculoModule();
 			
 			vm.atualizarVeiculo(Integer.parseInt(idVeiculo), cor);
 			

@@ -44,7 +44,7 @@ public class CadastrarUsuario extends HttpServlet {
 		String telefone = (String) request.getParameter("telefone");
 		
 		try {
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			um.inserirUsuario(nome, email, telefone);
 			
@@ -58,7 +58,7 @@ public class CadastrarUsuario extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (EmailJaCadastradoException e) {
-			request.setAttribute("erro", "O email informado já foi cadastrado.");
+			request.setAttribute("erro", "O email informado jï¿½ foi cadastrado.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("views/cadastrar.jsp");

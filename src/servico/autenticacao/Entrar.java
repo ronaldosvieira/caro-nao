@@ -42,7 +42,7 @@ public class Entrar extends HttpServlet {
 		String email = (String) request.getParameter("email");
 		
 		try {
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			RecordSet usuario = um.autenticar(email);
 			
@@ -56,7 +56,7 @@ public class Entrar extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 			
 		} catch (UsuarioNaoExisteException e) {
-			request.setAttribute("erro", "Email não cadastrado.");
+			request.setAttribute("erro", "Email nï¿½o cadastrado.");
 			
 			RequestDispatcher rd = request.getRequestDispatcher("views/entrar.jsp");
 			rd.forward(request, response);

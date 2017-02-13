@@ -31,7 +31,7 @@ public class VerVeiculo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			VeiculoModule vm = new VeiculoModule(new RecordSet());
+			VeiculoModule vm = new VeiculoModule();
 			RecordSet veiculo = vm.obter(Integer.parseInt(idVeiculo));
 			
 			request.setAttribute("veiculo", veiculo);

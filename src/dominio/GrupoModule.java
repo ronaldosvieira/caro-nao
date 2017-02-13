@@ -11,11 +11,9 @@ import util.RecordSet;
 import util.Row;
 
 public class GrupoModule {
-	private RecordSet dataset;
 	private GrupoTableGateway gtg;
 	
-	public GrupoModule(RecordSet dataset) throws ClassNotFoundException, SQLException {
-		this.dataset = dataset;
+	public GrupoModule() throws ClassNotFoundException, SQLException {
 		this.gtg = new GrupoTableGateway();
 	}
 	
@@ -27,10 +25,11 @@ public class GrupoModule {
 		return grupo;
 	}
 	
-	public RecordSet obterVarios(String column) throws SQLException {
+	public RecordSet obterVarios(String column, RecordSet dataset) 
+			throws SQLException {
 		RecordSet resultado = new RecordSet();
 		
-		for (Row row : this.dataset) {
+		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
 			Row grupo = this.gtg.obter(row.getInt(column)).get(0);
@@ -42,7 +41,7 @@ public class GrupoModule {
 	}
 	
 	public RecordSet listarUsuarios(int id) throws SQLException, ClassNotFoundException {
-		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		GrupoUsuarioModule gum = new GrupoUsuarioModule();
 		
 		return gum.listarUsuariosPorGrupo(id);
 	}
@@ -55,11 +54,9 @@ public class GrupoModule {
 		grupo.put("regras", regras);
 		grupo.put("limite", limite);
 		
-		dataset.add(grupo);
-		
 		int idGrupo = gtg.inserir(nome, descricao, regras, limite, true);
 		
-		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		GrupoUsuarioModule gum = new GrupoUsuarioModule();
 		gum.inserirGrupoUsuario(idGrupo, idUsuario);
 		
 		return idGrupo;
@@ -78,19 +75,13 @@ public class GrupoModule {
 		grupo.put("descricao", descricao);
 		grupo.put("limite", limite);
 		
-		if (dataset.contains("id", id)) {
-			dataset.set(dataset.find("id", id), grupo);
-		} else {
-			dataset.add(grupo);
-		}
-		
 		gtg.atualizar(id, nome, descricao, 
 				grupo.getString("regras"), limite, 
 				grupo.getBoolean("ativo"));
 	}
 	
 	public void desativarGrupo(int id) throws ClassNotFoundException, SQLException, DesativacaoGrupoInvalidaException, GrupoNaoExisteException, GrupoUsuarioNaoExisteException {
-		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		GrupoUsuarioModule gum = new GrupoUsuarioModule();
 		
 		RecordSet usuariosGrupo = gum.obterGrupoUsuarioPorGrupo(id);
 		

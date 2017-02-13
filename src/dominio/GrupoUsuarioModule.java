@@ -12,11 +12,9 @@ import util.RecordSet;
 import util.Row;
 
 public class GrupoUsuarioModule {
-	private RecordSet dataset;
 	private GrupoUsuarioTableGateway gutg;
 	
-	public GrupoUsuarioModule(RecordSet dataset) throws ClassNotFoundException, SQLException {
-		this.dataset = dataset;
+	public GrupoUsuarioModule() throws ClassNotFoundException, SQLException {
 		this.gutg = new GrupoUsuarioTableGateway();
 	}
 	
@@ -41,17 +39,17 @@ public class GrupoUsuarioModule {
 	public RecordSet listarGruposPorUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
 		RecordSet gruposUsuario = gutg.obterPorUsuario(idUsuario);
 		
-		GrupoModule gm = new GrupoModule(gruposUsuario);
+		GrupoModule gm = new GrupoModule();
 		
-		return gm.obterVarios("grupo_id");
+		return gm.obterVarios("grupo_id", gruposUsuario);
 	}
 	
 	public RecordSet listarUsuariosPorGrupo(int idGrupo) throws SQLException, ClassNotFoundException {
 		RecordSet usuariosGrupo = gutg.obterPorGrupo(idGrupo);
 		
-		UsuarioModule um = new UsuarioModule(usuariosGrupo);
+		UsuarioModule um = new UsuarioModule();
 		
-		return um.obterVarios("usuario_id");
+		return um.obterVarios("usuario_id", usuariosGrupo);
 	}
 	
 	public int inserirGrupoUsuario(int idGrupo, int idUsuario) throws SQLException, GrupoUsuarioJaExisteException {
@@ -66,8 +64,6 @@ public class GrupoUsuarioModule {
 		grupoUsuario.put("grupo_id", idGrupo);
 		grupoUsuario.put("usuario_id", idUsuario);
 		grupoUsuario.put("ativo", true);
-		
-		dataset.add(grupoUsuario);
 		
 		return gutg.inserir(idGrupo, idUsuario, true);
 	}

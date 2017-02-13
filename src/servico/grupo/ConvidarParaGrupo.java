@@ -34,7 +34,7 @@ public class ConvidarParaGrupo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			RecordSet grupo = um.validarGrupo(
 					usuario.get(0).getInt("id"), 
@@ -62,8 +62,8 @@ public class ConvidarParaGrupo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
-			GrupoModule gm = new GrupoModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
+			GrupoModule gm = new GrupoModule();
 			
 			um.validarGrupo(
 				usuario.get(0).getInt("id"), 
@@ -75,7 +75,7 @@ public class ConvidarParaGrupo extends HttpServlet {
 			
 			um.convidarUsuario(email, Integer.parseInt(idGrupo));
 			
-			request.setAttribute("sucesso", "Usuário convidado com sucesso!");
+			request.setAttribute("sucesso", "Usuï¿½rio convidado com sucesso!");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/grupo/convidar.jsp");
@@ -90,7 +90,7 @@ public class ConvidarParaGrupo extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (UsuarioNaoExisteException e) {
 			request.setAttribute("erro", 
-					"Seu amigo(a) ainda não está cadastrado(a) no Caronão.");
+					"Seu amigo(a) ainda nï¿½o estï¿½ cadastrado(a) no Caronï¿½o.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/grupo/convidar.jsp");

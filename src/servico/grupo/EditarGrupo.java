@@ -33,7 +33,7 @@ public class EditarGrupo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			
 			RecordSet grupo = um.validarGrupo(
 					usuario.get(0).getInt("id"), 
@@ -63,12 +63,12 @@ public class EditarGrupo extends HttpServlet {
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
-			UsuarioModule um = new UsuarioModule(new RecordSet());
+			UsuarioModule um = new UsuarioModule();
 			um.validarGrupo(
 				usuario.get(0).getInt("id"), 
 				Integer.parseInt(idGrupo));
 			
-			GrupoModule gm = new GrupoModule(new RecordSet());
+			GrupoModule gm = new GrupoModule();
 			
 			gm.atualizarGrupo(Integer.parseInt(idGrupo), 
 					nome, descricao, limite);

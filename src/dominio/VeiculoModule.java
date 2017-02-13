@@ -9,11 +9,9 @@ import util.RecordSet;
 import util.Row;
 
 public class VeiculoModule {
-	private RecordSet dataset;
 	private VeiculoTableGateway vtg;
 	
-	public VeiculoModule(RecordSet dataset) throws ClassNotFoundException, SQLException {
-		this.dataset = dataset;
+	public VeiculoModule() throws ClassNotFoundException, SQLException {
 		this.vtg = new VeiculoTableGateway();
 	}
 	
@@ -21,10 +19,11 @@ public class VeiculoModule {
 		return this.vtg.obter(id);
 	}
 	
-	public RecordSet obterVarios(String column) throws SQLException {
+	public RecordSet obterVarios(String column, RecordSet dataset) 
+			throws SQLException {
 		RecordSet resultado = new RecordSet();
 		
-		for (Row row : this.dataset) {
+		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
 			Row veiculo = this.vtg.obter(row.getInt(column)).get(0);
@@ -35,10 +34,11 @@ public class VeiculoModule {
 		return resultado;
 	}
 	
-	public RecordSet obterVariosPorUsuario(String column) throws SQLException {
+	public RecordSet obterVariosPorUsuario(String column, RecordSet dataset) 
+			throws SQLException {
 		RecordSet resultado = new RecordSet();
 		
-		for (Row row : this.dataset) {
+		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
 			RecordSet veiculos = this.vtg.obterPorUsuario(row.getInt(column));
@@ -62,8 +62,6 @@ public class VeiculoModule {
 		veiculo.put("vagas", vagas);
 		veiculo.put("usuario_id", idUsuario);
 		
-		dataset.add(veiculo);
-		
 		return vtg.inserir(modelo, placa, cor, vagas, idUsuario, true);
 	}
 	
@@ -78,12 +76,6 @@ public class VeiculoModule {
 		Row veiculo = jaExiste.get(0);
 		
 		veiculo.put("cor", cor);
-		
-		if (dataset.contains("id", id)) {
-			dataset.set(dataset.find("id", id), veiculo);
-		} else {
-			dataset.add(veiculo);
-		}
 		
 		vtg.atualizar(id, veiculo.getString("modelo"), 
 				veiculo.getString("placa"), cor, 
