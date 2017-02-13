@@ -46,6 +46,7 @@ public class LogradouroModule {
 	public int inserirLogradouro(String cep, String numero) 
 			throws SQLException, ServicoDeEnderecosInacessivelException, 
 			CEPInvalidoException {
+		cep = cep.replace("-", "");
 		RecordSet logradouro = this.obterLogradouroPeloCEP(cep);
 		Row logr = logradouro.get(0);
 		
