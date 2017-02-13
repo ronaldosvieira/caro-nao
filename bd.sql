@@ -37,6 +37,7 @@ create table veiculo (
 	id serial primary key,
 	modelo varchar(45) not null,
 	placa varchar(45) not null,
+	cor varchar(45) not null,
 	vagas integer not null,
 	usuario_id integer not null references usuario (id),
 	ativo boolean not null default true
