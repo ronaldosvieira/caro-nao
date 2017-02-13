@@ -22,7 +22,8 @@ public class LogradouroModule {
 	}
 	
 	public static String formatarLogradouro(RecordSet logradouro) {
-		return logradouro.get(0).getString("endereco") +
+		return logradouro.get(0).getString("cep") +
+				". " + logradouro.get(0).getString("endereco") +
 				", " + logradouro.get(0).getString("numero") +
 				". " + logradouro.get(0).getString("distrito") +
 				". " + logradouro.get(0).getString("cidade") +
