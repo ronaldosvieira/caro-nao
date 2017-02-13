@@ -58,6 +58,54 @@ public class UsuarioModule {
 		return vm.obterVariosPorUsuario("id", usuario);
 	}
 	
+	public RecordSet listarCaronas(int id) throws ClassNotFoundException, SQLException {
+		GrupoModule gm = new GrupoModule();
+		VeiculoModule vm = new VeiculoModule();
+		CaronaModule cm = new CaronaModule();
+		LogradouroModule lm = new LogradouroModule();
+		
+		RecordSet grupos = this.listarGrupos(id);
+		RecordSet amigos = new RecordSet();
+		RecordSet caronas = new RecordSet();
+		
+		for (Row grupo : grupos) {
+			RecordSet usuariosGrupo = 
+					gm.listarUsuarios(grupo.getInt("id"));
+			
+			for (Row usuarioGrupo : usuariosGrupo) {
+				if (!amigos.contains("id", usuarioGrupo.getInt("id"))) {
+					amigos.add(usuarioGrupo);
+				}
+			}
+		}
+		
+		RecordSet amigosVeiculos = vm.obterVariosPorUsuario("id", amigos);
+		
+		for (Row amigoVeiculo : amigosVeiculos) {
+			RecordSet caronasAmigo = 
+					cm.obterPeloVeiculo(amigoVeiculo.getInt("id"));
+			
+			for (Row caronaAmigo : caronasAmigo) {
+				if (!caronas.contains("id", caronaAmigo.getInt("id"))) {
+					RecordSet origem = lm.obter(caronaAmigo.getInt("logradouro_origem_id"));
+					RecordSet destino = lm.obter(caronaAmigo.getInt("logradouro_destino_id"));
+
+					caronaAmigo.put("veiculo", 
+							amigoVeiculo.getString("modelo"));
+					caronaAmigo.put("origem", 
+							LogradouroModule.formatarLogradouro(origem));
+					caronaAmigo.put("destino", 
+							LogradouroModule.formatarLogradouro(destino));
+					caronaAmigo.put("vagas", 
+							amigoVeiculo.getInt("vagas"));
+					caronas.add(caronaAmigo);
+				}
+			}
+		}
+		
+		return caronas;
+	}
+	
 	public int inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
 		RecordSet jaExiste = utg.obterPeloEmail(email);
 		

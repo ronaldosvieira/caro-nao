@@ -44,7 +44,9 @@ public class VeiculoModule {
 			RecordSet veiculos = this.vtg.obterPorUsuario(row.getInt(column));
 			
 			for (Row veiculo : veiculos) {
-				resultado.add(veiculo);
+				if (!resultado.contains("id", veiculo.getInt("id"))) {
+					resultado.add(veiculo);
+				}
 			}
 		}
 		

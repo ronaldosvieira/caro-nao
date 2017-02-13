@@ -21,6 +21,14 @@ public class LogradouroModule {
 		this.ltg = new LogradouroTableGateway();
 	}
 	
+	public static String formatarLogradouro(RecordSet logradouro) {
+		return logradouro.get(0).getString("endereco") +
+				", " + logradouro.get(0).getString("numero") +
+				". " + logradouro.get(0).getString("distrito") +
+				". " + logradouro.get(0).getString("cidade") +
+				"/" + logradouro.get(0).getString("estado");
+	}
+	
 	public RecordSet obter(int id) throws SQLException {
 		return this.ltg.obter(id);
 	}

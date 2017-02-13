@@ -28,6 +28,7 @@
   RecordSet usuario = (RecordSet) request.getAttribute("usuario");
   RecordSet grupos = (RecordSet) request.getAttribute("grupos");
   RecordSet veiculos = (RecordSet) request.getAttribute("veiculos");
+  RecordSet caronas = (RecordSet) request.getAttribute("caronas");
   %>
   
 	<header class="text-center">
@@ -110,6 +111,52 @@
 			</div>
 			
 			<br>
+			
+			<h4>Caronas dos seus grupos</h4>
+			
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th class="text-center col-sm-1">Veículo</th>
+					<th class="text-center col-sm-2">Data/horário</th>
+					<th class="text-center col-sm-3">Origem</th>
+					<th class="text-center col-sm-3">Destino</th>
+					<th class="text-center col-sm-1">Vagas</th>
+					<th class="text-center col-sm-1">Estado</th>
+					<th class="text-center col-sm-1">Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<% for (Row carona : caronas) { %>
+					<% String estado = ""; %>
+					<% switch (carona.getInt("estado_carona_id")) {
+						case 1:
+							estado = "Ativa";
+							break;
+						case 2:
+							estado = "Cancelada";
+							break;
+						case 3:
+							estado = "Concluída";
+							break;
+					} %>
+					<tr>
+						<td><%= carona.getString("veiculo") %></td>
+						<td><%= carona.getTimestamp("dia_horario") %></td>
+						<td><%= carona.getString("origem") %></td>
+						<td><%= carona.getString("destino") %></td>
+						<td><%= carona.getInt("vagas") %></td>
+						<td><%= estado %></td>
+						<td>
+							<a href="${pageContext.request.contextPath}/carona/ver?id=<%= carona.getInt("id") %>"
+								class="btn btn-link">
+								Ver
+							</a>
+						</td>
+					</tr>
+				<% } %>
+				</tbody>
+			</table>
 			
 			<h4>Meus veículos</h4>
 			
