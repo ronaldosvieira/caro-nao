@@ -3,6 +3,7 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.UsuarioTableGateway;
+import excecoes.CaronaNaoAutorizadaException;
 import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoUsuarioJaExisteException;
@@ -169,6 +170,46 @@ public class UsuarioModule {
 		else return grupo;
 	}
 
+	public RecordSet validarCarona(int id, int idCarona) 
+			throws ClassNotFoundException, SQLException, 
+			CaronaNaoAutorizadaException {
+		VeiculoModule vm = new VeiculoModule();
+		LogradouroModule lm = new LogradouroModule();
+		
+		RecordSet caronasDoUsuario = this.listarCaronas(id);
+		RecordSet carona = new RecordSet();
+		
+		for (Row caronaDoUsuario : caronasDoUsuario) {
+			if (caronaDoUsuario.getInt("id") == idCarona) {
+				carona.add(caronaDoUsuario);
+				
+				break;
+			}
+		}
+		
+		if (carona.isEmpty()) throw new CaronaNaoAutorizadaException();
+		
+		Row caronaRow = carona.get(0);
+		
+		RecordSet veiculo = vm.obter(caronaRow.getInt("veiculo_id"));
+		RecordSet origem = lm.obter(caronaRow.getInt("logradouro_origem_id"));
+		RecordSet destino = lm.obter(caronaRow.getInt("logradouro_destino_id"));
+		
+		caronaRow.put("veiculo", 
+				veiculo.get(0).getString("modelo"));
+		caronaRow.put("origem", 
+				LogradouroModule.formatarLogradouro(origem));
+		caronaRow.put("destino", 
+				LogradouroModule.formatarLogradouro(destino));
+		caronaRow.put("vagas", 
+				veiculo.get(0).getInt("vagas"));
+		
+		carona.set(0, caronaRow);
+		
+		return carona;
+	}
+
+	
 	public boolean isMotorista(int id) throws ClassNotFoundException, SQLException {
 		RecordSet veiculos = listarVeiculos(id);
 		
