@@ -29,6 +29,7 @@ public class LogradouroTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("cep", rs.getString("cep"));
 			row.put("estado", rs.getString("estado"));
+			row.put("cidade", rs.getString("cidade"));
 			row.put("distrito", rs.getString("distrito"));
 			row.put("endereco", rs.getString("endereco"));
 			row.put("numero", rs.getString("numero"));
@@ -57,6 +58,7 @@ public class LogradouroTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("cep", rs.getString("cep"));
 			row.put("estado", rs.getString("estado"));
+			row.put("cidade", rs.getString("cidade"));
 			row.put("distrito", rs.getString("distrito"));
 			row.put("endereco", rs.getString("endereco"));
 			row.put("numero", rs.getString("numero"));
@@ -86,6 +88,7 @@ public class LogradouroTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("cep", rs.getString("cep"));
 			row.put("estado", rs.getString("estado"));
+			row.put("cidade", rs.getString("cidade"));
 			row.put("distrito", rs.getString("distrito"));
 			row.put("endereco", rs.getString("endereco"));
 			row.put("numero", rs.getString("numero"));
@@ -96,12 +99,12 @@ public class LogradouroTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public int inserir(String cep, String estado, String distrito, 
-			String endereco, String numero) 
+	public int inserir(String cep, String estado, String cidade,
+			String distrito, String endereco, String numero) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
 				this.getTableName(),
-				"cep, estado, distrito, endereco, numero",
+				"cep, estado, cidade, distrito, endereco, numero",
 				"?, ?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
@@ -109,9 +112,10 @@ public class LogradouroTableGateway extends TableGateway {
 
 		stmt.setString(1, cep);
 		stmt.setString(2, estado);
-		stmt.setString(3, distrito);
-		stmt.setString(4, endereco);
-		stmt.setString(5, numero);
+		stmt.setString(3, cidade);
+		stmt.setString(4, distrito);
+		stmt.setString(5, endereco);
+		stmt.setString(6, numero);
 		
 		int affectedRows = stmt.executeUpdate();
 		
@@ -129,21 +133,23 @@ public class LogradouroTableGateway extends TableGateway {
 	}
 
 	public void atualizar(int id, String cep, String estado, 
-			String distrito, String endereco, String numero) 
+			String cidade, String distrito, String endereco, 
+			String numero) 
 			throws SQLException, IndexOutOfBoundsException {
 		String sql = String.format(this.updateId, 
 				this.getTableName(),
-				"cep = ?, estado = ?, distrito = ?, "
+				"cep = ?, estado = ?, cidade = ?, distrito = ?, "
 				+ "endereco = ?, numero = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 
 		stmt.setString(1, cep);
 		stmt.setString(2, estado);
-		stmt.setString(3, distrito);
-		stmt.setString(4, endereco);
-		stmt.setString(5, numero);
-		stmt.setInt(6, id);
+		stmt.setString(3, cidade);
+		stmt.setString(4, distrito);
+		stmt.setString(5, endereco);
+		stmt.setString(6, numero);
+		stmt.setInt(7, id);
 		
 		stmt.executeUpdate();
 	}

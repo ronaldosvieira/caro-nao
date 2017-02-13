@@ -46,6 +46,7 @@ create table logradouro (
 	id serial primary key,
 	cep varchar(45) not null,
 	estado varchar(2) not null,
+	cidade varchar(45) not null,
 	distrito varchar(45),
 	endereco varchar(255) not null,
 	numero varchar(45) not null
@@ -61,7 +62,7 @@ create table estado_carona (
 insert into estado_carona (nome, pode_entrar, pode_avaliar) values 
 	('Ativa', true, false), 
 	('Cancelada', false, false),
-	('Concluída', false, true);
+	('Concluï¿½da', false, true);
 
 create table carona (
 	id serial primary key,
