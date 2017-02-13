@@ -3,7 +3,9 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.GrupoTableGateway;
+import excecoes.DesativacaoGrupoInvalidaException;
 import excecoes.GrupoNaoExisteException;
+import excecoes.GrupoUsuarioNaoExisteException;
 import util.RecordSet;
 import util.Row;
 
@@ -16,8 +18,12 @@ public class GrupoModule {
 		this.gtg = new GrupoTableGateway();
 	}
 	
-	public RecordSet obter(int id) throws SQLException {
-		return this.gtg.obter(id);
+	public RecordSet obter(int id) throws SQLException, GrupoNaoExisteException {
+		RecordSet grupo = this.gtg.obter(id);
+		
+		if (grupo.isEmpty()) throw new GrupoNaoExisteException();
+		
+		return grupo;
 	}
 	
 	public RecordSet obterVarios(String column) throws SQLException {
@@ -80,5 +86,26 @@ public class GrupoModule {
 		gtg.atualizar(id, nome, descricao, 
 				grupo.getString("regras"), limite, 
 				grupo.getBoolean("ativo"));
+	}
+	
+	public void desativarGrupo(int id) throws ClassNotFoundException, SQLException, DesativacaoGrupoInvalidaException, GrupoNaoExisteException, GrupoUsuarioNaoExisteException {
+		GrupoUsuarioModule gum = new GrupoUsuarioModule(new RecordSet());
+		
+		RecordSet usuariosGrupo = gum.obterGrupoUsuarioPorGrupo(id);
+		
+		if (usuariosGrupo.size() > 1) {
+			throw new DesativacaoGrupoInvalidaException();
+		} else {
+			Row grupo = this.obter(id).get(0);
+			
+			for (Row usuarioGrupo : usuariosGrupo) {
+				gum.desativarGrupoUsuario(usuarioGrupo.getInt("id"));
+			}
+			
+			gtg.atualizar(id, grupo.getString("nome"), 
+					grupo.getString("descricao"), grupo.getString("regras"), 
+					grupo.getInt("limite_avaliacoes_negativas"), 
+					false);
+		}
 	}
 }

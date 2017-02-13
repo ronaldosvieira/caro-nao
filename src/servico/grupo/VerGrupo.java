@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.GrupoModule;
 import dominio.GrupoUsuarioModule;
+import excecoes.GrupoNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
@@ -47,7 +48,7 @@ public class VerGrupo extends HttpServlet {
 			rd.forward(request, response);
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | GrupoNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");

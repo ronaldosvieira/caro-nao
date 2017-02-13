@@ -107,6 +107,19 @@
 				</tbody>
 			</table>
 			
+			<% if (usuariosGrupo.size() <= 1) { %>
+				<div class="text-right">
+					<form action="${pageContext.request.contextPath}/grupo/desativar?id=<%= grupo.get(0).getInt("id") %>"
+						method="post">
+						<button type="submit" class="btn btn-link">
+							Desativar grupo
+						</button>
+					</form>
+				</div>
+				
+				<br>
+			<% } %>
+			
 			<div class="form-group">
 				<a href="${pageContext.request.contextPath}/grupo/editar?id=<%= grupo.get(0).getInt("id") %>"
 					class="btn btn-default pull-right col-xs-12 col-sm-6">Editar</a>

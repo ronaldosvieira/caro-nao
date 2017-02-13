@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import dados.GrupoUsuarioTableGateway;
 import dados.UsuarioTableGateway;
 import excecoes.EmailJaCadastradoException;
+import excecoes.GrupoUsuarioNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -16,6 +17,16 @@ public class GrupoUsuarioModule {
 	public GrupoUsuarioModule(RecordSet dataset) throws ClassNotFoundException, SQLException {
 		this.dataset = dataset;
 		this.gutg = new GrupoUsuarioTableGateway();
+	}
+	
+	private RecordSet obter(int id) throws GrupoUsuarioNaoExisteException, SQLException {
+		RecordSet grupoUsuario = gutg.obter(id);
+		
+		if (grupoUsuario.isEmpty()) {
+			throw new GrupoUsuarioNaoExisteException();
+		}
+		
+		return grupoUsuario;
 	}
 	
 	public RecordSet obterGrupoUsuarioPorUsuario(int idUsuario) throws SQLException {
@@ -52,5 +63,13 @@ public class GrupoUsuarioModule {
 		dataset.add(grupoUsuario);
 		
 		return gutg.inserir(idGrupo, idUsuario, true);
+	}
+
+	public void desativarGrupoUsuario(int id) throws SQLException, GrupoUsuarioNaoExisteException {
+		RecordSet grupoUsuario = this.obter(id);
+		
+		for (Row gU : grupoUsuario) {
+			gutg.atualizar(gU.getInt("id"), false);
+		}
 	}
 }
