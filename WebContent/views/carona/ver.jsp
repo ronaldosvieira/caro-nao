@@ -77,12 +77,10 @@
 			</div>
 			
 			<div class="form-group">
-				<% if (ativa) { %>
+				<% if (dono && ativa) { %>
 					<a href="${pageContext.request.contextPath}/carona/editar?id=<%= carona.get(0).getInt("id") %>" 
 						class="btn btn-default btn-block">Editar</a>
-				<% } %>
-				
-				<% if (dono && ativa) { %>
+						
 					<% if (jaComecou) { %>
 						<form action="${pageContext.request.contextPath}/carona/encerrar?id=<%= carona.get(0).getInt("id") %>"
 							method="post">
