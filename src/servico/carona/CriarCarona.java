@@ -77,6 +77,11 @@ public class CriarCarona extends HttpServlet {
 			RecordSet grupo = um.validarGrupo(
 					usuario.get(0).getInt("id"), 
 					Integer.parseInt(idGrupo));
+			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
+			
+			request.setAttribute("usuario", usuario);
+			request.setAttribute("grupo", grupo);
+			request.setAttribute("veiculos", veiculos);
 
 			cm.inserirCarona(Integer.parseInt(idVeiculo), data, 
 					horario, cepOrigem, numeroOrigem, cepDestino, 
