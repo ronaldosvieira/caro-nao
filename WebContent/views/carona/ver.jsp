@@ -31,6 +31,14 @@
   <% Boolean dono = (Boolean) request.getAttribute("dono"); %>
   <% RecordSet carona = (RecordSet) request.getAttribute("carona"); %>
   
+  <%
+  	boolean jaComecou =
+	carona.get(0).getTimestamp("dia_horario")
+		.before(new Timestamp(System.currentTimeMillis()));
+	boolean ativa = carona.get(0).getInt("estado_carona_id") == 1;
+	boolean concluida = carona.get(0).getInt("estado_carona_id") == 3;
+  %>
+  
 	<header class="text-center">
 		<h1>
 			Caro<span style="color: #DDD;">,</span>não
@@ -69,13 +77,12 @@
 			</div>
 			
 			<div class="form-group">
-				<a href="${pageContext.request.contextPath}/carona/editar?id=<%= carona.get(0).getInt("id") %>" 
-					class="btn btn-default btn-block">Editar</a>
-				<% if (dono) { %>
-					<% boolean jaComecou =
-						carona.get(0).getTimestamp("dia_horario")
-							.before(new Timestamp(System.currentTimeMillis())); %>
-					
+				<% if (ativa) { %>
+					<a href="${pageContext.request.contextPath}/carona/editar?id=<%= carona.get(0).getInt("id") %>" 
+						class="btn btn-default btn-block">Editar</a>
+				<% } %>
+				
+				<% if (dono && ativa) { %>
 					<% if (jaComecou) { %>
 						<form action="${pageContext.request.contextPath}/carona/encerrar?id=<%= carona.get(0).getInt("id") %>"
 							method="post">
@@ -91,6 +98,11 @@
 							</button>
 						</form>
 					<% } %>
+				<% } %>
+				
+				<% if (concluida) { %>
+					<a href="${pageContext.request.contextPath}/carona/avaliar?id=<%= carona.get(0).getInt("id") %>" 
+						class="btn btn-default btn-block">Editar</a>
 				<% } %>
 				<a href="${pageContext.request.contextPath}/dashboard" 
 					class="btn btn-block btn-link">Voltar</a>

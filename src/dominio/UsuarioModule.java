@@ -4,11 +4,13 @@ import java.sql.SQLException;
 
 import dados.UsuarioTableGateway;
 import excecoes.CaronaNaoAutorizadaException;
+import excecoes.CaronaNaoExisteException;
 import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoAutorizadoException;
+import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
 import util.Row;
 
@@ -170,9 +172,25 @@ public class UsuarioModule {
 		else return grupo;
 	}
 
+	public RecordSet validarDonoCarona(int id, int idCarona) 
+			throws SQLException, ClassNotFoundException, 
+			CaronaNaoExisteException, VeiculoNaoExisteException, 
+			CaronaNaoAutorizadaException {
+		CaronaModule cm = new CaronaModule();
+		
+		RecordSet usuario = this.obter(id);
+		RecordSet dono = cm.obterDono(idCarona);
+		
+		if (dono.get(0).getInt("id") != usuario.get(0).getInt("id")) {
+			throw new CaronaNaoAutorizadaException();
+		} 
+
+		return dono;
+	}
+	
 	public RecordSet validarCarona(int id, int idCarona) 
 			throws ClassNotFoundException, SQLException, 
-			CaronaNaoAutorizadaException {
+			CaronaNaoAutorizadaException, VeiculoNaoExisteException {
 		VeiculoModule vm = new VeiculoModule();
 		LogradouroModule lm = new LogradouroModule();
 		
@@ -208,7 +226,6 @@ public class UsuarioModule {
 		
 		return carona;
 	}
-
 	
 	public boolean isMotorista(int id) throws ClassNotFoundException, SQLException {
 		RecordSet veiculos = listarVeiculos(id);

@@ -15,8 +15,12 @@ public class VeiculoModule {
 		this.vtg = new VeiculoTableGateway();
 	}
 	
-	public RecordSet obter(int id) throws SQLException {
-		return this.vtg.obter(id);
+	public RecordSet obter(int id) throws SQLException, VeiculoNaoExisteException {
+		RecordSet veiculo = this.vtg.obter(id);
+		
+		if (veiculo.isEmpty()) throw new VeiculoNaoExisteException();
+		
+		return veiculo;
 	}
 	
 	public RecordSet obterVarios(String column, RecordSet dataset) 
@@ -51,6 +55,14 @@ public class VeiculoModule {
 		}
 		
 		return resultado;
+	}
+	
+	public RecordSet obterDono(int id) throws SQLException, ClassNotFoundException, VeiculoNaoExisteException {
+		UsuarioModule um = new UsuarioModule();
+		
+		RecordSet veiculo = this.obter(id);
+		
+		return um.obter(veiculo.get(0).getInt("usuario_id"));
 	}
 	
 	public int inserirVeiculo(String modelo, String placa, 

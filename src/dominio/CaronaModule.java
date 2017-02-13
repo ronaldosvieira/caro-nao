@@ -44,6 +44,14 @@ public class CaronaModule {
 		return this.ctg.obterPorVeiculo(idVeiculo);
 	}
 	
+	public RecordSet obterDono(int id) throws ClassNotFoundException, SQLException, CaronaNaoExisteException, VeiculoNaoExisteException {
+		VeiculoModule vm = new VeiculoModule();
+		
+		RecordSet carona = this.obter(id);
+		
+		return vm.obterDono(carona.get(0).getInt("veiculo_id"));
+	}
+	
 	public int inserirCarona(int idVeiculo, String data, String horario, 
 			String cepOrigem, String numeroOrigem, String cepDestino,
 			String numeroDestino) 
@@ -131,5 +139,45 @@ public class CaronaModule {
 				caronaRow.getInt("logradouro_origem_id"), 
 				caronaRow.getInt("logradouro_destino_id"), 
 				caronaRow.getInt("estado_carona_id"));
+	}
+	
+	private void atualizarEstadoDaCarona(int id, int idEstadoCarona) throws SQLException, CaronaNaoExisteException {
+		RecordSet carona = this.obter(id);
+		
+		this.ctg.atualizar(id, carona.get(0).getInt("veiculo_id"), 
+				carona.get(0).getTimestamp("dia_horario"), 
+				carona.get(0).getInt("logradouro_origem_id"), 
+				carona.get(0).getInt("logradouro_destino_id"), 
+				idEstadoCarona);
+	}
+
+	public void cancelarCarona(int id) throws SQLException, CaronaNaoExisteException {
+		RecordSet carona = this.obter(id);
+		Row caronaRow = carona.get(0);
+		
+		boolean estaAtiva = caronaRow.getInt("estado_carona_id")
+				== EstadoCarona.Ativa.getId();
+		boolean jaComecou = caronaRow.getTimestamp("dia_horario").getTime()
+				< new Timestamp(System.currentTimeMillis()).getTime();
+		
+		if (estaAtiva && !jaComecou) {
+			this.atualizarEstadoDaCarona(id, 
+					EstadoCarona.Cancelada.getId());
+		}
+	}
+
+	public void concluirCarona(int id) throws SQLException, CaronaNaoExisteException {
+		RecordSet carona = this.obter(id);
+		Row caronaRow = carona.get(0);
+		
+		boolean estaAtiva = caronaRow.getInt("estado_carona_id")
+				== EstadoCarona.Ativa.getId();
+		boolean jaComecou = caronaRow.getTimestamp("dia_horario").getTime()
+				< new Timestamp(System.currentTimeMillis()).getTime();
+		
+		if (estaAtiva && jaComecou) {
+			this.atualizarEstadoDaCarona(id, 
+					EstadoCarona.Concluida.getId());
+		}
 	}
 }
