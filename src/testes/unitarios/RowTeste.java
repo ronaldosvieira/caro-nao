@@ -49,23 +49,23 @@ public class RowTeste {
 		row.getTimestamp("timestamp");
 	}
 	
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testeObterIntNaoExistente() {
-		Integer i = row.getInt("coluna_inexistente");
+		int i = row.getInt("coluna_inexistente");
 		
 		assertNull(i);
 	}
 	
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testeObterFloatNaoExistente() {
-		Float f = row.getFloat("coluna_inexistente");
+		float f = row.getFloat("coluna_inexistente");
 		
 		assertNull(f);
 	}
 	
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testeObterBooleanNaoExistente() {
-		Boolean b = row.getBoolean("coluna_inexistente");
+		boolean b = row.getBoolean("coluna_inexistente");
 		
 		assertNull(b);
 	}
