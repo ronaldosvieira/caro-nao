@@ -40,6 +40,7 @@
 	boolean ativa = carona.get(0).getInt("estado_carona_id") == 1;
 	boolean concluida = carona.get(0).getInt("estado_carona_id") == 3;
 	boolean jaParticipa = usuariosCarona.contains("id", usuario.get(0).getInt("id"));
+	int usuariosNaCarona = usuariosCarona.size();
   %>
   
 	<header class="text-center">
@@ -92,7 +93,7 @@
 					<% if (!jaParticipa) { %>
 						<a href="${pageContext.request.contextPath}/carona/candidatar-se?id=<%= carona.get(0).getInt("id") %>" 
 							class="btn btn-default btn-block">Candidatar-se</a>
-					<% } else { %>
+					<% } else if (!dono) { %>
 						<form action="${pageContext.request.contextPath}/carona/desistir?id=<%= carona.get(0).getInt("id") %>"
 							method="post">
 							<button type="submit" class="btn btn-default btn-block">
@@ -112,7 +113,7 @@
 									Encerrar
 								</button>
 							</form>
-						<% } else { %>
+						<% } else if (usuariosNaCarona <= 1) { %>
 							<form action="${pageContext.request.contextPath}/carona/cancelar?id=<%= carona.get(0).getInt("id") %>"
 								method="post">
 								<button type="submit" class="btn btn-default btn-block">
