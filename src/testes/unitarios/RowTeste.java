@@ -1,4 +1,4 @@
-package testes;
+package testes.unitarios;
 
 import static org.junit.Assert.assertNull;
 
