@@ -1,8 +1,9 @@
 package dados;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import util.ConnectionFactory;
 
 public abstract class TableGateway implements AutoCloseable {
 	private Connection conn;
@@ -21,13 +22,7 @@ public abstract class TableGateway implements AutoCloseable {
 	
 	public TableGateway(String table) 
 			throws ClassNotFoundException, SQLException {
-		Class.forName("org.h2.Driver");
-		
-		String url = "jdbc:h2:~/carona";
-		String user = "carona";
-		String pass = "123456";
-		
-		this.conn = DriverManager.getConnection(url, user, pass);
+		this.conn = ConnectionFactory.getConnection();
 		this.table = table;
 	}
 
