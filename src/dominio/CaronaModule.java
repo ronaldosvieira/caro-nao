@@ -197,4 +197,25 @@ public class CaronaModule {
 					EstadoCarona.Concluida.getId());
 		}
 	}
+	
+	public void inserirUsuarioNaCarona(int id, int idUsuario,
+			String cep) 
+			throws ClassNotFoundException, SQLException, 
+			ServicoDeEnderecosInacessivelException, 
+			CEPInvalidoException, CaronaUsuarioJaExisteException {
+		LogradouroModule lm = new LogradouroModule();
+		
+		int idLogradouro = lm.inserirLogradouro(cep, "" /* TODO */);
+		
+		this.inserirUsuarioNaCarona(id, idUsuario, idLogradouro);
+	}
+
+	public void inserirUsuarioNaCarona(int id, int idUsuario, 
+			int idLogradouro) 
+			throws ClassNotFoundException, SQLException, 
+			CaronaUsuarioJaExisteException {
+		CaronaUsuarioModule cum = new CaronaUsuarioModule();
+		
+		cum.inserirCaronaUsuario(id, idUsuario, idLogradouro);
+	}
 }
