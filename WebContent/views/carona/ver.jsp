@@ -81,11 +81,19 @@
 			</div>
 			
 			<% if (jaParticipa) { %>
-				<div class="form-group">
-					<p class="text-success">
-						Você está participando desta carona.
-					</p>
-				</div>
+				<% if (dono) { %>
+					<div class="form-group">
+						<p class="text-success">
+							Você é o criador desta carona.
+						</p>
+					</div>
+				<% } else { %>
+					<div class="form-group">
+						<p class="text-success">
+							Você está participando desta carona.
+						</p>
+					</div>
+				<% } %>
 			<% } %>
 			
 			<div class="form-group">
@@ -103,8 +111,10 @@
 					<% } %>
 					
 					<% if (dono) { %>
-						<a href="${pageContext.request.contextPath}/carona/editar?id=<%= carona.get(0).getInt("id") %>" 
-							class="btn btn-default btn-block">Editar</a>
+						<% if (!jaComecou) { %>
+							<a href="${pageContext.request.contextPath}/carona/editar?id=<%= carona.get(0).getInt("id") %>" 
+								class="btn btn-default btn-block">Editar</a>
+						<% } %>
 							
 						<% if (jaComecou) { %>
 							<form action="${pageContext.request.contextPath}/carona/encerrar?id=<%= carona.get(0).getInt("id") %>"
