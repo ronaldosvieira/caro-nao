@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import dados.CaronaUsuarioTableGateway;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExiste;
-import excecoes.GrupoUsuarioJaExisteException;
-import excecoes.GrupoUsuarioNaoExisteException;
 import util.RecordSet;
 import util.Row;
 
@@ -37,8 +35,24 @@ public class CaronaUsuarioModule {
 		RecordSet usuariosCarona = cutg.obterPorCarona(idCarona);
 		
 		UsuarioModule um = new UsuarioModule();
+		LogradouroModule lm = new LogradouroModule();
 		
-		return um.obterVarios("usuario_id", usuariosCarona);
+		RecordSet usuarios = um.obterVarios("usuario_id", usuariosCarona);
+		
+		for (int i = 0; i < usuarios.size(); ++i) {
+			Row usuarioCarona = usuariosCarona.get(usuariosCarona.find("usuario_id", 
+					usuarios.get(i).getInt("id")));
+			RecordSet logradouro = lm.obter(usuarioCarona.getInt("logradouro_id"));
+			Row usuario = usuarios.get(i);
+			
+			usuario.put("logradouro", 
+					LogradouroModule.formatarLogradouro(logradouro));
+			usuario.put("logradouro_id", usuarioCarona.getInt("logradouro_id"));
+			
+			usuarios.set(i, usuario);
+		}
+		
+		return usuarios;
 	}
 	
 	public int inserirCaronaUsuario(int idCarona, int idUsuario, int idLogradouro) 
