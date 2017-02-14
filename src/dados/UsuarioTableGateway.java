@@ -108,14 +108,14 @@ public class UsuarioTableGateway extends TableGateway {
 		int affectedRows = stmt.executeUpdate();
 		
 		if (affectedRows == 0) {
-            throw new SQLException("Erro ao inserir usu·rio.");
+            throw new SQLException("Erro ao inserir usu√°rio.");
         }
 
         try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
             } else {
-                throw new SQLException("Erro ao inserir usu·rio.");
+                throw new SQLException("Erro ao inserir usu√°rio.");
             }
         }
 	}

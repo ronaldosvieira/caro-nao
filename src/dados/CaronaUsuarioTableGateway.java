@@ -132,14 +132,14 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 		int affectedRows = stmt.executeUpdate();
 		
 		if (affectedRows == 0) {
-            throw new SQLException("Erro ao inserir relaÁ„o entre carona e usu·rio.");
+            throw new SQLException("Erro ao inserir rela√ß√£o entre carona e usu√°rio.");
         }
 
         try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
             } else {
-                throw new SQLException("Erro ao inserir relaÁ„o entre carona e usu·rio.");
+                throw new SQLException("Erro ao inserir rela√ß√£o entre carona e usu√°rio.");
             }
         }
 	}

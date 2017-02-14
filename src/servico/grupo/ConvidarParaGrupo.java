@@ -75,7 +75,7 @@ public class ConvidarParaGrupo extends HttpServlet {
 			
 			um.convidarUsuario(email, Integer.parseInt(idGrupo));
 			
-			request.setAttribute("sucesso", "Usu�rio convidado com sucesso!");
+			request.setAttribute("sucesso", "Usuário convidado com sucesso!");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/grupo/convidar.jsp");
@@ -90,7 +90,7 @@ public class ConvidarParaGrupo extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (UsuarioNaoExisteException e) {
 			request.setAttribute("erro", 
-					"Seu amigo(a) ainda n�o est� cadastrado(a) no Caron�o.");
+					"Seu amigo(a) ainda não está cadastrado(a) no Caron�o.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/grupo/convidar.jsp");
