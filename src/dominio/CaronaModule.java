@@ -20,7 +20,7 @@ import util.Row;
 public class CaronaModule {
 	private CaronaTableGateway ctg;
 	private enum EstadoCarona {
-		Ativa(1), Cancelada(2), Concluida(2);
+		Ativa(1), Cancelada(2), Concluida(3);
 		private int id;
 		
 		private EstadoCarona(int id) {this.id = id;}
