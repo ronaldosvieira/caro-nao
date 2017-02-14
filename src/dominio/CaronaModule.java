@@ -8,6 +8,7 @@ import dados.CaronaTableGateway;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
+import excecoes.CaronaUsuarioNaoExiste;
 import excecoes.DataInvalidaException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.VeiculoComMenosVagasException;
@@ -217,5 +218,15 @@ public class CaronaModule {
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
 		cum.inserirCaronaUsuario(id, idUsuario, idLogradouro);
+	}
+
+	public void removerUsuarioDaCarona(int id, int idUsuario) 
+			throws SQLException, ClassNotFoundException, 
+			CaronaUsuarioNaoExiste {
+		CaronaUsuarioModule cum = new CaronaUsuarioModule();
+		
+		RecordSet caronaUsuario = cum.obter(id, idUsuario);
+	
+		cum.excluirCaronaUsuario(id, idUsuario);
 	}
 }

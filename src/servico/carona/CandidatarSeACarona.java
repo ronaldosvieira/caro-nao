@@ -108,7 +108,7 @@ public class CandidatarSeACarona extends HttpServlet {
 			RequestDispatcher rd = 
 					request.getRequestDispatcher(
 							request.getContextPath() + 
-							"carona/candidatar-se?id=" + idCarona);
+							"../../carona/candidatar-se?id=" + idCarona);
 			rd.forward(request, response);
 		}
 	}

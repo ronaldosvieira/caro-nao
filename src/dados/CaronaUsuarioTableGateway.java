@@ -154,8 +154,9 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 	}
 
 	public void excluir(int idCarona, int idUsuario) throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.deleteId, 
-				this.getTableName(), "carona_id = ? and usuario_id = ?");
+		String sql = String.format(this.deleteMany, 
+				this.getTableName(), 
+				"carona_id = ? and usuario_id = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		

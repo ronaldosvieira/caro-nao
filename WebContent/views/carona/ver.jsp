@@ -92,6 +92,13 @@
 					<% if (!jaParticipa) { %>
 						<a href="${pageContext.request.contextPath}/carona/candidatar-se?id=<%= carona.get(0).getInt("id") %>" 
 							class="btn btn-default btn-block">Candidatar-se</a>
+					<% } else { %>
+						<form action="${pageContext.request.contextPath}/carona/desistir?id=<%= carona.get(0).getInt("id") %>"
+							method="post">
+							<button type="submit" class="btn btn-default btn-block">
+								Desistir de participar
+							</button>
+						</form>
 					<% } %>
 					
 					<% if (dono) { %>
