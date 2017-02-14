@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import dados.CaronaTableGateway;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoExisteException;
+import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.VeiculoComMenosVagasException;
@@ -63,7 +64,8 @@ public class CaronaModule {
 			String numeroDestino) 
 			throws SQLException, VeiculoJaSelecionadoException, 
 			ClassNotFoundException, ServicoDeEnderecosInacessivelException, 
-			DataInvalidaException, CEPInvalidoException {
+			DataInvalidaException, CEPInvalidoException, 
+			VeiculoNaoExisteException, CaronaUsuarioJaExisteException {
 		String[] dataSep = data.split("-");
 		String[] horarioSep = horario.split(":");
 		
@@ -95,14 +97,23 @@ public class CaronaModule {
 		}
 		
 		LogradouroModule lm = new LogradouroModule();
+		VeiculoModule vm = new VeiculoModule();
+		CaronaUsuarioModule cum = new CaronaUsuarioModule();
+		
+		RecordSet criador = vm.obterDono(idVeiculo);
 		
 		int idLogradouroOrigem = 
 				lm.inserirLogradouro(cepOrigem, numeroOrigem);
 		int idLogradouroDestino =
 				lm.inserirLogradouro(cepDestino, numeroDestino);
 		
-		return ctg.inserir(idVeiculo, diaHorario, 
+		int idCarona = ctg.inserir(idVeiculo, diaHorario, 
 				idLogradouroOrigem, idLogradouroDestino);
+		
+		cum.inserirCaronaUsuario(idCarona, 
+				criador.get(0).getInt("id"), idLogradouroDestino);
+		
+		return idCarona;
 	}
 	
 	public void atualizarVeiculoDaCarona(int id, int idVeiculo) 

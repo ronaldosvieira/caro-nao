@@ -115,17 +115,17 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public int inserir(int idGrupo, int idUsuario, int idLogradouro) 
+	public int inserir(int idCarona, int idUsuario, int idLogradouro) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
 				this.getTableName(), 
-				"grupo_id, usuario_id, logadouro_id",
+				"carona_id, usuario_id, logradouro_id",
 				"?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
-					sql, Statement.RETURN_GENERATED_KEYS);
+					sql);
 		
-		stmt.setInt(1, idGrupo);
+		stmt.setInt(1, idCarona);
 		stmt.setInt(2, idUsuario);
 		stmt.setInt(3, idLogradouro);
 		
@@ -134,14 +134,8 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 		if (affectedRows == 0) {
             throw new SQLException("Erro ao inserir relação entre carona e usuário.");
         }
-
-        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                return generatedKeys.getInt(1);
-            } else {
-                throw new SQLException("Erro ao inserir relação entre carona e usuário.");
-            }
-        }
+		
+		return 0;
 	}
 
 	public void atualizar(int idCarona, int idUsuario, int idLogradouro) 

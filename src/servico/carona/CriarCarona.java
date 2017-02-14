@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import dominio.CaronaModule;
 import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
+import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoJaSelecionadoException;
+import excecoes.VeiculoNaoExisteException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 
@@ -84,30 +86,31 @@ public class CriarCarona extends HttpServlet {
 			e.printStackTrace();
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | VeiculoNaoExisteException
+				| CaronaUsuarioJaExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (VeiculoJaSelecionadoException e) {
 			request.setAttribute("erro", 
-					"O veÌculo informado j· foi escolhido para uma "
-					+ "carona no mesmo dia e hor·rio.");
+					"O ve√≠culo informado j√° foi escolhido para uma "
+					+ "carona no mesmo dia e hor√°rio.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/criar.jsp");
 			rd.forward(request, response);
 		} catch (ServicoDeEnderecosInacessivelException e) {
-			response.getWriter().append("Erro ao acessar o serviÁo de endereÁos.");
+			response.getWriter().append("Erro ao acessar o servi√ßo de endere√ßos.");
 			e.printStackTrace();
 		} catch (DataInvalidaException e) {
 			request.setAttribute("erro", 
-					"Data ou hor·rio de saÌda " + e.getData() 
-					+ " inv·lido.");
+					"Data ou hor√°rio de sa√≠da " + e.getData() 
+					+ " inv√°lido.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/criar.jsp");
 			rd.forward(request, response);
 		} catch (CEPInvalidoException e) {
 			request.setAttribute("erro", 
-					"CEP " + e.getCep() + " n„o encontrado.");
+					"CEP " + e.getCep() + " n√£o encontrado.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/criar.jsp");

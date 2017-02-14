@@ -129,7 +129,7 @@
 				<tbody>
 				<% if (caronas.isEmpty()) { %>
 				<tr>
-					<td colspan="5">
+					<td colspan="7">
 						Nenhuma carona disponível.
 					</td>
 				</tr>
