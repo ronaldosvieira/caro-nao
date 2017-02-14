@@ -8,15 +8,18 @@ Camada de lógica de negócio: Módulo de tabela
 Camada de dados: Portão de acesso de dados por tabelas
 
 ## Requisitos
+- Entrar no sistema
+- Sair do sistema
+- Cadastrar-se
+
 ### Grupo
 - Criar grupo
 - Alterar grupo
 - Visualizar grupo
 - Desativar grupo
-- Convidar usuário
+- Convidar usuário para grupo
 
 ### Usuário
-- Criar usuário
 - Alterar usuário
 - Visualizar usuário
 - Criar veículo
@@ -25,6 +28,7 @@ Camada de dados: Portão de acesso de dados por tabelas
 ### Carona
 - Criar carona
 - Alterar carona
+- Visualizar carona
 - Candidatar-se à carona
 - Criar ponto de parada
 - Desistir da carona
