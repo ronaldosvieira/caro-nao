@@ -10,7 +10,11 @@ public class RecordSet extends ArrayList<Row> {
 	
 	public int find(String column, Object value) {
 		for (int i = 0; i < this.size(); ++i) {
-			if (this.get(i).get(column).equals(value)) {
+			Object found = this.get(i).get(column);
+			
+			if (found == null) continue;
+			
+			if (found.equals(value)) {
 				return i;
 			}
 		}
