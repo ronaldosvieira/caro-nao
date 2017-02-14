@@ -79,6 +79,14 @@
 				<p><%= carona.get(0).getString("destino") %></p>
 			</div>
 			
+			<% if (jaParticipa) { %>
+				<div class="form-group">
+					<p class="text-success">
+						Você está participando desta carona.
+					</p>
+				</div>
+			<% } %>
+			
 			<div class="form-group">
 				<% if (ativa) { %>
 					<% if (!jaParticipa) { %>
