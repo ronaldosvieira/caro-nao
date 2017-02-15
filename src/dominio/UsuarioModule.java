@@ -7,6 +7,7 @@ import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoNaoAutorizadoException;
+import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoAutorizadoException;
@@ -243,7 +244,7 @@ public class UsuarioModule {
 	
 	public void convidarUsuario(String email, int idGrupo) 
 			throws SQLException, UsuarioNaoExisteException, 
-			ClassNotFoundException, GrupoUsuarioJaExisteException {
+			ClassNotFoundException, GrupoUsuarioJaExisteException, GrupoNaoExisteException {
 		RecordSet usuario = utg.obterPeloEmail(email);
 		
 		if (usuario.isEmpty()) {
@@ -251,6 +252,9 @@ public class UsuarioModule {
 		}
 		
 		GrupoUsuarioModule gum = new GrupoUsuarioModule();
+		GrupoModule gm = new GrupoModule();
+		
+		gm.obter(idGrupo);
 		
 		gum.inserirGrupoUsuario(idGrupo, 
 				usuario.get(0).getInt("id"));
