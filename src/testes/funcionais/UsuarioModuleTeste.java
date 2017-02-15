@@ -353,9 +353,4 @@ public class UsuarioModuleTeste extends TesteFuncional {
 		um.convidarUsuario("rodrigovicente@gmail.com", 50);
 	}
 	
-	
-	
-	
-	
-	
 }
