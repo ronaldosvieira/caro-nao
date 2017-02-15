@@ -9,7 +9,8 @@ insert into grupo_usuario (grupo_id, usuario_id)
 values (1, 1);
 
 insert into veiculo (modelo, placa, cor, vagas, usuario_id)
-values ('Fiat Uno', 'SOD-4394', 'Azul marinho', 4, 1);
+values ('Fiat Uno', 'SOD-4394', 'Azul marinho', 4, 1),
+	('Veloster', 'NWE-4821', 'Vermelho', 3, 1);
 
 insert into logradouro (cep, estado, cidade, distrito, endereco, numero)
 values ('26170230', 'RJ', 'Belford Roxo', 'Pauline', 'Rua Acre', '28'),
