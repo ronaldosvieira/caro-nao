@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import org.junit.Test;
 
 import dominio.VeiculoModule;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -120,7 +121,7 @@ public class VeiculoModuleTeste extends TesteFuncional {
 	@Test
 	public void testeObterDono() 
 			throws SQLException, ClassNotFoundException, 
-			VeiculoNaoExisteException {
+			VeiculoNaoExisteException, UsuarioNaoExisteException {
 		RecordSet resultado = vm.obterDono(1);
 		
 		assertEquals(1, resultado.get(0).getInt("id"));
@@ -130,7 +131,7 @@ public class VeiculoModuleTeste extends TesteFuncional {
 	@Test(expected = VeiculoNaoExisteException.class)
 	public void testeObterDonoNaoExistente() 
 			throws ClassNotFoundException, SQLException, 
-			VeiculoNaoExisteException {
+			VeiculoNaoExisteException, UsuarioNaoExisteException {
 		vm.obterDono(50);
 	}
 	

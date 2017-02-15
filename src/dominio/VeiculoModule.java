@@ -3,6 +3,7 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.VeiculoTableGateway;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -59,7 +60,9 @@ public class VeiculoModule {
 		return resultado;
 	}
 	
-	public RecordSet obterDono(int id) throws SQLException, ClassNotFoundException, VeiculoNaoExisteException {
+	public RecordSet obterDono(int id) 
+			throws SQLException, ClassNotFoundException, 
+			VeiculoNaoExisteException, UsuarioNaoExisteException {
 		UsuarioModule um = new UsuarioModule();
 		
 		RecordSet veiculo = this.obter(id);

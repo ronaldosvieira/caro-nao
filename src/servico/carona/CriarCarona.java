@@ -18,6 +18,7 @@ import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoJaSelecionadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -51,7 +52,8 @@ public class CriarCarona extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}
@@ -87,12 +89,13 @@ public class CriarCarona extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | VeiculoNaoExisteException
-				| CaronaUsuarioJaExisteException e) {
+				| CaronaUsuarioJaExisteException | UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (VeiculoJaSelecionadoException e) {
 			request.setAttribute("erro", 
-					"O ve√≠culo informado j√° foi escolhido para uma "
-					+ "carona no mesmo dia e hor√°rio.");
+					"O veÌculo informado j· foi escolhido para uma "
+					+ "carona no mesmo dia e hor·rio.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/criar.jsp");
@@ -102,8 +105,8 @@ public class CriarCarona extends HttpServlet {
 			e.printStackTrace();
 		} catch (DataInvalidaException e) {
 			request.setAttribute("erro", 
-					"Data ou hor√°rio de sa√≠da " + e.getData() 
-					+ " inv√°lido.");
+					"Data ou hor·rio de saÌda " + e.getData() 
+					+ " inv·lido.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/criar.jsp");

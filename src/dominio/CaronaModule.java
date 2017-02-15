@@ -11,6 +11,7 @@ import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExiste;
 import excecoes.DataInvalidaException;
 import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoComMenosVagasException;
 import excecoes.VeiculoJaSelecionadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -46,7 +47,10 @@ public class CaronaModule {
 		return this.ctg.obterPorVeiculo(idVeiculo);
 	}
 	
-	public RecordSet obterDono(int id) throws ClassNotFoundException, SQLException, CaronaNaoExisteException, VeiculoNaoExisteException {
+	public RecordSet obterDono(int id) 
+			throws ClassNotFoundException, SQLException, 
+			CaronaNaoExisteException, VeiculoNaoExisteException, 
+			UsuarioNaoExisteException {
 		VeiculoModule vm = new VeiculoModule();
 		
 		RecordSet carona = this.obter(id);
@@ -66,7 +70,7 @@ public class CaronaModule {
 			throws SQLException, VeiculoJaSelecionadoException, 
 			ClassNotFoundException, ServicoDeEnderecosInacessivelException, 
 			DataInvalidaException, CEPInvalidoException, 
-			VeiculoNaoExisteException, CaronaUsuarioJaExisteException {
+			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, UsuarioNaoExisteException {
 		String[] dataSep = data.split("-");
 		String[] horarioSep = horario.split(":");
 		

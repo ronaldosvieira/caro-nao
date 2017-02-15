@@ -19,6 +19,7 @@ import excecoes.CaronaNaoExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoComMenosVagasException;
 import excecoes.VeiculoJaSelecionadoException;
@@ -62,9 +63,11 @@ public class EditarCarona extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
-				| VeiculoNaoExisteException | CaronaNaoExisteException e) {
+				| VeiculoNaoExisteException | CaronaNaoExisteException
+				| UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
-		} 
+		}
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -99,7 +102,8 @@ public class EditarCarona extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
-				| VeiculoNaoExisteException | CaronaNaoExisteException e) {
+				| VeiculoNaoExisteException | CaronaNaoExisteException
+				| UsuarioNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (VeiculoJaSelecionadoException e) {
 			request.setAttribute("erro", 

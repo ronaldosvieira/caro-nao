@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
 import dominio.VeiculoModule;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoNaoAutorizadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -48,7 +49,9 @@ public class EditarVeiculo extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
-		} catch (NumberFormatException | VeiculoNaoAutorizadoException e) {
+		} catch (NumberFormatException | VeiculoNaoAutorizadoException
+				| UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}
@@ -76,7 +79,8 @@ public class EditarVeiculo extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | VeiculoNaoExisteException 
-				| VeiculoNaoAutorizadoException e) {
+				| VeiculoNaoAutorizadoException | UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}

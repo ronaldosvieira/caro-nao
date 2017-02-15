@@ -28,8 +28,12 @@ public class UsuarioModule {
 		else throw new UsuarioNaoExisteException();
 	}
 	
-	public RecordSet obter(int id) throws SQLException {
-		return this.utg.obter(id);
+	public RecordSet obter(int id) throws SQLException, UsuarioNaoExisteException {
+		RecordSet usuario = this.utg.obter(id);
+		
+		if (usuario.isEmpty()) throw new UsuarioNaoExisteException();
+		
+		return usuario;
 	}
 	
 	public RecordSet obterVarios(String column, RecordSet dataset) 
@@ -53,7 +57,7 @@ public class UsuarioModule {
 		return gum.listarGruposPorUsuario(id);
 	}
 	
-	public RecordSet listarVeiculos(int id) throws SQLException, ClassNotFoundException {
+	public RecordSet listarVeiculos(int id) throws SQLException, ClassNotFoundException, UsuarioNaoExisteException {
 		RecordSet usuario = this.obter(id);
 		
 		VeiculoModule vm = new VeiculoModule();
@@ -140,7 +144,7 @@ public class UsuarioModule {
 		utg.atualizar(id, nome, usuario.getString("email"), telefone);
 	}
 	
-	public RecordSet validarVeiculo(int id, int idVeiculo) throws ClassNotFoundException, SQLException, VeiculoNaoAutorizadoException {
+	public RecordSet validarVeiculo(int id, int idVeiculo) throws ClassNotFoundException, SQLException, VeiculoNaoAutorizadoException, UsuarioNaoExisteException {
 		RecordSet veiculosDoUsuario = this.listarVeiculos(id);
 		RecordSet veiculo = new RecordSet();
 		
@@ -175,7 +179,7 @@ public class UsuarioModule {
 	public RecordSet validarDonoCarona(int id, int idCarona) 
 			throws SQLException, ClassNotFoundException, 
 			CaronaNaoExisteException, VeiculoNaoExisteException, 
-			CaronaNaoAutorizadaException {
+			CaronaNaoAutorizadaException, UsuarioNaoExisteException {
 		CaronaModule cm = new CaronaModule();
 		
 		RecordSet usuario = this.obter(id);
@@ -227,7 +231,7 @@ public class UsuarioModule {
 		return carona;
 	}
 	
-	public boolean isMotorista(int id) throws ClassNotFoundException, SQLException {
+	public boolean isMotorista(int id) throws ClassNotFoundException, SQLException, UsuarioNaoExisteException {
 		RecordSet veiculos = listarVeiculos(id);
 		
 		return !veiculos.isEmpty();

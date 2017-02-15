@@ -18,6 +18,7 @@ import excecoes.CaronaNaoAutorizadaException;
 import excecoes.DataInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoJaSelecionadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -63,7 +64,7 @@ public class VerCarona extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
-				| VeiculoNaoExisteException e) {
+				| VeiculoNaoExisteException | UsuarioNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}

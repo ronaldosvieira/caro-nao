@@ -19,6 +19,7 @@ import excecoes.CaronaNaoExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoJaSelecionadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -57,7 +58,9 @@ public class EncerrarCarona extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
-				| VeiculoNaoExisteException | CaronaNaoExisteException e) {
+				| VeiculoNaoExisteException | CaronaNaoExisteException
+				| UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}
