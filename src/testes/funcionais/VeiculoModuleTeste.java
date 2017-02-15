@@ -13,10 +13,10 @@ import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
 import util.Row;
 
-public class VeiculoModuleTest extends TesteFuncional {
+public class VeiculoModuleTeste extends TesteFuncional {
 	private static VeiculoModule vm;
 	
-	public VeiculoModuleTest() throws ClassNotFoundException, SQLException {
+	public VeiculoModuleTeste() throws ClassNotFoundException, SQLException {
 		vm = new VeiculoModule();
 	}
 	
