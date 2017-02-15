@@ -32,9 +32,11 @@ public class GrupoModule {
 		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
-			Row grupo = this.gtg.obter(row.getInt(column)).get(0);
-			
-			resultado.add(grupo);
+			Row grupo;
+			try {
+				grupo = this.obter(row.getInt(column)).get(0);
+				resultado.add(grupo);
+			} catch (GrupoNaoExisteException e) {continue;}
 		}
 		
 		return resultado;
