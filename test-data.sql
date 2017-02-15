@@ -1,5 +1,6 @@
 insert into grupo (nome, descricao, regras, limite_avaliacoes_negativas)
-values ('Grupo de carona #1', 'Carona po', 'Nenhuma', 3);
+values ('Grupo de carona #1', 'Carona po', 'Nenhuma', 3),
+	('Grupo vazio', '-', 'Nenhuma', 1);
 
 insert into usuario (nome, email, telefone)
 values ('Rodrigo', 'rodrigovicente@gmail.com', '90909090'),
