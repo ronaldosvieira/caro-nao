@@ -53,7 +53,9 @@ public class UsuarioModule {
 		return resultado;
 	}
 	
-	public RecordSet listarGrupos(int id) throws SQLException, ClassNotFoundException {
+	public RecordSet listarGrupos(int id) throws SQLException, ClassNotFoundException, UsuarioNaoExisteException {
+		RecordSet usuario = this.obter(id);
+		
 		GrupoUsuarioModule gum = new GrupoUsuarioModule();
 		
 		return gum.listarGruposPorUsuario(id);
@@ -67,7 +69,7 @@ public class UsuarioModule {
 		return vm.obterVariosPorUsuario("id", usuario);
 	}
 	
-	public RecordSet listarCaronas(int id) throws ClassNotFoundException, SQLException {
+	public RecordSet listarCaronas(int id) throws ClassNotFoundException, SQLException, UsuarioNaoExisteException {
 		GrupoModule gm = new GrupoModule();
 		VeiculoModule vm = new VeiculoModule();
 		CaronaModule cm = new CaronaModule();
@@ -162,7 +164,7 @@ public class UsuarioModule {
 		else return veiculo;
 	}
 	
-	public RecordSet validarGrupo(int id, int idGrupo) throws GrupoNaoAutorizadoException, ClassNotFoundException, SQLException {
+	public RecordSet validarGrupo(int id, int idGrupo) throws GrupoNaoAutorizadoException, ClassNotFoundException, SQLException, UsuarioNaoExisteException {
 		RecordSet gruposDoUsuario = this.listarGrupos(id);
 		RecordSet grupo = new RecordSet();
 		
@@ -196,7 +198,7 @@ public class UsuarioModule {
 	
 	public RecordSet validarCarona(int id, int idCarona) 
 			throws ClassNotFoundException, SQLException, 
-			CaronaNaoAutorizadaException, VeiculoNaoExisteException {
+			CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException {
 		VeiculoModule vm = new VeiculoModule();
 		LogradouroModule lm = new LogradouroModule();
 		

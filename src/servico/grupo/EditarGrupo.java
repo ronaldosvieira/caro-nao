@@ -14,6 +14,7 @@ import dominio.GrupoModule;
 import dominio.UsuarioModule;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoNaoAutorizadoException;
 import servico.autenticacao.Autenticacao;
@@ -49,7 +50,9 @@ public class EditarGrupo extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
-		} catch (NumberFormatException | GrupoNaoAutorizadoException e) {
+		} catch (NumberFormatException | GrupoNaoAutorizadoException
+				| UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}
@@ -80,7 +83,8 @@ public class EditarGrupo extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | GrupoNaoExisteException 
-				| GrupoNaoAutorizadoException e) {
+				| GrupoNaoAutorizadoException | UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}

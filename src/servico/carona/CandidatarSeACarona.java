@@ -17,6 +17,7 @@ import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoNaoExisteException;
 import servico.autenticacao.Autenticacao;
@@ -58,7 +59,7 @@ public class CandidatarSeACarona extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
-				| VeiculoNaoExisteException e) {
+				| VeiculoNaoExisteException | UsuarioNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
@@ -96,7 +97,8 @@ public class CandidatarSeACarona extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaUsuarioJaExisteException
-				| CaronaNaoAutorizadaException | VeiculoNaoExisteException e) {
+				| CaronaNaoAutorizadaException | VeiculoNaoExisteException
+				| UsuarioNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ServicoDeEnderecosInacessivelException e) {
 			response.getWriter().append(

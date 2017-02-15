@@ -50,7 +50,8 @@ public class ConvidarParaGrupo extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
-		} catch (NumberFormatException | GrupoNaoAutorizadoException e) {
+		} catch (NumberFormatException | GrupoNaoAutorizadoException
+				| UsuarioNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
 	}

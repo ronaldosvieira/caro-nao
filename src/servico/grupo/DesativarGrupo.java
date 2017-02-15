@@ -16,6 +16,7 @@ import excecoes.DesativacaoGrupoInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
+import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoNaoAutorizadoException;
 import servico.autenticacao.Autenticacao;
@@ -51,7 +52,9 @@ public class DesativarGrupo extends HttpServlet {
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | GrupoNaoExisteException 
-				| GrupoNaoAutorizadoException | GrupoUsuarioNaoExisteException e) {
+				| GrupoNaoAutorizadoException | GrupoUsuarioNaoExisteException
+				| UsuarioNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (DesativacaoGrupoInvalidaException e) {
 			// TODO: adicionar msg de erro
