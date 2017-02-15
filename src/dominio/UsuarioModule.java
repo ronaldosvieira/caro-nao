@@ -43,9 +43,11 @@ public class UsuarioModule {
 		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
-			Row usuario = this.utg.obter(row.getInt(column)).get(0);
-			
-			resultado.add(usuario);
+			Row usuario;
+			try {
+				usuario = this.obter(row.getInt(column)).get(0);
+				resultado.add(usuario);
+			} catch (UsuarioNaoExisteException e) {continue;}
 		}
 		
 		return resultado;
