@@ -3,7 +3,6 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.VeiculoTableGateway;
-import excecoes.EmailJaCadastradoException;
 import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -30,9 +29,12 @@ public class VeiculoModule {
 		for (Row row : dataset) {
 			if (!row.containsKey(column)) continue;
 			
-			Row veiculo = this.vtg.obter(row.getInt(column)).get(0);
-			
-			resultado.add(veiculo);
+			Row veiculo;
+			try {
+				veiculo = this.obter(row.getInt(column)).get(0);
+				
+				resultado.add(veiculo);
+			} catch (VeiculoNaoExisteException e) {continue;}
 		}
 		
 		return resultado;
