@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import dados.CaronaUsuarioTableGateway;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExiste;
+import excecoes.LogradouroNaoExisteException;
 import util.RecordSet;
 import util.Row;
 
@@ -31,7 +32,7 @@ public class CaronaUsuarioModule {
 		return cutg.obterPorCarona(idCarona);
 	}
 	
-	public RecordSet listarUsuariosPorCarona(int idCarona) throws SQLException, ClassNotFoundException {
+	public RecordSet listarUsuariosPorCarona(int idCarona) throws SQLException, ClassNotFoundException, LogradouroNaoExisteException {
 		RecordSet usuariosCarona = cutg.obterPorCarona(idCarona);
 		
 		UsuarioModule um = new UsuarioModule();

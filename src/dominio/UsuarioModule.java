@@ -9,6 +9,7 @@ import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
+import excecoes.LogradouroNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoAutorizadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -70,7 +71,7 @@ public class UsuarioModule {
 		return vm.obterVariosPorUsuario("id", usuario);
 	}
 	
-	public RecordSet listarCaronas(int id) throws ClassNotFoundException, SQLException, UsuarioNaoExisteException {
+	public RecordSet listarCaronas(int id) throws ClassNotFoundException, SQLException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		GrupoModule gm = new GrupoModule();
 		VeiculoModule vm = new VeiculoModule();
 		CaronaModule cm = new CaronaModule();
@@ -199,7 +200,7 @@ public class UsuarioModule {
 	
 	public RecordSet validarCarona(int id, int idCarona) 
 			throws ClassNotFoundException, SQLException, 
-			CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException {
+			CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		VeiculoModule vm = new VeiculoModule();
 		LogradouroModule lm = new LogradouroModule();
 		

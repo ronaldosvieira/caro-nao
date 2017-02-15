@@ -16,6 +16,7 @@ import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaUsuarioJaExisteException;
+import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
@@ -59,7 +60,8 @@ public class CandidatarSeACarona extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
-				| VeiculoNaoExisteException | UsuarioNaoExisteException e) {
+				| VeiculoNaoExisteException | UsuarioNaoExisteException 
+				| LogradouroNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
@@ -98,14 +100,14 @@ public class CandidatarSeACarona extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaUsuarioJaExisteException
 				| CaronaNaoAutorizadaException | VeiculoNaoExisteException
-				| UsuarioNaoExisteException e) {
+				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ServicoDeEnderecosInacessivelException e) {
 			response.getWriter().append(
-					"Erro ao acessar o servi√ßo de endere√ßos.");
+					"Erro ao acessar o serviÁo de endereÁos.");
 			e.printStackTrace();
 		} catch (CEPInvalidoException e) {
-			request.setAttribute("erro", "CEP inv√°lido.");
+			request.setAttribute("erro", "CEP inv·lido.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher(

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
+import excecoes.LogradouroNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
@@ -49,7 +50,7 @@ public class Dashboard extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			response.getWriter().append("Erro ao acessar o banco de dados.");
 			e.printStackTrace();
-		} catch (UsuarioNaoExisteException e) {
+		} catch (UsuarioNaoExisteException | LogradouroNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}

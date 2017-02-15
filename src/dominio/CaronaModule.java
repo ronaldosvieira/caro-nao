@@ -10,6 +10,7 @@ import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExiste;
 import excecoes.DataInvalidaException;
+import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoComMenosVagasException;
@@ -58,7 +59,7 @@ public class CaronaModule {
 		return vm.obterDono(carona.get(0).getInt("veiculo_id"));
 	}
 	
-	public RecordSet listarUsuarios(int id) throws SQLException, ClassNotFoundException {
+	public RecordSet listarUsuarios(int id) throws SQLException, ClassNotFoundException, LogradouroNaoExisteException {
 		CaronaUsuarioModule gum = new CaronaUsuarioModule();
 		
 		return gum.listarUsuariosPorCarona(id);

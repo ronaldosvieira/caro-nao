@@ -18,6 +18,7 @@ import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.GrupoNaoAutorizadoException;
+import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
@@ -64,7 +65,7 @@ public class EditarCarona extends HttpServlet {
 			e.printStackTrace();
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
 				| VeiculoNaoExisteException | CaronaNaoExisteException
-				| UsuarioNaoExisteException e) {
+				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
@@ -103,7 +104,7 @@ public class EditarCarona extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
 				| VeiculoNaoExisteException | CaronaNaoExisteException
-				| UsuarioNaoExisteException e) {
+				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (VeiculoJaSelecionadoException e) {
 			request.setAttribute("erro", 

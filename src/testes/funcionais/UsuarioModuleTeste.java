@@ -15,6 +15,7 @@ import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
+import excecoes.LogradouroNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoAutorizadoException;
 import excecoes.VeiculoNaoExisteException;
@@ -156,7 +157,7 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeListarCaronas() throws ClassNotFoundException, SQLException, UsuarioNaoExisteException {
+	public void testeListarCaronas() throws ClassNotFoundException, SQLException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		RecordSet caronas = um.listarCaronas(1);
 		
 		assertEquals(1, caronas.size());
@@ -165,14 +166,14 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeListarCaronasVazio() throws ClassNotFoundException, SQLException, UsuarioNaoExisteException {
+	public void testeListarCaronasVazio() throws ClassNotFoundException, SQLException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		RecordSet caronas = um.listarCaronas(2);
 		
 		assertEquals(0, caronas.size());
 	}
 	
 	@Test(expected = UsuarioNaoExisteException.class)
-	public void testeListarCaronasUsuarioNaoExistente() throws ClassNotFoundException, SQLException, UsuarioNaoExisteException {
+	public void testeListarCaronasUsuarioNaoExistente() throws ClassNotFoundException, SQLException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		um.listarCaronas(50);
 	}
 
@@ -272,22 +273,22 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 
 	@Test
-	public void testeValidarCarona() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException {
+	public void testeValidarCarona() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		um.validarCarona(1, 1);
 	}
 	
 	@Test(expected = CaronaNaoAutorizadaException.class)
-	public void testeValidarCaronaNaoPertencente() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException {
+	public void testeValidarCaronaNaoPertencente() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		um.validarCarona(2, 1);
 	}
 	
 	@Test(expected = UsuarioNaoExisteException.class)
-	public void testeValidarCaronaUsuarioNaoExistente() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException {
+	public void testeValidarCaronaUsuarioNaoExistente() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		um.validarCarona(50, 1);
 	}
 	
 	@Test(expected = CaronaNaoAutorizadaException.class)
-	public void testeValidarCaronaCaronaNaoExistente() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException {
+	public void testeValidarCaronaCaronaNaoExistente() throws ClassNotFoundException, SQLException, CaronaNaoAutorizadaException, VeiculoNaoExisteException, UsuarioNaoExisteException, LogradouroNaoExisteException {
 		um.validarCarona(1, 50);
 	}
 	

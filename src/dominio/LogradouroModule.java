@@ -30,8 +30,14 @@ public class LogradouroModule {
 				"/" + logradouro.get(0).getString("estado");
 	}
 	
-	public RecordSet obter(int id) throws SQLException {
-		return this.ltg.obter(id);
+	public RecordSet obter(int id) throws SQLException, LogradouroNaoExisteException {
+		RecordSet logradouro = this.ltg.obter(id);
+		
+		if (logradouro.isEmpty()) {
+			throw new LogradouroNaoExisteException();
+		}
+		
+		return logradouro;
 	}
 	
 	public RecordSet obterPorCep(String cep) throws LogradouroNaoExisteException, SQLException {
