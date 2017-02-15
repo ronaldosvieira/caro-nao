@@ -134,10 +134,6 @@
 					<% } %>
 				<% } %>
 				
-				<% if (concluida) { %>
-					<a href="${pageContext.request.contextPath}/carona/avaliar?id=<%= carona.get(0).getInt("id") %>" 
-						class="btn btn-default btn-block">Editar</a>
-				<% } %>
 				<a href="${pageContext.request.contextPath}/dashboard" 
 					class="btn btn-block btn-link">Voltar</a>
 			</div>
