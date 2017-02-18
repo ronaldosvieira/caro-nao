@@ -119,15 +119,6 @@
 				</div>
 			<% } %>
 			
-			<% if (usuario.get(0).getBoolean("motorista")) { %>
-				<div class="text-right">
-					<a href="${pageContext.request.contextPath}/carona/criar?id=<%= grupo.get(0).getInt("id") %>"
-						type="submit" class="btn btn-link">
-						Criar carona
-					</a>
-				</div>
-			<% } %>
-			
 			<div class="form-group">
 				<a href="${pageContext.request.contextPath}/grupo/editar?id=<%= grupo.get(0).getInt("id") %>"
 					class="btn btn-default pull-right col-xs-12 col-sm-6">Editar</a>
