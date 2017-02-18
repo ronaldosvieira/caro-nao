@@ -4,9 +4,12 @@ import java.sql.SQLException;
 
 import dados.GrupoUsuarioTableGateway;
 import dados.UsuarioTableGateway;
+import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
+import excecoes.UsuarioJaEstaNaCaronaException;
+import excecoes.UsuarioJaEstaNoGrupoException;
 import excecoes.UsuarioNaoExisteException;
 import util.RecordSet;
 import util.Row;
@@ -37,11 +40,24 @@ public class GrupoUsuarioModule {
 	}
 
 	public RecordSet listarGruposPorUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
-		RecordSet gruposUsuario = gutg.obterPorUsuario(idUsuario);
-		
 		GrupoModule gm = new GrupoModule();
 		
-		return gm.obterVarios("grupo_id", gruposUsuario);
+		RecordSet gruposUsuario = gutg.obterPorUsuario(idUsuario);
+		RecordSet grupos = gm.obterVarios("grupo_id", gruposUsuario);
+		RecordSet resultado = new RecordSet();
+		
+		for (Row grupo : grupos) {
+			Row grupoUsuario = gruposUsuario.get(
+					gruposUsuario.find("grupo_id", grupo.getInt("id")));
+			
+			grupo.put("aceitou_regras", 
+					grupoUsuario.getBoolean("aceitou_regras"));
+			grupo.put("usuario_ativo", grupoUsuario.getBoolean("ativo"));
+			
+			resultado.add(grupo);
+		}
+		
+		return resultado;
 	}
 	
 	public RecordSet listarUsuariosPorGrupo(int idGrupo) throws SQLException, ClassNotFoundException {
@@ -52,7 +68,12 @@ public class GrupoUsuarioModule {
 		return um.obterVarios("usuario_id", usuariosGrupo);
 	}
 	
-	public int inserirGrupoUsuario(int idGrupo, int idUsuario) throws SQLException, GrupoUsuarioJaExisteException {
+	public int inserirGrupoUsuario(int idGrupo, int idUsuario) 
+			throws SQLException, GrupoUsuarioJaExisteException {
+		return this.inserirGrupoUsuario(idGrupo, idUsuario, false);
+	}
+	
+	public int inserirGrupoUsuario(int idGrupo, int idUsuario, boolean aceitouRegras) throws SQLException, GrupoUsuarioJaExisteException {
 		RecordSet jaExiste = gutg.obter(idGrupo, idUsuario);
 		
 		if (!jaExiste.isEmpty()) {
@@ -65,14 +86,33 @@ public class GrupoUsuarioModule {
 		grupoUsuario.put("usuario_id", idUsuario);
 		grupoUsuario.put("ativo", true);
 		
-		return gutg.inserir(idGrupo, idUsuario, true);
+		return gutg.inserir(idGrupo, idUsuario, aceitouRegras, true);
 	}
 
-	public void desativarGrupoUsuario(int id) throws SQLException, GrupoUsuarioNaoExisteException {
+	public void desativarGrupoUsuario(int id) 
+			throws SQLException, GrupoUsuarioNaoExisteException {
 		RecordSet grupoUsuario = this.obter(id);
 		
 		for (Row gU : grupoUsuario) {
-			gutg.atualizar(gU.getInt("id"), false);
+			gutg.atualizar(gU.getInt("id"), 
+					gU.getBoolean("aceitou_regras"), 
+					false);
 		}
+	}
+
+	public void aceitarConvite(int idGrupo, int idUsuario) 
+			throws SQLException, UsuarioJaEstaNoGrupoException, GrupoUsuarioNaoExisteException {
+		RecordSet grupoUsuario = gutg.obter(idGrupo, idUsuario);
+		
+		if (grupoUsuario.isEmpty()) {
+			throw new GrupoUsuarioNaoExisteException();
+		}
+		
+		if (grupoUsuario.get(0).getBoolean("aceitou_regras")) {
+			throw new UsuarioJaEstaNoGrupoException();
+		}
+		
+		gutg.atualizar(grupoUsuario.get(0).getInt("id"),
+				true, grupoUsuario.get(0).getBoolean("ativo"));
 	}
 }

@@ -81,12 +81,14 @@
 				</tr>
 				<% } else { %>
 					<% for (Row grupo : grupos) { %>
-						<% if (grupo.getBoolean("ativo")) { %>
+						<% if (grupo.getBoolean("ativo") && 
+								grupo.getBoolean("usuario_ativo")) { %>
 						<tr>
 							<td><%= grupo.getInt("id") %></td>
 							<td><%= grupo.getString("nome") %></td>
 							<td class="text-left"><%= grupo.getString("descricao") %></td>
 							<td>
+							<% if (grupo.getBoolean("aceitou_regras")) { %>
 								<a href="${pageContext.request.contextPath}/grupo/ver?id=<%= grupo.getInt("id") %>"
 									class="btn btn-link">
 									Ver
@@ -95,6 +97,12 @@
 									class="btn btn-link">
 									Convidar
 								</a>
+							<% } else { %>
+								<a href="${pageContext.request.contextPath}/grupo/ver?id=<%= grupo.getInt("id") %>"
+									class="btn btn-link">
+									Aceitar convite
+								</a>
+							<% } %>
 							</td>
 						</tr>
 						<% } %>

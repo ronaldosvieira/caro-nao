@@ -29,6 +29,10 @@
 	RecordSet grupo = (RecordSet) request.getAttribute("grupo");
 	RecordSet usuarios = (RecordSet) request.getAttribute("usuarios");
 	RecordSet usuariosGrupo = (RecordSet) request.getAttribute("usuariosGrupo");
+	
+	boolean aceitouRegras = usuariosGrupo.get(
+				usuariosGrupo.find("usuario_id", usuario.get(0).getInt("id"))
+			).getBoolean("aceitou_regras");
 	%>
   
 	<header class="text-center">
@@ -90,8 +94,14 @@
 				<tbody>
 				<% for (Row us : usuarios) { %>
 					<% Row usuarioGrupo = usuariosGrupo.get(usuariosGrupo.find("usuario_id", us.getInt("id"))); %>
+					
 					<% if (usuarioGrupo.getBoolean("ativo")) { %>
-					<tr>
+						<% if (!usuarioGrupo.getBoolean("aceitou_regras")) { %>
+							<tr class="text-muted mostrar-tooltip" data-toggle="tooltip" 
+								title="<%= us.getString("nome") %> ainda não aceitou o convite.">
+						<% } else { %>
+							<tr>
+						<% } %>
 						<td><%= us.getString("nome") %></td>
 						<td><%= us.getString("email") %></td>
 						<td><%= us.getString("telefone") %></td>
@@ -119,9 +129,22 @@
 				</div>
 			<% } %>
 			
+			<% if (!aceitouRegras) { %>
 			<div class="form-group col-md-offset-2 col-md-8">
-				<a href="${pageContext.request.contextPath}/grupo/editar?id=<%= grupo.get(0).getInt("id") %>"
-					class="btn btn-default btn-block">Editar</a>
+				<form action="${pageContext.request.contextPath}/grupo/aceitar?id=<%= grupo.get(0).getInt("id") %>"
+					method="post">
+					<button type="submit" class="btn btn-default btn-block">
+						Aceitar convite
+					</button>
+				</form>
+			</div>
+			<% } %>
+			
+			<div class="form-group col-md-offset-2 col-md-8">
+				<% if (aceitouRegras) { %>
+					<a href="${pageContext.request.contextPath}/grupo/editar?id=<%= grupo.get(0).getInt("id") %>"
+						class="btn btn-default btn-block">Editar</a>
+				<% } %>
 				<a href="${pageContext.request.contextPath}/dashboard" 
 					class="btn btn-link btn-block">Voltar</a>
 			</div>
@@ -133,4 +156,7 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
   </body>
+  <script>
+  	$('.mostrar-tooltip').tooltip();
+  </script>
 </html>

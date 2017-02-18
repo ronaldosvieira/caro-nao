@@ -90,12 +90,15 @@ public class UsuarioModule {
 		RecordSet caronas = new RecordSet();
 		
 		for (Row grupo : grupos) {
-			RecordSet usuariosGrupo = 
-					gm.listarUsuarios(grupo.getInt("id"));
-			
-			for (Row usuarioGrupo : usuariosGrupo) {
-				if (!amigos.contains("id", usuarioGrupo.getInt("id"))) {
-					amigos.add(usuarioGrupo);
+			if (grupo.getBoolean("usuario_ativo") &&
+					grupo.getBoolean("aceitou_regras")) {
+				RecordSet usuariosGrupo = 
+						gm.listarUsuarios(grupo.getInt("id"));
+				
+				for (Row usuarioGrupo : usuariosGrupo) {
+					if (!amigos.contains("id", usuarioGrupo.getInt("id"))) {
+						amigos.add(usuarioGrupo);
+					}
 				}
 			}
 		}

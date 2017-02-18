@@ -20,6 +20,7 @@ create table grupo_usuario (
 	id serial primary key,
 	grupo_id integer not null references grupo (id),
 	usuario_id integer not null references usuario (id),
+	aceitou_regras boolean not null default false,
 	ativo boolean not null default true
 );
 

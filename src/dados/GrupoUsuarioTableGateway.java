@@ -29,6 +29,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("grupo_id", rs.getInt("grupo_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("aceitou_regras", rs.getBoolean("aceitou_regras"));
 			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
@@ -55,6 +56,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("grupo_id", rs.getInt("grupo_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("aceitou_regras", rs.getBoolean("aceitou_regras"));
 			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
@@ -83,6 +85,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("grupo_id", rs.getInt("grupo_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("aceitou_regras", rs.getBoolean("aceitou_regras"));
 			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
@@ -110,6 +113,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("grupo_id", rs.getInt("grupo_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("aceitou_regras", rs.getBoolean("aceitou_regras"));
 			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
@@ -137,6 +141,7 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 			row.put("id", rs.getInt("id"));
 			row.put("grupo_id", rs.getInt("grupo_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
+			row.put("aceitou_regras", rs.getBoolean("aceitou_regras"));
 			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
@@ -145,19 +150,20 @@ public class GrupoUsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public int inserir(int idGrupo, int idUsuario, boolean ativo) 
+	public int inserir(int idGrupo, int idUsuario, boolean aceitouRegras, boolean ativo) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
 				this.getTableName(), 
-				"grupo_id, usuario_id, ativo",
-				"?, ?, ?");
+				"grupo_id, usuario_id, aceitou_regras, ativo",
+				"?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, Statement.RETURN_GENERATED_KEYS);
 		
 		stmt.setInt(1, idGrupo);
 		stmt.setInt(2, idUsuario);
-		stmt.setBoolean(3, ativo);
+		stmt.setBoolean(3, aceitouRegras);
+		stmt.setBoolean(4, ativo);
 		
 		int affectedRows = stmt.executeUpdate();
 		
@@ -174,15 +180,16 @@ public class GrupoUsuarioTableGateway extends TableGateway {
         }
 	}
 
-	public void atualizar(int id, boolean ativo) 
+	public void atualizar(int id, boolean aceitouRegras, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
 		String sql = String.format(this.updateId, 
-				this.getTableName(), "ativo = ?");
+				this.getTableName(), "aceitou_regras = ?, ativo = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 
 		stmt.setBoolean(1, ativo);
-		stmt.setInt(2, id);
+		stmt.setBoolean(2, aceitouRegras);
+		stmt.setInt(3, id);
 		
 		stmt.executeUpdate();
 	}
