@@ -240,6 +240,7 @@ public class CaronaModule {
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
 		// validar se usuário já está na carona
+		// validar se é possível adicionar usuario na carona
 		
 		cum.inserirCaronaUsuario(id, idUsuario, idLogradouro, ativo);
 	}

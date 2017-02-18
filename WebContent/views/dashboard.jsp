@@ -121,7 +121,7 @@
 					<th class="text-center col-sm-2">Data/horário</th>
 					<th class="text-center col-sm-3">Origem</th>
 					<th class="text-center col-sm-3">Destino</th>
-					<th class="text-center col-sm-1">Vagas</th>
+					<th class="text-center col-sm-1">Vagas restantes</th>
 					<th class="text-center col-sm-1">Estado</th>
 					<th class="text-center col-sm-1">Ações</th>
 				</tr>
@@ -154,7 +154,10 @@
 							<td><%= carona.getTimestamp("dia_horario") %></td>
 							<td><%= carona.getString("origem") %></td>
 							<td><%= carona.getString("destino") %></td>
-							<td><%= carona.getInt("vagas") %></td>
+							<td>
+								<%= carona.getInt("vagas_restantes") %> /
+								<%= carona.getInt("vagas") %>
+							</td>
 							<td><%= estado %></td>
 							<td>
 								<a href="${pageContext.request.contextPath}/carona/ver?id=<%= carona.getInt("id") %>"

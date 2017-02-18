@@ -110,7 +110,12 @@ public class UsuarioModule {
 				if (!caronas.contains("id", caronaAmigo.getInt("id"))) {
 					RecordSet origem = lm.obter(caronaAmigo.getInt("logradouro_origem_id"));
 					RecordSet destino = lm.obter(caronaAmigo.getInt("logradouro_destino_id"));
-
+					RecordSet usuariosCarona = 
+							cm.listarUsuarios(caronaAmigo.getInt("id"));
+					
+					int vagasRestantes = amigoVeiculo.getInt("vagas") 
+							- usuariosCarona.size();
+					
 					caronaAmigo.put("veiculo", 
 							amigoVeiculo.getString("modelo"));
 					caronaAmigo.put("origem", 
@@ -119,6 +124,7 @@ public class UsuarioModule {
 							LogradouroModule.formatarLogradouro(destino));
 					caronaAmigo.put("vagas", 
 							amigoVeiculo.getInt("vagas"));
+					caronaAmigo.put("vagas_restantes", vagasRestantes);
 					caronas.add(caronaAmigo);
 				}
 			}

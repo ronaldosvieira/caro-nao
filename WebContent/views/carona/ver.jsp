@@ -73,8 +73,11 @@
 			</div>
 			
 			<div class="form-group">
-				<label for="vagas">Vagas</label>
-				<p><%= carona.get(0).getInt("vagas") %></p>
+				<label for="vagas">Vagas restantes</label>
+				<p>
+					<%= carona.get(0).getInt("vagas") - usuariosNaCarona %> /
+					<%= carona.get(0).getInt("vagas") %>
+				</p>
 			</div>
 			
 			<div class="form-group">
