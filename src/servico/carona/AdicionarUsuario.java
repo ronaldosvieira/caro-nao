@@ -41,7 +41,7 @@ public class AdicionarUsuario extends HttpServlet {
 			UsuarioModule um = new UsuarioModule();
 			CaronaModule cm = new CaronaModule();
 			
-			RecordSet carona = um.validarCarona(usuario.get(0).getInt("id"), 
+			RecordSet carona = um.validarDonoCarona(usuario.get(0).getInt("id"), 
 					Integer.parseInt(idCarona));
 			
 			RecordSet usuariosCarona = 
@@ -61,7 +61,7 @@ public class AdicionarUsuario extends HttpServlet {
 			e.printStackTrace();
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
 				| VeiculoNaoExisteException | UsuarioNaoExisteException 
-				| LogradouroNaoExisteException e) {
+				| LogradouroNaoExisteException | CaronaNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}
@@ -84,6 +84,9 @@ public class AdicionarUsuario extends HttpServlet {
 			
 			RecordSet caroneiro = um.obterPeloEmail(email);
 			
+			um.validarCarona(caroneiro.get(0).getInt("id"), 
+					Integer.parseInt(idCarona));
+			
 			if (Integer.parseInt(idLogradouro) == -1) {
 				cm.convidarUsuario(Integer.parseInt(idCarona),
 					caroneiro.get(0).getInt("id"),
@@ -101,8 +104,8 @@ public class AdicionarUsuario extends HttpServlet {
 			e.printStackTrace();
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
-		} catch (NumberFormatException | CaronaNaoAutorizadaException 
-				| VeiculoNaoExisteException
+		} catch (NumberFormatException 
+				| VeiculoNaoExisteException | LogradouroNaoExisteException
 				| CaronaNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
@@ -124,6 +127,10 @@ public class AdicionarUsuario extends HttpServlet {
 					"O usuário informado já foi convidado para esta carona.");
 			
 			doGet(request, response);
+		} catch (CaronaNaoAutorizadaException e) {
+			request.setAttribute("erro", 
+					"O usuário informado não é autorizado a participar "
+					+ "desta carona. Convide-o para seu grupo!");
 		}
 	}
 
