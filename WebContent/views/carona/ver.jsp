@@ -10,10 +10,7 @@
 
     <!-- Bootstrap -->
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- CSS do caronão -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-
+   
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -110,6 +107,41 @@
 				</div>
 			<% } %>
 			
+			<h4>Participantes</h4>
+			
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th class="text-center col-sm-3">Nome</th>
+					<th class="text-center col-sm-3">Email</th>
+					<th class="text-center col-sm-4">Telefone</th>
+					<th class="text-center col-sm-1">Nota</th>
+					<th class="text-center col-sm-1">Ações</th>
+				</tr>
+				</thead>
+				<tbody>
+				<% for (Row us : usuariosCarona) { %>
+					<% if (!us.getBoolean("ativo")) { %>
+					<tr class="text-muted mostrar-tooltip" data-toggle="tooltip" 
+						title="<%= us.getString("nome") %> ainda não aceitou o convite.">
+					<% } else { %>
+						<tr>
+					<% } %>
+						<td><%= us.getString("nome") %></td>
+						<td><%= us.getString("email") %></td>
+						<td><%= us.getString("telefone") %></td>
+						<td><%= 5/* TODO: colocar nota */ %></td>
+						<td>
+							<a href="${pageContext.request.contextPath}/perfil/ver?id=<%= us.getInt("id") %>"
+								class="btn btn-link">
+								Ver
+							</a>
+						</td>
+					</tr>
+				<% } %>
+				</tbody>
+			</table>
+			
 			<div class="form-group">
 				<% if (ativa) { %>
 					<% if (dono && usuariosNaCarona < carona.get(0).getInt("vagas")) { %>
@@ -169,5 +201,8 @@
     <script src="${pageContext.request.contextPath}/js/jquery-3.1.1.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script>
+    	$('.mostrar-tooltip').tooltip();
+    </script>
   </body>
 </html>
