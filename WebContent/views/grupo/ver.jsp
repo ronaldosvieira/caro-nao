@@ -119,11 +119,11 @@
 				</div>
 			<% } %>
 			
-			<div class="form-group">
+			<div class="form-group col-md-offset-2 col-md-8">
 				<a href="${pageContext.request.contextPath}/grupo/editar?id=<%= grupo.get(0).getInt("id") %>"
-					class="btn btn-default pull-right col-xs-12 col-sm-6">Editar</a>
+					class="btn btn-default btn-block">Editar</a>
 				<a href="${pageContext.request.contextPath}/dashboard" 
-					class="btn btn-link pull-right col-xs-12 col-sm-6">Voltar</a>
+					class="btn btn-link btn-block">Voltar</a>
 			</div>
 		</div>
 	</div>

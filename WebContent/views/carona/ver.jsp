@@ -48,8 +48,7 @@
 		</h1>
 	 </header>
 	<div class="container">
-		<div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6
-			col-lg-offset-4 col-lg-4 text-center">
+		<div class="col-sm-offset-2 col-sm-8 text-center">
 			
 			<% if (erro != null) { %>
 				<div class="text-center text-danger">
@@ -142,7 +141,7 @@
 				</tbody>
 			</table>
 			
-			<div class="form-group">
+			<div class="form-group col-md-offset-2 col-md-8">
 				<% if (ativa) { %>
 					<% if (dono && usuariosNaCarona < carona.get(0).getInt("vagas")) { %>
 						<a href="${pageContext.request.contextPath}/carona/adicionar-usuario?id=<%= carona.get(0).getInt("id") %>" 
