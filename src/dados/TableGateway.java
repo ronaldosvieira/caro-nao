@@ -26,7 +26,15 @@ public abstract class TableGateway implements AutoCloseable {
 		this.table = table;
 	}
 
-	protected Connection getConnection() {return this.conn;} 
+	protected Connection getConnection() {
+		try {
+			if (conn.isClosed()) conn = ConnectionFactory.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return this.conn;
+	} 
 	protected String getTableName() {return this.table;}
 	
 	public void close() throws SQLException {

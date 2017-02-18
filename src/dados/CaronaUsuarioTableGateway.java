@@ -29,6 +29,7 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("logradouro_id", rs.getInt("logradouro_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
 		}
@@ -56,6 +57,7 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("logradouro_id", rs.getInt("logradouro_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
 		}
@@ -82,6 +84,7 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("logradouro_id", rs.getInt("logradouro_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
 		}
@@ -108,6 +111,7 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("usuario_id", rs.getInt("usuario_id"));
 			row.put("logradouro_id", rs.getInt("logradouro_id"));
+			row.put("ativo", rs.getBoolean("ativo"));
 			
 			dataset.add(row);
 		}
@@ -115,12 +119,12 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public int inserir(int idCarona, int idUsuario, int idLogradouro) 
+	public int inserir(int idCarona, int idUsuario, int idLogradouro, boolean ativo) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
 				this.getTableName(), 
-				"carona_id, usuario_id, logradouro_id",
-				"?, ?, ?");
+				"carona_id, usuario_id, logradouro_id, ativo",
+				"?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql);
@@ -128,6 +132,7 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 		stmt.setInt(1, idCarona);
 		stmt.setInt(2, idUsuario);
 		stmt.setInt(3, idLogradouro);
+		stmt.setBoolean(4, ativo);
 		
 		int affectedRows = stmt.executeUpdate();
 		
@@ -138,17 +143,18 @@ public class CaronaUsuarioTableGateway extends TableGateway {
 		return 0;
 	}
 
-	public void atualizar(int idCarona, int idUsuario, int idLogradouro) 
+	public void atualizar(int idCarona, int idUsuario, int idLogradouro, boolean ativo) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, 
-				this.getTableName(), "logradouro_id = ?", 
+		String sql = String.format(this.updateMany, 
+				this.getTableName(), "logradouro_id = ?, ativo = ?", 
 				"carona_id = ? and usuario_id = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 
 		stmt.setInt(1, idLogradouro);
-		stmt.setInt(2, idCarona);
-		stmt.setInt(3, idUsuario);
+		stmt.setBoolean(2, ativo);
+		stmt.setInt(3, idCarona);
+		stmt.setInt(4, idUsuario);
 		
 		stmt.executeUpdate();
 	}

@@ -12,7 +12,7 @@ import dominio.CaronaModule;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
-import excecoes.CaronaUsuarioNaoExiste;
+import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
@@ -307,7 +307,7 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeRemoverUsuarioDaCarona() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExiste {
+	public void testeRemoverUsuarioDaCarona() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExisteException {
 		cm.removerUsuarioDaCarona(1, 1);
 		
 		String sql = "select * from carona_usuario where carona_id = 1;";
@@ -317,13 +317,13 @@ public class CaronaModuleTeste extends TesteFuncional {
 		assertFalse(rs.next());
 	}
 	
-	@Test(expected = CaronaUsuarioNaoExiste.class)
-	public void testeRemoverUsuarioDaCaronaNaoExistente() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExiste {
+	@Test(expected = CaronaUsuarioNaoExisteException.class)
+	public void testeRemoverUsuarioDaCaronaNaoExistente() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExisteException {
 		cm.removerUsuarioDaCarona(50, 1);
 	}
 	
-	@Test(expected = CaronaUsuarioNaoExiste.class)
-	public void testeRemoverUsuarioNaoExistenteDaCarona() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExiste {
+	@Test(expected = CaronaUsuarioNaoExisteException.class)
+	public void testeRemoverUsuarioNaoExistenteDaCarona() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExisteException {
 		cm.removerUsuarioDaCarona(1, 50);
 	}
 }

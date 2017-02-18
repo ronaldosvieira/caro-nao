@@ -45,10 +45,16 @@
 				</div>
 			<% } %>
 			
-			<h4>Candidatar-se à carona</h4>
+			<h4>Adicionar usuário à carona</h4>
 			
-			<form action="${pageContext.request.contextPath}/carona/candidatar-se?id=<%= carona.get(0).getInt("id") %>"
+			<form action="${pageContext.request.contextPath}/carona/adicionar-usuario?id=<%= carona.get(0).getInt("id") %>"
 				method="post" class="form-horizontal">
+				<div class="form-group">
+					<label for="nome">Email do usuário</label>
+					<input type="email" name="email" class="form-control text-center" 
+					placeholder="ex: tio-do-bandejao@ufrrj.br" required>
+				</div>
+				
 				<div class="form-group">
 					<label for="logradouro_id">Parada</label>
 					<select name="logradouro_id" 
@@ -77,7 +83,7 @@
 				
 				<div class="form-group">
 					<button class="btn btn-default btn-block" 
-						type="submit">Candidatar-se</button>
+						type="submit">Adicionar usuário</button>
 					<a href="${pageContext.request.contextPath}/carona/ver?id=<%= carona.get(0).getInt("id") %>" 
 						class="btn btn-block btn-link">Voltar</a>
 				</div>

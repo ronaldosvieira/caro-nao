@@ -3,7 +3,6 @@ package servico.carona;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,23 +12,21 @@ import javax.servlet.http.HttpServletResponse;
 import dominio.CaronaModule;
 import dominio.CaronaUsuarioModule;
 import dominio.UsuarioModule;
-import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoAutorizadaException;
-import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.LogradouroNaoExisteException;
-import excecoes.ServicoDeEnderecosInacessivelException;
+import excecoes.UsuarioJaEstaNaCaronaException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoNaoExisteException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 
-@WebServlet("/carona/desistir")
-public class DesistirDaCarona extends HttpServlet {
+@WebServlet("/carona/aceitar")
+public class AceitarConvite extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    public DesistirDaCarona() {
+    public AceitarConvite() {
         super();
     }
 
@@ -41,11 +38,12 @@ public class DesistirDaCarona extends HttpServlet {
 			
 			CaronaModule cm = new CaronaModule();
 			UsuarioModule um = new UsuarioModule();
+			CaronaUsuarioModule cum = new CaronaUsuarioModule();
 			
 			um.validarCarona(usuario.get(0).getInt("id"), 
 					Integer.parseInt(idCarona));
 			
-			cm.removerUsuarioDaCarona(Integer.parseInt(idCarona),
+			cum.aceitarConvite(Integer.parseInt(idCarona), 
 					usuario.get(0).getInt("id"));
 			
 			response.sendRedirect(request.getContextPath() 
@@ -57,7 +55,8 @@ public class DesistirDaCarona extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaNaoAutorizadaException 
 				| VeiculoNaoExisteException | CaronaUsuarioNaoExisteException
-				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
+				| UsuarioNaoExisteException | LogradouroNaoExisteException
+				| UsuarioJaEstaNaCaronaException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}

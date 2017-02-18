@@ -39,7 +39,9 @@
 		.before(new Timestamp(System.currentTimeMillis()));
 	boolean ativa = carona.get(0).getInt("estado_carona_id") == 1;
 	boolean concluida = carona.get(0).getInt("estado_carona_id") == 3;
-	boolean jaParticipa = usuariosCarona.contains("id", usuario.get(0).getInt("id"));
+	int indice = usuariosCarona.find("id", usuario.get(0).getInt("id"));
+	boolean jaParticipa = indice != -1 && usuariosCarona.get(indice).getBoolean("ativo");
+	boolean estaConvidado = indice != -1 && !usuariosCarona.get(indice).getBoolean("ativo");
 	int usuariosNaCarona = usuariosCarona.size();
   %>
   
@@ -71,6 +73,11 @@
 			</div>
 			
 			<div class="form-group">
+				<label for="vagas">Vagas</label>
+				<p><%= carona.get(0).getInt("vagas") %></p>
+			</div>
+			
+			<div class="form-group">
 				<label for="origem">Logradouro de origem</label>
 				<p><%= carona.get(0).getString("origem") %></p>
 			</div>
@@ -80,28 +87,43 @@
 				<p><%= carona.get(0).getString("destino") %></p>
 			</div>
 			
-			<% if (jaParticipa) { %>
-				<% if (dono) { %>
-					<div class="form-group">
-						<p class="text-success">
-							Você é o criador desta carona.
-						</p>
-					</div>
-				<% } else { %>
-					<div class="form-group">
-						<p class="text-success">
-							Você está participando desta carona.
-						</p>
-					</div>
-				<% } %>
+			<% if (dono) { %>
+				<div class="form-group">
+					<p class="text-success">
+						Você é o criador desta carona.
+					</p>
+				</div>
+			<% } else if (jaParticipa) { %>
+				<div class="form-group">
+					<p class="text-success">
+						Você está participando desta carona.
+					</p>
+				</div>
+			<% } else if (estaConvidado) { %>
+				<div class="form-group">
+					<p class="text-success">
+						Você foi convidado para esta carona.
+					</p>
+				</div>
 			<% } %>
 			
 			<div class="form-group">
 				<% if (ativa) { %>
-					<% if (!jaParticipa) { %>
-						<a href="${pageContext.request.contextPath}/carona/candidatar-se?id=<%= carona.get(0).getInt("id") %>" 
-							class="btn btn-default btn-block">Candidatar-se</a>
-					<% } else if (!dono) { %>
+					<% if (dono && usuariosNaCarona < carona.get(0).getInt("vagas")) { %>
+						<a href="${pageContext.request.contextPath}/carona/adicionar-usuario?id=<%= carona.get(0).getInt("id") %>" 
+							class="btn btn-default btn-block">Adicionar usuário</a>
+					<% } %>
+					
+					<% if (estaConvidado) { %>
+						<form action="${pageContext.request.contextPath}/carona/aceitar?id=<%= carona.get(0).getInt("id") %>"
+							method="post">
+							<button type="submit" class="btn btn-default btn-block">
+								Aceitar convite
+							</button>
+						</form>
+					<% } %>
+					
+					<% if (jaParticipa && !dono) { %>
 						<form action="${pageContext.request.contextPath}/carona/desistir?id=<%= carona.get(0).getInt("id") %>"
 							method="post">
 							<button type="submit" class="btn btn-default btn-block">

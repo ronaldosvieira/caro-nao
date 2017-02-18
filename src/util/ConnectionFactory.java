@@ -19,18 +19,20 @@ public class ConnectionFactory {
 	
 	private ConnectionFactory() {}
 	
-	public static Connection getConnection() 
-			throws SQLException, ClassNotFoundException {
+	public static Connection getConnection() {
 		if (conn == null) {
-			Class.forName("org.h2.Driver");
-			
-			String url = "jdbc:h2:" + bancos[ambiente.getNum()];
-			String user = "carona";
-			String pass = "123456";
-			
-			conn = DriverManager.getConnection(url, user, pass);
+			try {
+				Class.forName("org.h2.Driver");
+				
+				String url = "jdbc:h2:" + bancos[ambiente.getNum()];
+				String user = "carona";
+				String pass = "123456";
+				
+				conn = DriverManager.getConnection(url, user, pass);
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		
 		return conn;
 	}
 	

@@ -38,6 +38,14 @@ public class UsuarioModule {
 		return usuario;
 	}
 	
+	public RecordSet obterPeloEmail(String email) throws SQLException, UsuarioNaoExisteException {
+		RecordSet usuario = this.utg.obterPeloEmail(email);
+		
+		if (usuario.isEmpty()) throw new UsuarioNaoExisteException();
+		
+		return usuario;
+	}
+	
 	public RecordSet obterVarios(String column, RecordSet dataset) 
 			throws SQLException {
 		RecordSet resultado = new RecordSet();

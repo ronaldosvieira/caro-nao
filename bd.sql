@@ -81,5 +81,6 @@ create table carona_usuario (
 	usuario_id int not null references usuario (id),
 	carona_id int not null references carona (id),
 	logradouro_id int not null references logradouro (id),
+	ativo boolean not null default false,
 	primary key (usuario_id, carona_id)
 );

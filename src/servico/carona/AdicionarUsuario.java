@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dominio.CaronaModule;
-import dominio.CaronaUsuarioModule;
 import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoAutorizadaException;
+import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
@@ -24,11 +24,11 @@ import excecoes.VeiculoNaoExisteException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
 
-@WebServlet("/carona/candidatar-se")
-public class CandidatarSeACarona extends HttpServlet {
+@WebServlet("/carona/adicionar-usuario")
+public class AdicionarUsuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    public CandidatarSeACarona() {
+    public AdicionarUsuario() {
         super();
     }
 
@@ -52,7 +52,7 @@ public class CandidatarSeACarona extends HttpServlet {
 			request.setAttribute("usuariosCarona", usuariosCarona);
 			
 			RequestDispatcher rd = 
-					request.getRequestDispatcher("../views/carona/candidatar-se.jsp");
+					request.getRequestDispatcher("../views/carona/adicionar-usuario.jsp");
 			rd.forward(request, response);
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
@@ -69,25 +69,28 @@ public class CandidatarSeACarona extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idCarona = (String) request.getParameter("id");
+		String email = (String) request.getParameter("email");
 		String idLogradouro = (String) request.getParameter("logradouro_id");
 		String cep = (String) request.getParameter("cep");
-		
+				
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
 			CaronaModule cm = new CaronaModule();
 			UsuarioModule um = new UsuarioModule();
 			
-			um.validarCarona(usuario.get(0).getInt("id"), 
+			um.validarDonoCarona(usuario.get(0).getInt("id"), 
 					Integer.parseInt(idCarona));
 			
+			RecordSet caroneiro = um.obterPeloEmail(email);
+			
 			if (Integer.parseInt(idLogradouro) == -1) {
-				cm.inserirUsuarioNaCarona(Integer.parseInt(idCarona),
-					usuario.get(0).getInt("id"),
+				cm.convidarUsuario(Integer.parseInt(idCarona),
+					caroneiro.get(0).getInt("id"),
 					cep);
 			} else {
-				cm.inserirUsuarioNaCarona(Integer.parseInt(idCarona),
-					usuario.get(0).getInt("id"), 
+				cm.convidarUsuario(Integer.parseInt(idCarona),
+					caroneiro.get(0).getInt("id"), 
 					Integer.parseInt(idLogradouro));
 			}
 			
@@ -98,9 +101,10 @@ public class CandidatarSeACarona extends HttpServlet {
 			e.printStackTrace();
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
-		} catch (NumberFormatException | CaronaUsuarioJaExisteException
-				| CaronaNaoAutorizadaException | VeiculoNaoExisteException
-				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
+		} catch (NumberFormatException | CaronaNaoAutorizadaException 
+				| VeiculoNaoExisteException
+				| CaronaNaoExisteException e) {
+			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		} catch (ServicoDeEnderecosInacessivelException e) {
 			response.getWriter().append(
@@ -108,12 +112,18 @@ public class CandidatarSeACarona extends HttpServlet {
 			e.printStackTrace();
 		} catch (CEPInvalidoException e) {
 			request.setAttribute("erro", "CEP inválido.");
+
+			doGet(request, response);
+		} catch (UsuarioNaoExisteException e) {
+			request.setAttribute("erro", 
+					"Seu amigo(a) ainda não está cadastrado(a) no Caronão.");
 			
-			RequestDispatcher rd = 
-					request.getRequestDispatcher(
-							request.getContextPath() + 
-							"../../carona/candidatar-se?id=" + idCarona);
-			rd.forward(request, response);
+			doGet(request, response);
+		} catch (CaronaUsuarioJaExisteException e) {
+			request.setAttribute("erro", 
+					"O usuário informado já foi convidado para esta carona.");
+			
+			doGet(request, response);
 		}
 	}
 

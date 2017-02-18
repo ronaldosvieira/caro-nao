@@ -4,8 +4,9 @@ import java.sql.SQLException;
 
 import dados.CaronaUsuarioTableGateway;
 import excecoes.CaronaUsuarioJaExisteException;
-import excecoes.CaronaUsuarioNaoExiste;
+import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.LogradouroNaoExisteException;
+import excecoes.UsuarioJaEstaNaCaronaException;
 import util.RecordSet;
 import util.Row;
 
@@ -16,10 +17,10 @@ public class CaronaUsuarioModule {
 		this.cutg = new CaronaUsuarioTableGateway();
 	}
 	
-	public RecordSet obter(int idCarona, int idUsuario) throws SQLException, CaronaUsuarioNaoExiste {
+	public RecordSet obter(int idCarona, int idUsuario) throws SQLException, CaronaUsuarioNaoExisteException {
 		RecordSet caronaUsuario = cutg.obter(idCarona, idUsuario);
 		
-		if (caronaUsuario.isEmpty()) throw new CaronaUsuarioNaoExiste();
+		if (caronaUsuario.isEmpty()) throw new CaronaUsuarioNaoExisteException();
 		
 		return caronaUsuario;
 	}
@@ -49,6 +50,7 @@ public class CaronaUsuarioModule {
 			usuario.put("logradouro", 
 					LogradouroModule.formatarLogradouro(logradouro));
 			usuario.put("logradouro_id", usuarioCarona.getInt("logradouro_id"));
+			usuario.put("ativo", usuarioCarona.getBoolean("ativo"));
 			
 			usuarios.set(i, usuario);
 		}
@@ -56,7 +58,7 @@ public class CaronaUsuarioModule {
 		return usuarios;
 	}
 	
-	public int inserirCaronaUsuario(int idCarona, int idUsuario, int idLogradouro) 
+	public int inserirCaronaUsuario(int idCarona, int idUsuario, int idLogradouro, boolean ativo) 
 			throws SQLException, CaronaUsuarioJaExisteException {
 		RecordSet jaExiste = cutg.obterPorUsuario(idUsuario);
 		
@@ -67,9 +69,26 @@ public class CaronaUsuarioModule {
 			}
 		}
 		
-		return cutg.inserir(idCarona, idUsuario, idLogradouro);
+		return cutg.inserir(idCarona, idUsuario, idLogradouro, ativo);
 	}
 
+	public void aceitarConvite(int idCarona, int idUsuario) 
+			throws SQLException, CaronaUsuarioNaoExisteException, 
+			UsuarioJaEstaNaCaronaException {
+		RecordSet caronaUsuario = cutg.obter(idCarona, idUsuario);
+		
+		if (caronaUsuario.isEmpty()) {
+			throw new CaronaUsuarioNaoExisteException();
+		}
+		
+		if (caronaUsuario.get(0).getBoolean("ativo")) {
+			throw new UsuarioJaEstaNaCaronaException();
+		}
+		
+		cutg.atualizar(idCarona, idUsuario, 
+				caronaUsuario.get(0).getInt("logradouro_id"), true);
+	}
+	
 	public void excluirCaronaUsuario(int idCarona, int idUsuario) 
 			throws SQLException {
 		cutg.excluir(idCarona, idUsuario);

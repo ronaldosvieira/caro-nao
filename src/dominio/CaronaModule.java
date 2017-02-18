@@ -8,7 +8,7 @@ import dados.CaronaTableGateway;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
-import excecoes.CaronaUsuarioNaoExiste;
+import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.DataInvalidaException;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
@@ -117,7 +117,8 @@ public class CaronaModule {
 				idLogradouroOrigem, idLogradouroDestino);
 		
 		cum.inserirCaronaUsuario(idCarona, 
-				criador.get(0).getInt("id"), idLogradouroDestino);
+				criador.get(0).getInt("id"), idLogradouroDestino,
+				true);
 		
 		return idCarona;
 	}
@@ -204,8 +205,24 @@ public class CaronaModule {
 		}
 	}
 	
-	public void inserirUsuarioNaCarona(int id, int idUsuario,
-			String cep) 
+	public void convidarUsuario(int id, int idUsuario, String cep) 
+			throws ClassNotFoundException, SQLException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioJaExisteException {
+		this.inserirUsuarioNaCarona(id, idUsuario, 
+				cep, false);
+	}
+	
+	public void convidarUsuario(int id, int idUsuario, int idLogradouro) 
+			throws ClassNotFoundException, SQLException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioJaExisteException {
+		this.inserirUsuarioNaCarona(id, idUsuario, 
+				idLogradouro, false);
+	}
+	
+	private void inserirUsuarioNaCarona(int id, int idUsuario,
+			String cep, boolean ativo) 
 			throws ClassNotFoundException, SQLException, 
 			ServicoDeEnderecosInacessivelException, 
 			CEPInvalidoException, CaronaUsuarioJaExisteException {
@@ -213,22 +230,26 @@ public class CaronaModule {
 		
 		int idLogradouro = lm.inserirLogradouro(cep, "" /* TODO */);
 		
-		this.inserirUsuarioNaCarona(id, idUsuario, idLogradouro);
+		this.inserirUsuarioNaCarona(id, idUsuario, idLogradouro, ativo);
 	}
 
-	public void inserirUsuarioNaCarona(int id, int idUsuario, 
-			int idLogradouro) 
+	private void inserirUsuarioNaCarona(int id, int idUsuario, 
+			int idLogradouro, boolean ativo) 
 			throws ClassNotFoundException, SQLException, 
 			CaronaUsuarioJaExisteException {
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
-		cum.inserirCaronaUsuario(id, idUsuario, idLogradouro);
+		// validar se usuário já está na carona
+		
+		cum.inserirCaronaUsuario(id, idUsuario, idLogradouro, ativo);
 	}
 
 	public void removerUsuarioDaCarona(int id, int idUsuario) 
 			throws SQLException, ClassNotFoundException, 
-			CaronaUsuarioNaoExiste {
+			CaronaUsuarioNaoExisteException {
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
+		
+		// validar se carona esta ativa
 		
 		RecordSet caronaUsuario = cum.obter(id, idUsuario);
 	
