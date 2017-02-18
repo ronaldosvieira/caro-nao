@@ -129,15 +129,16 @@ public class CaronaModule {
 			ClassNotFoundException, VeiculoComMenosVagasException {
 		VeiculoModule vm = new VeiculoModule();
 		
+		RecordSet carona = this.obter(id);
 		RecordSet novoVeiculo = vm.obter(idVeiculo);
-		RecordSet veiculoAtual = vm.obter(id);
-		
+		int idVeiculoAtual = carona.get(0).getInt("veiculo_id");
+		RecordSet veiculoAtual = vm.obter(idVeiculoAtual);
+
 		if (novoVeiculo.get(0).getInt("vagas")
 				< veiculoAtual.get(0).getInt("vagas")) {
 			throw new VeiculoComMenosVagasException();
 		}
 		
-		RecordSet carona = this.obter(id);
 		RecordSet caronasVeiculo = this.obterPeloVeiculo(idVeiculo);
 		
 		Row caronaRow = carona.get(0);
