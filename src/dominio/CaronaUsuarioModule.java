@@ -72,6 +72,18 @@ public class CaronaUsuarioModule {
 		return cutg.inserir(idCarona, idUsuario, idLogradouro, ativo);
 	}
 
+	public void atualizarCaronaUsuario(int idCarona, int idUsuario, 
+			int idLogradouro, boolean ativo) 
+			throws SQLException, CaronaUsuarioNaoExisteException {
+		RecordSet caronaUsuario = cutg.obter(idCarona, idUsuario);
+		
+		if (caronaUsuario.isEmpty()) {
+			throw new CaronaUsuarioNaoExisteException();
+		}
+		
+		cutg.atualizar(idCarona, idUsuario, idLogradouro, ativo);
+	}
+	
 	public void aceitarConvite(int idCarona, int idUsuario) 
 			throws SQLException, CaronaUsuarioNaoExisteException, 
 			UsuarioJaEstaNaCaronaException {

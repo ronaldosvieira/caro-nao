@@ -2,7 +2,6 @@ package servico.carona;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,13 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dados.LogradouroTableGateway;
 import dominio.CaronaModule;
+import dominio.LogradouroModule;
 import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
+import excecoes.CaronaJaContemPassageirosException;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
-import excecoes.DataInvalidaException;
-import excecoes.GrupoNaoAutorizadoException;
+import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
@@ -39,7 +40,7 @@ public class EditarCarona extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idCarona = (String) request.getParameter("id");
 		
-		try {
+		try (LogradouroTableGateway ltg = new LogradouroTableGateway()) {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
 			UsuarioModule um = new UsuarioModule();
@@ -51,9 +52,16 @@ public class EditarCarona extends HttpServlet {
 			
 			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
 		
+			RecordSet origem = ltg.obter(
+					carona.get(0).getInt("logradouro_origem_id"));
+			RecordSet destino = ltg.obter(
+					carona.get(0).getInt("logradouro_destino_id"));
+			
 			request.setAttribute("usuario", usuario);
 			request.setAttribute("carona", carona);
 			request.setAttribute("veiculos", veiculos);
+			request.setAttribute("origem", origem);
+			request.setAttribute("destino", destino);
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/editar.jsp");
@@ -74,12 +82,17 @@ public class EditarCarona extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idCarona = (String) request.getParameter("id");
 		String idVeiculo = (String) request.getParameter("veiculo_id");
+		String cepOrigem = request.getParameter("cep_origem");
+		String cepDestino = request.getParameter("cep_destino");
+		String numeroOrigem = request.getParameter("numero_origem");
+		String numeroDestino = request.getParameter("numero_destino");
 
 		try {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
 			CaronaModule cm = new CaronaModule();
 			UsuarioModule um = new UsuarioModule();
+			LogradouroModule lm = new LogradouroModule();
 			
 			RecordSet carona = um.validarCarona(usuario.get(0).getInt("id"), 
 					Integer.parseInt(idCarona));
@@ -93,8 +106,10 @@ public class EditarCarona extends HttpServlet {
 			request.setAttribute("carona", carona);
 			request.setAttribute("veiculos", veiculos);
 	
-			cm.atualizarVeiculoDaCarona(Integer.parseInt(idCarona),
-					Integer.parseInt(idVeiculo));
+			cm.atualizarCarona(Integer.parseInt(idCarona), 
+					Integer.parseInt(idVeiculo),
+					cepOrigem, numeroOrigem, 
+					cepDestino, numeroDestino);
 			
 			response.sendRedirect(request.getContextPath() + "/carona/ver?id=" + idCarona);
 		} catch (ClassNotFoundException | SQLException e) {
@@ -104,24 +119,37 @@ public class EditarCarona extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaNaoAutorizadaException
 				| VeiculoNaoExisteException | CaronaNaoExisteException
-				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
+				| UsuarioNaoExisteException | LogradouroNaoExisteException 
+				| CaronaUsuarioNaoExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
+			e.printStackTrace();
 		} catch (VeiculoJaSelecionadoException e) {
 			request.setAttribute("erro", 
 					"O veículo informado já foi selecionado para uma "
 					+ "carona neste dia e horário.");
 			
-			RequestDispatcher rd = 
-					request.getRequestDispatcher("../views/carona/editar.jsp");
-			rd.forward(request, response);
+			doGet(request, response);
 		} catch (VeiculoComMenosVagasException e) {
 			request.setAttribute("erro", 
 					"Não é possível trocar para um veículo "
 					+ "com menos vagas.");
 			
-			RequestDispatcher rd = 
-					request.getRequestDispatcher("../views/carona/editar.jsp");
-			rd.forward(request, response);
+			doGet(request, response);
+		} catch (ServicoDeEnderecosInacessivelException e) {
+			response.getWriter().append(
+					"Erro ao acessar o serviço de endereços.");
+			e.printStackTrace();
+		} catch (CEPInvalidoException e) {
+			request.setAttribute("erro", 
+					"CEP inválido: " + e.getCep() + ".");
+			
+			doGet(request, response);
+		} catch (CaronaJaContemPassageirosException e) {
+			request.setAttribute("erro", 
+					"Não é possível editar a origem ou destino: "
+					+ "já existem passageiros na carona.");
+			
+			doGet(request, response);
 		}
 	}
 }

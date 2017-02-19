@@ -158,7 +158,7 @@ public class CaronaModuleTeste extends TesteFuncional {
 		
 		int idVeiculo = 2;
 		
-		cm.atualizarVeiculoDaCarona(1, idVeiculo);
+		cm.atualizarCarona(1, idVeiculo);
 		
 		String sql2 = "select * from carona where id = 1;";
 		PreparedStatement stmt2 = this.getConnection().prepareStatement(sql2);
@@ -171,17 +171,17 @@ public class CaronaModuleTeste extends TesteFuncional {
 	
 	@Test(expected = VeiculoComMenosVagasException.class)
 	public void testeAtualizarVeiculoDaCaronaMenosVagas() throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
-		cm.atualizarVeiculoDaCarona(1, 2);
+		cm.atualizarCarona(1, 2);
 	}
 	
 	@Test(expected = VeiculoNaoExisteException.class)
 	public void testeAtualizarVeiculoDaCaronaNaoExistente() throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
-		cm.atualizarVeiculoDaCarona(50, 1);
+		cm.atualizarCarona(50, 1);
 	}
 	
 	@Test(expected = VeiculoNaoExisteException.class)
 	public void testeAtualizarVeiculoDaCaronaVeiculoNaoExistente() throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
-		cm.atualizarVeiculoDaCarona(1, 50);
+		cm.atualizarCarona(1, 50);
 	}
 	
 	@Test

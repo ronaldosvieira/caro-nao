@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import dados.CaronaTableGateway;
 import excecoes.CEPInvalidoException;
+import excecoes.CaronaJaContemPassageirosException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
@@ -123,11 +124,19 @@ public class CaronaModule {
 		return idCarona;
 	}
 	
-	public void atualizarVeiculoDaCarona(int id, int idVeiculo) 
+	public void atualizarCarona(int id, int idVeiculo, 
+			String cepOrigem, String numeroOrigem, 
+			String cepDestino, String numeroDestino) 
 			throws SQLException, VeiculoNaoExisteException, 
 			VeiculoJaSelecionadoException, CaronaNaoExisteException, 
-			ClassNotFoundException, VeiculoComMenosVagasException {
+			ClassNotFoundException, VeiculoComMenosVagasException, 
+			CaronaJaContemPassageirosException, LogradouroNaoExisteException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioNaoExisteException {
 		VeiculoModule vm = new VeiculoModule();
+		CaronaModule cm = new CaronaModule();
+		LogradouroModule lm = new LogradouroModule();
+		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
 		RecordSet carona = this.obter(id);
 		RecordSet novoVeiculo = vm.obter(idVeiculo);
@@ -160,9 +169,42 @@ public class CaronaModule {
 			}
 		}
 		
+		RecordSet origem = lm.obter(caronaRow.getInt("logradouro_origem_id"));
+		RecordSet destino = lm.obter(caronaRow.getInt("logradouro_destino_id"));
+		
+		int idLogradouroOrigem = origem.get(0).getInt("id");
+		int idLogradouroDestino = destino.get(0).getInt("id");
+		
+		if (!cepOrigem.equals(origem.get(0).getString("cep"))
+				|| !numeroOrigem.equals(origem.get(0).getString("numero"))) {
+			if (cm.listarUsuarios(id).size() > 1) {
+				throw new CaronaJaContemPassageirosException();
+			}
+			
+			idLogradouroOrigem = 
+					lm.inserirLogradouro(cepOrigem, numeroOrigem);
+		}
+		
+		if (!cepDestino.equals(destino.get(0).getString("cep"))
+				|| !numeroDestino.equals(destino.get(0).getString("numero"))) {
+			if (cm.listarUsuarios(id).size() > 1) {
+				throw new CaronaJaContemPassageirosException();
+			}
+			
+			idLogradouroDestino = 
+					lm.inserirLogradouro(cepDestino, numeroDestino);
+			
+			RecordSet caronaUsuario = cum.obter(id, 
+					veiculoAtual.get(0).getInt("usuario_id"));
+			cum.atualizarCaronaUsuario(
+					id, veiculoAtual.get(0).getInt("usuario_id"), 
+					idLogradouroDestino, 
+					caronaUsuario.get(0).getBoolean("ativo"));
+		}
+		
 		ctg.atualizar(id, idVeiculo, caronaRow.getTimestamp("dia_horario"), 
-				caronaRow.getInt("logradouro_origem_id"), 
-				caronaRow.getInt("logradouro_destino_id"), 
+				idLogradouroOrigem, 
+				idLogradouroDestino, 
 				caronaRow.getInt("estado_carona_id"));
 	}
 	

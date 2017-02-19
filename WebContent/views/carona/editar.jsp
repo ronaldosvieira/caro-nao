@@ -29,6 +29,8 @@
   <% String erro = (String) request.getAttribute("erro"); %>
   <% RecordSet veiculos = (RecordSet) request.getAttribute("veiculos"); %>
   <% RecordSet carona = (RecordSet) request.getAttribute("carona"); %>
+  <% RecordSet origem = (RecordSet) request.getAttribute("origem"); %>
+  <% RecordSet destino = (RecordSet) request.getAttribute("destino"); %>
   
 	<header class="text-center">
 		<h1>
@@ -45,7 +47,7 @@
 				</div>
 			<% } %>
 			
-			<h4>Editar veículo de carona</h4>
+			<h4>Editar carona</h4>
 			
 			<form action="${pageContext.request.contextPath}/carona/editar?id=<%= carona.get(0).getInt("id") %>"
 				method="post" class="form-horizontal">
@@ -65,6 +67,42 @@
 						</option>
 					<% } %>
 					</select>
+				</div>
+				
+				<h5>Logradouro de origem</h5>
+				
+				<div class="form-group">
+					<label for="cep_origem">CEP</label>
+					<input type="text" name="cep_origem" 
+					class="form-control text-center" 
+					placeholder="ex: 00000-000" required
+					value="<%= origem.get(0).getString("cep") %>">
+				</div>
+				
+				<div class="form-group">
+					<label for="numero_origem">Número</label>
+					<input type="text" name="numero_origem" 
+					class="form-control text-center" 
+					placeholder="ex: 324" required
+					value="<%= origem.get(0).getString("numero") %>">
+				</div>
+				
+				<h5>Logradouro de destino</h5>
+				
+				<div class="form-group">
+					<label for="cep_destino">CEP</label>
+					<input type="text" name="cep_destino" 
+					class="form-control text-center" 
+					placeholder="ex: 00000-000" required
+					value="<%= destino.get(0).getString("cep") %>">
+				</div>
+				
+				<div class="form-group">
+					<label for="numero_destino">Número</label>
+					<input type="text" name="numero_destino" 
+					class="form-control text-center" 
+					placeholder="ex: 324" required
+					value="<%= destino.get(0).getString("numero") %>">
 				</div>
 				
 				<div class="form-group">
