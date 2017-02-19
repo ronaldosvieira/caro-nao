@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.GrupoModule;
 import dominio.UsuarioModule;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
@@ -86,6 +87,10 @@ public class EditarGrupo extends HttpServlet {
 				| GrupoNaoAutorizadoException | UsuarioNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 

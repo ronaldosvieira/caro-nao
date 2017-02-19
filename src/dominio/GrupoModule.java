@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import dados.GrupoTableGateway;
 import excecoes.DesativacaoGrupoInvalidaException;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
@@ -48,13 +49,24 @@ public class GrupoModule {
 		return gum.listarUsuariosPorGrupo(id);
 	}
 	
-	public int inserirGrupo(int idUsuario, String nome, String descricao, String regras, int limite) throws SQLException, ClassNotFoundException, GrupoUsuarioJaExisteException {
+	public int inserirGrupo(int idUsuario, String nome, 
+			String descricao, String regras, int limite) 
+				throws SQLException, ClassNotFoundException, 
+				GrupoUsuarioJaExisteException, ErroDeValidacao {
 		Row grupo = new Row();
 		
-		grupo.put("nome", nome);
-		grupo.put("descricao", descricao);
-		grupo.put("regras", regras);
-		grupo.put("limite", limite);
+		if (nome == null || nome.length() == 0)
+			throw new ErroDeValidacao("É necessário informar o "
+					+ "nome do grupo.");
+		if (descricao == null || descricao.length() == 0)
+			throw new ErroDeValidacao("É necessário informar a "
+					+ "descricao do grupo.");
+		if (regras == null || regras.length() == 0)
+			throw new ErroDeValidacao("É necessário informar as "
+					+ "regras do grupo.");
+		if (limite < 1 || limite > 1000)
+			throw new ErroDeValidacao("Limite de avaliações "
+					+ "negativas inválido");
 		
 		int idGrupo = gtg.inserir(nome, descricao, regras, limite, true);
 		
@@ -64,7 +76,10 @@ public class GrupoModule {
 		return idGrupo;
 	}
 	
-	public void atualizarGrupo(int id, String nome, String descricao, int limite) throws SQLException, GrupoNaoExisteException {
+	public void atualizarGrupo(int id, String nome, String descricao, 
+			int limite) 
+				throws SQLException, GrupoNaoExisteException, 
+				ErroDeValidacao {
 		RecordSet jaExiste = gtg.obter(id);
 		
 		if (jaExiste.isEmpty()) {
@@ -73,9 +88,15 @@ public class GrupoModule {
 		
 		Row grupo = jaExiste.get(0);
 		
-		grupo.put("nome", nome);
-		grupo.put("descricao", descricao);
-		grupo.put("limite", limite);
+		if (nome == null || nome.length() == 0)
+			throw new ErroDeValidacao("É necessário informar o "
+					+ "nome do grupo.");
+		if (descricao == null || descricao.length() == 0)
+			throw new ErroDeValidacao("É necessário informar a "
+					+ "descricao do grupo.");
+		if (limite < 1 || limite > 1000)
+			throw new ErroDeValidacao("Limite de avaliações "
+					+ "negativas inválido");
 		
 		gtg.atualizar(id, nome, descricao, 
 				grupo.getString("regras"), limite, 

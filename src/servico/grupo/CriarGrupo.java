@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.GrupoModule;
 import dominio.GrupoUsuarioModule;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
@@ -60,6 +61,10 @@ public class CriarGrupo extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (GrupoUsuarioJaExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 
