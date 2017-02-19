@@ -14,7 +14,9 @@ import dominio.CaronaModule;
 import dominio.CaronaUsuarioModule;
 import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
+import excecoes.CaronaNaoAtivaException;
 import excecoes.CaronaNaoAutorizadaException;
+import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.LogradouroNaoExisteException;
@@ -57,7 +59,8 @@ public class DesistirDaCarona extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "");
 		} catch (NumberFormatException | CaronaNaoAutorizadaException 
 				| VeiculoNaoExisteException | CaronaUsuarioNaoExisteException
-				| UsuarioNaoExisteException | LogradouroNaoExisteException e) {
+				| UsuarioNaoExisteException | LogradouroNaoExisteException
+				| CaronaNaoAtivaException | CaronaNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 		}

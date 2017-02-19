@@ -19,6 +19,7 @@ import excecoes.CaronaJaContemPassageirosException;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
@@ -148,6 +149,10 @@ public class EditarCarona extends HttpServlet {
 			request.setAttribute("erro", 
 					"Não é possível editar a origem ou destino: "
 					+ "já existem passageiros na carona.");
+			
+			doGet(request, response);
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
 			
 			doGet(request, response);
 		}

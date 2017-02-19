@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import dados.CaronaTableGateway;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaJaContemPassageirosException;
+import excecoes.CaronaNaoAtivaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
@@ -168,7 +169,7 @@ public class CaronaModule {
 			ClassNotFoundException, VeiculoComMenosVagasException, 
 			CaronaJaContemPassageirosException, LogradouroNaoExisteException, 
 			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
-			CaronaUsuarioNaoExisteException {
+			CaronaUsuarioNaoExisteException, ErroDeValidacao {
 		VeiculoModule vm = new VeiculoModule();
 		CaronaModule cm = new CaronaModule();
 		LogradouroModule lm = new LogradouroModule();
@@ -203,6 +204,34 @@ public class CaronaModule {
 					<= intervaloMinEntreCaronas) {
 				throw new VeiculoJaSelecionadoException();
 			}
+		}
+		
+		if (cepOrigem == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de origem.");
+		if (cepDestino == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de destino.");
+		
+		if (numeroOrigem == null) 
+			throw new ErroDeValidacao("É necessário inserir o número de origem.");
+		if (numeroDestino == null) 
+			throw new ErroDeValidacao("É necessário inserir o número de destino.");
+		
+		cepOrigem = cepOrigem.replace("-", "");
+		cepDestino = cepDestino.replace("-", "");
+		
+		if (cepOrigem.length() != 8) 
+			throw new CEPInvalidoException(cepOrigem);
+		if (cepDestino.length() != 8) 
+			throw new CEPInvalidoException(cepDestino);
+		
+		try {Integer.parseInt(cepOrigem);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cepOrigem);
+		}
+		
+		try {Integer.parseInt(cepDestino);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cepDestino);
 		}
 		
 		RecordSet origem = lm.obter(caronaRow.getInt("logradouro_origem_id"));
@@ -291,7 +320,7 @@ public class CaronaModule {
 	public void convidarUsuario(int id, int idUsuario, String cep) 
 			throws ClassNotFoundException, SQLException, 
 			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
-			CaronaUsuarioJaExisteException {
+			CaronaUsuarioJaExisteException, ErroDeValidacao {
 		this.inserirUsuarioNaCarona(id, idUsuario, 
 				cep, false);
 	}
@@ -308,8 +337,21 @@ public class CaronaModule {
 			String cep, boolean ativo) 
 			throws ClassNotFoundException, SQLException, 
 			ServicoDeEnderecosInacessivelException, 
-			CEPInvalidoException, CaronaUsuarioJaExisteException {
+			CEPInvalidoException, CaronaUsuarioJaExisteException, 
+			ErroDeValidacao {
 		LogradouroModule lm = new LogradouroModule();
+		
+		cep = cep.replace("-", "");
+		
+		if (cep == null) 
+			throw new ErroDeValidacao("É necessário inserir o CEP.");
+		if (cep.length() != 8)
+			throw new CEPInvalidoException(cep);
+		
+		try {Integer.parseInt(cep);}
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cep);
+		}
 		
 		int idLogradouro = lm.inserirLogradouro(cep, "" /* TODO */);
 		
@@ -321,19 +363,24 @@ public class CaronaModule {
 			throws ClassNotFoundException, SQLException, 
 			CaronaUsuarioJaExisteException {
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
-		
-		// validar se usuário já está na carona
-		// validar se é possível adicionar usuario na carona
+	
+		// TODO validar se é possível adicionar usuario na carona
 		
 		cum.inserirCaronaUsuario(id, idUsuario, idLogradouro, ativo);
 	}
 
 	public void removerUsuarioDaCarona(int id, int idUsuario) 
 			throws SQLException, ClassNotFoundException, 
-			CaronaUsuarioNaoExisteException {
+			CaronaUsuarioNaoExisteException, CaronaNaoAtivaException, 
+			CaronaNaoExisteException {
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
-		// validar se carona esta ativa
+		RecordSet carona = this.obter(id);
+		
+		if (carona.get(0).getInt("estado_carona_id") 
+				!= EstadoCarona.Ativa.getId()) {
+			throw new CaronaNaoAtivaException();
+		}
 		
 		RecordSet caronaUsuario = cum.obter(id, idUsuario);
 	

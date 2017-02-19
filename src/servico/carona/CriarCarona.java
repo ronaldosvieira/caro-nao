@@ -16,6 +16,7 @@ import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.DataInvalidaException;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
@@ -74,9 +75,6 @@ public class CriarCarona extends HttpServlet {
 			UsuarioModule um = new UsuarioModule();
 			
 			RecordSet veiculos = um.listarVeiculos(usuario.get(0).getInt("id"));
-			
-			request.setAttribute("usuario", usuario);
-			request.setAttribute("veiculos", veiculos);
 
 			cm.inserirCarona(Integer.parseInt(idVeiculo), data, 
 					horario, cepOrigem, numeroOrigem, cepDestino, 
@@ -97,9 +95,7 @@ public class CriarCarona extends HttpServlet {
 					"O veÌculo informado j· foi escolhido para uma "
 					+ "carona no mesmo dia e hor·rio.");
 			
-			RequestDispatcher rd = 
-					request.getRequestDispatcher("../views/carona/criar.jsp");
-			rd.forward(request, response);
+			doGet(request, response);
 		} catch (ServicoDeEnderecosInacessivelException e) {
 			response.getWriter().append("Erro ao acessar o servi√ßo de endere√ßos.");
 			e.printStackTrace();
@@ -108,16 +104,16 @@ public class CriarCarona extends HttpServlet {
 					"Data ou hor·rio de saÌda " + e.getData() 
 					+ " inv·lido.");
 			
-			RequestDispatcher rd = 
-					request.getRequestDispatcher("../views/carona/criar.jsp");
-			rd.forward(request, response);
+			doGet(request, response);
 		} catch (CEPInvalidoException e) {
 			request.setAttribute("erro", 
 					"CEP " + e.getCep() + " n√£o encontrado.");
 			
-			RequestDispatcher rd = 
-					request.getRequestDispatcher("../views/carona/criar.jsp");
-			rd.forward(request, response);
+			doGet(request, response);
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 

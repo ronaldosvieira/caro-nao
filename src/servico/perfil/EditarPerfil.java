@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
@@ -64,6 +65,10 @@ public class EditarPerfil extends HttpServlet {
 			rd.forward(request, response);
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 

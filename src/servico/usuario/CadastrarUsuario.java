@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
@@ -63,6 +64,10 @@ public class CadastrarUsuario extends HttpServlet {
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("views/cadastrar.jsp");
 			rd.forward(request, response);
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 

@@ -16,6 +16,7 @@ import excecoes.CEPInvalidoException;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
@@ -134,6 +135,12 @@ public class AdicionarUsuario extends HttpServlet {
 			request.setAttribute("erro", 
 					"O usuário informado não é autorizado a participar "
 					+ "desta carona. Convide-o para seu grupo!");
+			
+			doGet(request, response);
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 
