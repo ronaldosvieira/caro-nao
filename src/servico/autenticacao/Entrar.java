@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dados.UsuarioTableGateway;
 import dominio.UsuarioModule;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
@@ -41,10 +42,12 @@ public class Entrar extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = (String) request.getParameter("email");
 		
-		try {
+		try (UsuarioTableGateway utg = new UsuarioTableGateway()) {
 			UsuarioModule um = new UsuarioModule();
 			
-			RecordSet usuario = um.autenticar(email);
+			RecordSet usuario = utg.obterPeloEmail(email);
+			
+			um.validarExistencia(usuario);
 			
 			Cookie cookie = new Cookie("caronao-login", email);
 			cookie.setMaxAge(24 * 60 * 60);
@@ -54,7 +57,6 @@ public class Entrar extends HttpServlet {
 			request.setAttribute("usuario", usuario);
 			
 			response.sendRedirect(request.getContextPath() + "/dashboard");
-			
 		} catch (UsuarioNaoExisteException e) {
 			request.setAttribute("erro", "Email n�o cadastrado.");
 			

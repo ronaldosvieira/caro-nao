@@ -6,6 +6,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dados.UsuarioTableGateway;
 import dominio.UsuarioModule;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
@@ -28,10 +29,14 @@ public class Autenticacao {
 			}
 		}
 		
-		try {
+		try (UsuarioTableGateway utg = new UsuarioTableGateway()) {
 			UsuarioModule um = new UsuarioModule();
 			
-			return um.autenticar(emailUsuarioLogado);
+			RecordSet usuario = utg.obterPeloEmail(emailUsuarioLogado);
+			
+			um.validarExistencia(usuario);
+			
+			return usuario;
 		} catch (UsuarioNaoExisteException | ClassNotFoundException | SQLException e) {
 			throw new UsuarioNaoLogadoException();
 		}

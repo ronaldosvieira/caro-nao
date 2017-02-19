@@ -31,14 +31,14 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	
 	@Test
 	public void testeAutenticar() throws SQLException, UsuarioNaoExisteException {
-		RecordSet usuario = um.autenticar("ronaldo.vieira@ufrrj.br");
+		RecordSet usuario = um.validarExistencia("ronaldo.vieira@ufrrj.br");
 		
 		assertEquals(1, usuario.size());
 	}
 	
 	@Test(expected = UsuarioNaoExisteException.class)
 	public void testeAutenticarNaoExistente() throws SQLException, UsuarioNaoExisteException {
-		um.autenticar("email@nao.existente");
+		um.validarExistencia("email@nao.existente");
 	}
 	
 	@Test

@@ -23,11 +23,10 @@ public class UsuarioModule {
 		this.utg = new UsuarioTableGateway();
 	}
 	
-	public RecordSet autenticar(String email) throws SQLException, UsuarioNaoExisteException {
-		RecordSet usuario = utg.obterPeloEmail(email);
-		
-		if (usuario.size() > 0) return usuario;
-		else throw new UsuarioNaoExisteException();
+	public void validarExistencia(RecordSet usuario) throws SQLException, UsuarioNaoExisteException {
+		if (usuario.isEmpty()) {
+			throw new UsuarioNaoExisteException();
+		}
 	}
 	
 	public RecordSet obter(int id) throws SQLException, UsuarioNaoExisteException {
