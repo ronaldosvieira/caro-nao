@@ -40,7 +40,6 @@ public abstract class TableGateway implements AutoCloseable {
 	public void close() throws SQLException {
 		if (!conn.isClosed()) {
 			conn.rollback();
-			conn.close();
 		}
 	}
 }
