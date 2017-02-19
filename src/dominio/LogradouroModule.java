@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import dados.LogradouroTableGateway;
 import excecoes.CEPInvalidoException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import util.RecordSet;
@@ -52,8 +53,20 @@ public class LogradouroModule {
 	
 	public int inserirLogradouro(String cep, String numero) 
 			throws SQLException, ServicoDeEnderecosInacessivelException, 
-			CEPInvalidoException {
+			CEPInvalidoException, ErroDeValidacao {
+		if (cep == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de origem.");
+		
 		cep = cep.replace("-", "");
+		
+		if (cep.length() != 8) 
+			throw new CEPInvalidoException(cep);
+		
+		try {Integer.parseInt(cep);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cep);
+		}
+		
 		RecordSet logradouro = this.obterLogradouroPeloCEP(cep);
 		Row logr = logradouro.get(0);
 		
