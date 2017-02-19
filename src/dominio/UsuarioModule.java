@@ -6,6 +6,7 @@ import dados.UsuarioTableGateway;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
@@ -136,35 +137,38 @@ public class UsuarioModule {
 		return caronas;
 	}
 	
-	public int inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
+	public int inserirUsuario(String nome, String email, String telefone) 
+			throws EmailJaCadastradoException, SQLException, 
+			ErroDeValidacao {
 		RecordSet jaExiste = utg.obterPeloEmail(email);
 		
-		if (!jaExiste.isEmpty()) {
-			throw new EmailJaCadastradoException();
-		}
+		if (!jaExiste.isEmpty()) throw new EmailJaCadastradoException();
+
+		if (nome == null || nome.equals(""))
+			throw new ErroDeValidacao("Nome não pode ser nulo.");
+		if (email == null || email.equals(""))
+			throw new ErroDeValidacao("Email não pode ser nulo.");
+		if (telefone == null || telefone.equals(""))
+			throw new ErroDeValidacao("Telefone não pode ser nulo.");
 		
-		Row usuario = new Row();
-		
-		usuario.put("nome", nome);
-		usuario.put("email", email);
-		usuario.put("telefone", telefone);
+		if (!email.contains("@"))
+			throw new ErroDeValidacao("Email inválido.");
 		
 		return utg.inserir(nome, email, telefone);
 	}
 	
-	public void atualizarUsuario(int id, String nome, String telefone) throws SQLException, UsuarioNaoExisteException {
-		RecordSet jaExiste = utg.obter(id);
+	public void atualizarUsuario(int id, String nome, String telefone) 
+			throws SQLException, UsuarioNaoExisteException, ErroDeValidacao {
+		RecordSet usuario = utg.obter(id);
 		
-		if (jaExiste.isEmpty()) {
-			throw new UsuarioNaoExisteException();
-		}
+		if (usuario.isEmpty()) throw new UsuarioNaoExisteException();
 		
-		Row usuario = jaExiste.get(0);
+		if (nome == null || nome.equals(""))
+			throw new ErroDeValidacao("Nome não pode ser nulo.");
+		if (telefone == null || telefone.equals(""))
+			throw new ErroDeValidacao("Telefone não pode ser nulo.");
 		
-		usuario.put("nome", nome);
-		usuario.put("telefone", telefone);
-		
-		utg.atualizar(id, nome, usuario.getString("email"), telefone);
+		utg.atualizar(id, nome, usuario.get(0).getString("email"), telefone);
 	}
 	
 	public RecordSet validarVeiculo(int id, int idVeiculo) throws ClassNotFoundException, SQLException, VeiculoNaoAutorizadoException, UsuarioNaoExisteException {
