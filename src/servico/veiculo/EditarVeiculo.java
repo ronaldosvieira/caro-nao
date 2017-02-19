@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.UsuarioModule;
 import dominio.VeiculoModule;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import excecoes.VeiculoNaoAutorizadoException;
@@ -82,6 +83,10 @@ public class EditarVeiculo extends HttpServlet {
 				| VeiculoNaoAutorizadoException | UsuarioNaoExisteException e) {
 			e.printStackTrace();
 			response.sendRedirect(request.getContextPath() + "/dashboard");
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 

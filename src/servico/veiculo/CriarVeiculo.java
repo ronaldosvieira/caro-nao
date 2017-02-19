@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dominio.VeiculoModule;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
 import util.RecordSet;
@@ -57,6 +58,10 @@ public class CriarVeiculo extends HttpServlet {
 			e.printStackTrace();
 		} catch (UsuarioNaoLogadoException e) {
 			response.sendRedirect(request.getContextPath() + "");
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 

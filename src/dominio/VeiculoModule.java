@@ -3,6 +3,7 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.VeiculoTableGateway;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
@@ -72,20 +73,22 @@ public class VeiculoModule {
 	
 	public int inserirVeiculo(String modelo, String placa, 
 			String cor, int vagas, int idUsuario) 
-			throws SQLException {
-		Row veiculo = new Row();
-		
-		veiculo.put("modelo", modelo);
-		veiculo.put("placa", placa);
-		veiculo.put("cor", cor);
-		veiculo.put("vagas", vagas);
-		veiculo.put("usuario_id", idUsuario);
+			throws SQLException, ErroDeValidacao {
+		if (modelo == null || modelo.length() == 0) 
+			throw new ErroDeValidacao("É necessário informar o modelo.");
+		if (placa == null || placa.length() == 0) 
+			throw new ErroDeValidacao("É necessário informar a placa.");
+		if (cor == null || cor.length() == 0) 
+			throw new ErroDeValidacao("É necessário informar a cor.");
+		if (vagas < 1 || vagas > 1000) 
+			throw new ErroDeValidacao("Número de vagas inválido.");
 		
 		return vtg.inserir(modelo, placa, cor, vagas, idUsuario, true);
 	}
 	
 	public void atualizarVeiculo(int id, String cor) 
-			throws SQLException, VeiculoNaoExisteException {
+			throws SQLException, VeiculoNaoExisteException, 
+			ErroDeValidacao {
 		RecordSet jaExiste = vtg.obter(id);
 		
 		if (jaExiste.isEmpty()) {
@@ -93,8 +96,9 @@ public class VeiculoModule {
 		}
 		
 		Row veiculo = jaExiste.get(0);
-		
-		veiculo.put("cor", cor);
+
+		if (cor == null || cor.length() == 0) 
+			throw new ErroDeValidacao("É necessário informar a cor.");
 		
 		vtg.atualizar(id, veiculo.getString("modelo"), 
 				veiculo.getString("placa"), cor, 
