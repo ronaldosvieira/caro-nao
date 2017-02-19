@@ -143,7 +143,8 @@
 			
 			<div class="form-group col-md-offset-2 col-md-8">
 				<% if (ativa) { %>
-					<% if (dono && usuariosNaCarona < carona.get(0).getInt("vagas")) { %>
+					<% if (dono && !jaComecou && 
+							usuariosNaCarona < carona.get(0).getInt("vagas")) { %>
 						<a href="${pageContext.request.contextPath}/carona/adicionar-usuario?id=<%= carona.get(0).getInt("id") %>" 
 							class="btn btn-default btn-block">Adicionar usuário</a>
 					<% } %>

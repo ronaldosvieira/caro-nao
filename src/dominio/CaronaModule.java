@@ -191,7 +191,9 @@ public class CaronaModule {
 		}
 	}
 
-	public void concluirCarona(int id) throws SQLException, CaronaNaoExisteException {
+	public void concluirCarona(int id) throws SQLException, CaronaNaoExisteException, ClassNotFoundException {
+		CaronaUsuarioModule cum = new CaronaUsuarioModule();
+		
 		RecordSet carona = this.obter(id);
 		Row caronaRow = carona.get(0);
 		
@@ -199,6 +201,8 @@ public class CaronaModule {
 				== EstadoCarona.Ativa.getId();
 		boolean jaComecou = caronaRow.getTimestamp("dia_horario").getTime()
 				< new Timestamp(System.currentTimeMillis()).getTime();
+		
+		cum.removerConvitesPendentes(id);
 		
 		if (estaAtiva && jaComecou) {
 			this.atualizarEstadoDaCarona(id, 

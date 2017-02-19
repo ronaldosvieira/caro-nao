@@ -89,6 +89,16 @@ public class CaronaUsuarioModule {
 				caronaUsuario.get(0).getInt("logradouro_id"), true);
 	}
 	
+	public void removerConvitesPendentes(int id) throws SQLException {
+		RecordSet usuariosCarona = cutg.obterPorCarona(id);
+		
+		for (Row usuarioCarona : usuariosCarona) {
+			if (!usuarioCarona.getBoolean("ativo")) {
+				cutg.excluir(id, usuarioCarona.getInt("usuario_id"));
+			}
+		}
+	}
+	
 	public void excluirCaronaUsuario(int idCarona, int idUsuario) 
 			throws SQLException {
 		cutg.excluir(idCarona, idUsuario);
