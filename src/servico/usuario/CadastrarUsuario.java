@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dados.UsuarioTableGateway;
 import dominio.UsuarioModule;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
 import servico.autenticacao.Autenticacao;
@@ -43,10 +45,12 @@ public class CadastrarUsuario extends HttpServlet {
 		String email = (String) request.getParameter("email");
 		String telefone = (String) request.getParameter("telefone");
 		
-		try {
+		try (UsuarioTableGateway utg = new UsuarioTableGateway()) {
 			UsuarioModule um = new UsuarioModule();
 			
-			um.inserirUsuario(nome, email, telefone);
+			um.validarInsercaoUsuario(nome, email, telefone);
+			
+			utg.inserir(nome, email, telefone);
 			
 			Cookie cookie = new Cookie("caronao-login", email);
 			cookie.setMaxAge(24 * 60 * 60);
@@ -58,11 +62,15 @@ public class CadastrarUsuario extends HttpServlet {
 			response.getWriter().append("Erro ao acessar o banco de dados");
 			e.printStackTrace();
 		} catch (EmailJaCadastradoException e) {
-			request.setAttribute("erro", "O email informado jï¿½ foi cadastrado.");
+			request.setAttribute("erro", "O email informado já foi cadastrado.");
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("views/cadastrar.jsp");
 			rd.forward(request, response);
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.getMessage());
+			
+			doGet(request, response);
 		}
 	}
 

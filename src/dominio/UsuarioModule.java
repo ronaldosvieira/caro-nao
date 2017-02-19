@@ -6,6 +6,7 @@ import dados.UsuarioTableGateway;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
@@ -135,20 +136,24 @@ public class UsuarioModule {
 		return caronas;
 	}
 	
-	public int inserirUsuario(String nome, String email, String telefone) throws EmailJaCadastradoException, SQLException {
+	public void validarInsercaoUsuario(String nome, String email, String telefone) 
+			throws EmailJaCadastradoException, SQLException, 
+			ErroDeValidacao {
 		RecordSet jaExiste = utg.obterPeloEmail(email);
 		
 		if (!jaExiste.isEmpty()) {
 			throw new EmailJaCadastradoException();
 		}
 		
-		Row usuario = new Row();
+		if (nome == null || nome.equals("")) 
+			throw new ErroDeValidacao("Nome não pode ser nulo.");
+		if (email == null || email.equals(""))
+			throw new ErroDeValidacao("Email não pode ser nulo.");
+		if (telefone == null || telefone.equals(""))
+			throw new ErroDeValidacao("Telefone não pode ser nulo.");
 		
-		usuario.put("nome", nome);
-		usuario.put("email", email);
-		usuario.put("telefone", telefone);
-		
-		return utg.inserir(nome, email, telefone);
+		if (!email.contains("@"));
+			throw new ErroDeValidacao("Email inválido.");
 	}
 	
 	public void atualizarUsuario(int id, String nome, String telefone) throws SQLException, UsuarioNaoExisteException {
