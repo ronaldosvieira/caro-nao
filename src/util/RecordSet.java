@@ -19,6 +19,22 @@ public class RecordSet extends ArrayList<Row> {
 		return -1;
 	}
 	
+	public RecordSet getWhere(String column, Object value) {
+		RecordSet result = new RecordSet();
+		
+		for (int i = 0; i < this.size(); ++i) {
+			Object found = this.get(i).get(column);
+			
+			if (found == null) continue;
+			
+			if (found.equals(value)) {
+				result.add(this.get(i));
+			}
+		}
+		
+		return result;
+	}
+	
 	public boolean contains(String column, Object value) {
 		return this.find(column, value) != -1;
 	}

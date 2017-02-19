@@ -3,14 +3,9 @@ package dominio;
 import java.sql.SQLException;
 
 import dados.GrupoUsuarioTableGateway;
-import dados.UsuarioTableGateway;
-import excecoes.CaronaUsuarioNaoExisteException;
-import excecoes.EmailJaCadastradoException;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
-import excecoes.UsuarioJaEstaNaCaronaException;
 import excecoes.UsuarioJaEstaNoGrupoException;
-import excecoes.UsuarioNaoExisteException;
 import util.RecordSet;
 import util.Row;
 
@@ -114,5 +109,16 @@ public class GrupoUsuarioModule {
 		
 		gutg.atualizar(grupoUsuario.get(0).getInt("id"),
 				true, grupoUsuario.get(0).getBoolean("ativo"));
+	}
+
+	public void checarAvaliacoes(int idUsuario) 
+			throws ClassNotFoundException, SQLException {
+		AvaliacaoModule am = new AvaliacaoModule();
+		
+		RecordSet avaliacoes = am.obterPorAvaliado(idUsuario);
+		
+		int notasNegativas = am.obterNotasNegativas("nota", avaliacoes).size();
+		
+		/* TODO terminar de implementar checagem */
 	}
 }

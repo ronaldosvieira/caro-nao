@@ -184,7 +184,7 @@ public class AvaliacaoTableGateway extends TableGateway {
 		return dataset;
 	}
 	
-	public int inserir(int idCarona, int idAvaliador, 
+	public void inserir(int idCarona, int idAvaliador, 
 			int idAvaliado, int nota) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
@@ -205,14 +205,6 @@ public class AvaliacaoTableGateway extends TableGateway {
 		
 		if (affectedRows == 0) {
             throw new SQLException("Erro ao inserir avaliação.");
-        }
-
-        try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                return generatedKeys.getInt(1);
-            } else {
-                throw new SQLException("Erro ao inserir avaliação.");
-            }
         }
 	}
 

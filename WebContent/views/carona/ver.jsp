@@ -29,6 +29,7 @@
   <% RecordSet usuario = (RecordSet) request.getAttribute("usuario"); %>
   <% RecordSet carona = (RecordSet) request.getAttribute("carona"); %>
   <% RecordSet usuariosCarona = (RecordSet) request.getAttribute("usuariosCarona"); %>
+  <% RecordSet avaliacoes = (RecordSet) request.getAttribute("avaliacoes"); %>
   
   <%
   	boolean jaComecou =
@@ -114,7 +115,6 @@
 					<th class="text-center col-sm-3">Nome</th>
 					<th class="text-center col-sm-3">Email</th>
 					<th class="text-center col-sm-4">Telefone</th>
-					<th class="text-center col-sm-1">Nota</th>
 					<th class="text-center col-sm-1">Ações</th>
 				</tr>
 				</thead>
@@ -129,12 +129,19 @@
 						<td><%= us.getString("nome") %></td>
 						<td><%= us.getString("email") %></td>
 						<td><%= us.getString("telefone") %></td>
-						<td><%= 5/* TODO: colocar nota */ %></td>
 						<td>
 							<a href="${pageContext.request.contextPath}/perfil/ver?id=<%= us.getInt("id") %>"
 								class="btn btn-link">
 								Ver
 							</a>
+							<% if (us.getInt("id") != usuario.get(0).getInt("id")
+									&& !avaliacoes.getWhere("avaliador_id", usuario.get(0).getInt("id"))
+										.contains("avaliado_id", us.getInt("id"))) { %>
+								<% if (concluida && jaParticipa) { %>
+									<a href="${pageContext.request.contextPath}/carona/avaliar?id=<%= carona.get(0).getInt("id") %>&usuario_id=<%= us.getInt("id") %>" 
+										class="btn btn-link">Avaliar</a>
+								<% } %>
+							<% } %>
 						</td>
 					</tr>
 				<% } %>

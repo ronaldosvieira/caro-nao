@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dados.AvaliacaoTableGateway;
 import dominio.CaronaModule;
 import dominio.UsuarioModule;
 import excecoes.CEPInvalidoException;
@@ -37,7 +38,7 @@ public class VerCarona extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idCarona = (String) request.getParameter("id");
 		
-		try {
+		try (AvaliacaoTableGateway atg = new AvaliacaoTableGateway()) {
 			RecordSet usuario = Autenticacao.autenticar(request, response);
 			
 			UsuarioModule um = new UsuarioModule();
@@ -51,10 +52,14 @@ public class VerCarona extends HttpServlet {
 			
 			boolean dono = veiculos.contains("id", carona.get(0).getInt("veiculo_id"));
 			
+			RecordSet avaliacoes = 
+					atg.obterPorCarona(Integer.parseInt(idCarona));
+			
 			request.setAttribute("usuario", usuario);
 			request.setAttribute("carona", carona);
 			request.setAttribute("usuariosCarona", usuariosCarona);
 			request.setAttribute("dono", dono);
+			request.setAttribute("avaliacoes", avaliacoes);
 			
 			RequestDispatcher rd = 
 					request.getRequestDispatcher("../views/carona/ver.jsp");
