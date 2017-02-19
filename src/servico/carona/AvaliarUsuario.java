@@ -18,6 +18,7 @@ import dominio.GrupoUsuarioModule;
 import dominio.UsuarioModule;
 import excecoes.AvaliacaoJaExisteException;
 import excecoes.CaronaNaoAutorizadaException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.UsuarioNaoLogadoException;
@@ -106,6 +107,10 @@ public class AvaliarUsuario extends HttpServlet {
 				| LogradouroNaoExisteException | AvaliacaoJaExisteException e) {
 			response.sendRedirect(request.getContextPath() + "/dashboard");
 			e.printStackTrace();
+		} catch (ErroDeValidacao e) {
+			request.setAttribute("erro", e.obterErro());
+			
+			doGet(request, response);
 		}
 	}
 }

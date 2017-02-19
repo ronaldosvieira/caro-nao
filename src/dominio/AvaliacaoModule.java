@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import dados.AvaliacaoTableGateway;
 import excecoes.AvaliacaoJaExisteException;
 import excecoes.AvaliacaoNaoExisteException;
+import excecoes.ErroDeValidacao;
 import util.RecordSet;
 import util.Row;
 
@@ -33,8 +34,8 @@ public class AvaliacaoModule {
 
 	public void validarInsercao(int idCarona, int idAvaliador, 
 			int idAvaliado, int nota) 
-			throws IndexOutOfBoundsException, SQLException, 
-			AvaliacaoJaExisteException {
+			throws SQLException, 
+			AvaliacaoJaExisteException, ErroDeValidacao {
 		RecordSet jaExiste = atg.obterPorCarona(idCarona)
 				.getWhere("avaliador_id", idAvaliador)
 				.getWhere("avaliado_id", idAvaliado);
@@ -43,7 +44,9 @@ public class AvaliacaoModule {
 			throw new AvaliacaoJaExisteException();
 		}
 		
-		/* TODO validar range da nota */
+		if (nota < 1 || nota > 5) {
+			throw new ErroDeValidacao("Nota inválida: deve ser de 1 a 5.");
+		}
 	}
 	
 	public double obterNotaMedia(String colunaNota, 

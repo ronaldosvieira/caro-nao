@@ -8,5 +8,5 @@ public class ErroDeValidacao extends Exception {
 		this.erro = erro;
 	}
 	
-	public String getErro() {return this.erro;}
+	public String obterErro() {return this.erro;}
 }
