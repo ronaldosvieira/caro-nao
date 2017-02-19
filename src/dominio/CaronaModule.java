@@ -11,6 +11,7 @@ import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.DataInvalidaException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
@@ -72,9 +73,17 @@ public class CaronaModule {
 			throws SQLException, VeiculoJaSelecionadoException, 
 			ClassNotFoundException, ServicoDeEnderecosInacessivelException, 
 			DataInvalidaException, CEPInvalidoException, 
-			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, UsuarioNaoExisteException {
+			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, 
+			UsuarioNaoExisteException, ErroDeValidacao {
+		VeiculoModule vm = new VeiculoModule();
+		
+		vm.obter(idVeiculo);
+		
 		String[] dataSep = data.split("-");
 		String[] horarioSep = horario.split(":");
+		
+		if (dataSep.length != 3 || horarioSep.length != 2) 
+			throw new DataInvalidaException(data + " " + horario);
 		
 		Timestamp diaHorario;
 		
@@ -104,10 +113,37 @@ public class CaronaModule {
 		}
 		
 		LogradouroModule lm = new LogradouroModule();
-		VeiculoModule vm = new VeiculoModule();
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
 		RecordSet criador = vm.obterDono(idVeiculo);
+		
+		if (cepOrigem == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de origem.");
+		if (cepDestino == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de destino.");
+		
+		if (numeroOrigem == null) 
+			throw new ErroDeValidacao("É necessário inserir o número de origem.");
+		if (numeroDestino == null) 
+			throw new ErroDeValidacao("É necessário inserir o número de destino.");
+		
+		cepOrigem = cepOrigem.replace("-", "");
+		cepDestino = cepDestino.replace("-", "");
+		
+		if (cepOrigem.length() != 8) 
+			throw new CEPInvalidoException(cepOrigem);
+		if (cepDestino.length() != 8) 
+			throw new CEPInvalidoException(cepDestino);
+		
+		try {Integer.parseInt(cepOrigem);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cepOrigem);
+		}
+		
+		try {Integer.parseInt(cepDestino);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cepDestino);
+		}
 		
 		int idLogradouroOrigem = 
 				lm.inserirLogradouro(cepOrigem, numeroOrigem);
