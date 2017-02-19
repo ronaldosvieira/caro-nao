@@ -24,16 +24,6 @@ create table grupo_usuario (
 	ativo boolean not null default true
 );
 
-create table avaliacao (
-	id serial primary key,
-	avaliador_id integer not null 
-		references grupo_usuario (id),
-	avaliado_id integer not null
-		references grupo_usuario (id),
-	nota integer not null,
-	data timestamp not null default NOW()
-);
-
 create table veiculo (
 	id serial primary key,
 	modelo varchar(45) not null,
@@ -84,4 +74,15 @@ create table carona_usuario (
 	logradouro_id int not null references logradouro (id),
 	ativo boolean not null default false,
 	primary key (usuario_id, carona_id)
+);
+
+create table avaliacao (
+	carona_id integer not null references carona (id),
+	avaliador_id integer not null 
+		references usuario (id),
+	avaliado_id integer not null
+		references usuario (id),
+	nota integer not null,
+	data timestamp not null default NOW(),
+	primary key (carona_id, avaliador_id, avaliado_id)
 );

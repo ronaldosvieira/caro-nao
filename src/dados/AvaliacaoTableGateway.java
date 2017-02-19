@@ -38,14 +38,18 @@ public class AvaliacaoTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public RecordSet obter(int id) throws SQLException, IndexOutOfBoundsException {
+	public RecordSet obter(int idCarona, int idAvaliador, int idAvaliado) 
+			throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectId, this.getTableName());
+		String sql = String.format(this.selectMany, this.getTableName(),
+				"carona_id = ? and avaliador_id = ? and avalido_id = ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
 		
-		stmt.setInt(1, id);
+		stmt.setInt(1, idCarona);
+		stmt.setInt(2, idAvaliador);
+		stmt.setInt(3, idAvaliado);
 		
 		if (stmt.execute()) rs = stmt.getResultSet();
 		else throw new IndexOutOfBoundsException();
@@ -53,7 +57,7 @@ public class AvaliacaoTableGateway extends TableGateway {
 		while (rs.next()) {
 			Row row = new Row();
 			
-			row.put("id", rs.getInt("id"));
+			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("avaliador_id", rs.getInt("avaliador_id"));
 			row.put("avaliado_id", rs.getInt("avaliado_id"));
 			row.put("nota", rs.getInt("nota"));
@@ -64,11 +68,40 @@ public class AvaliacaoTableGateway extends TableGateway {
 		
 		return dataset;
 	}
+
+	public RecordSet obterPorCarona(int idCarona) 
+			throws SQLException, IndexOutOfBoundsException {
+		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
+		String sql = String.format(this.selectColumn, 
+				this.getTableName(), "carona_id");
+		PreparedStatement stmt = 
+			this.getConnection().prepareStatement(sql);
 		
+		stmt.setInt(1, idCarona);
+		
+		if (stmt.execute()) rs = stmt.getResultSet();
+		else throw new IndexOutOfBoundsException();
+		
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("carona_id", rs.getInt("carona_id"));
+			row.put("avaliador_id", rs.getInt("avaliador_id"));
+			row.put("avaliado_id", rs.getInt("avaliado_id"));
+			row.put("nota", rs.getInt("nota"));
+			row.put("data", rs.getDate("data"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
+	}
+	
 	public RecordSet obterPorAvaliador(int idAvaliador) throws SQLException, IndexOutOfBoundsException {
 		ResultSet rs = null;
 		RecordSet dataset = new RecordSet();
-		String sql = String.format(this.selectId, 
+		String sql = String.format(this.selectColumn, 
 				this.getTableName(), "avaliador_id");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(sql);
@@ -81,7 +114,7 @@ public class AvaliacaoTableGateway extends TableGateway {
 		while (rs.next()) {
 			Row row = new Row();
 			
-			row.put("id", rs.getInt("id"));
+			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("avaliador_id", rs.getInt("avaliador_id"));
 			row.put("avaliado_id", rs.getInt("avaliado_id"));
 			row.put("nota", rs.getInt("nota"));
@@ -109,7 +142,7 @@ public class AvaliacaoTableGateway extends TableGateway {
 		while (rs.next()) {
 			Row row = new Row();
 			
-			row.put("id", rs.getInt("id"));
+			row.put("carona_id", rs.getInt("carona_id"));
 			row.put("avaliador_id", rs.getInt("avaliador_id"));
 			row.put("avaliado_id", rs.getInt("avaliado_id"));
 			row.put("nota", rs.getInt("nota"));
@@ -121,59 +154,95 @@ public class AvaliacaoTableGateway extends TableGateway {
 		return dataset;
 	}
 
-	public int inserir(int idAvaliador, int idAvaliado, int nota) 
+	public RecordSet obterPorCaronaEAvaliador(int idCarona, int idAvaliador) 
+			throws SQLException, IndexOutOfBoundsException {
+		ResultSet rs = null;
+		RecordSet dataset = new RecordSet();
+		String sql = String.format(this.selectMany, 
+				this.getTableName(), "carona_id = ? and avaliador_id = ?");
+		PreparedStatement stmt = 
+			this.getConnection().prepareStatement(sql);
+		
+		stmt.setInt(1, idCarona);
+		stmt.setInt(2, idAvaliador);
+		
+		if (stmt.execute()) rs = stmt.getResultSet();
+		else throw new IndexOutOfBoundsException();
+		
+		while (rs.next()) {
+			Row row = new Row();
+			
+			row.put("carona_id", rs.getInt("carona_id"));
+			row.put("avaliador_id", rs.getInt("avaliador_id"));
+			row.put("avaliado_id", rs.getInt("avaliado_id"));
+			row.put("nota", rs.getInt("nota"));
+			row.put("data", rs.getDate("data"));
+			
+			dataset.add(row);
+		}
+		
+		return dataset;
+	}
+	
+	public int inserir(int idCarona, int idAvaliador, 
+			int idAvaliado, int nota) 
 			throws SQLException {
 		String sql = String.format(this.insert, 
 				this.getTableName(), 
-				"avaliador_id, avaliado_id, nota",
-				"?, ?, ?");
+				"carona_id, avaliador_id, avaliado_id, nota",
+				"?, ?, ?, ?");
 		PreparedStatement stmt = 
 			this.getConnection().prepareStatement(
 					sql, 
 					Statement.RETURN_GENERATED_KEYS);
 
-		stmt.setInt(1, idAvaliador);
-		stmt.setInt(2, idAvaliado);
-		stmt.setInt(3, nota);
+		stmt.setInt(1, idCarona);
+		stmt.setInt(2, idAvaliador);
+		stmt.setInt(3, idAvaliado);
+		stmt.setInt(4, nota);
 		
 		int affectedRows = stmt.executeUpdate();
 		
 		if (affectedRows == 0) {
-            throw new SQLException("Erro ao inserir usuÃ¡rio.");
+            throw new SQLException("Erro ao inserir avaliação.");
         }
 
         try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
             } else {
-                throw new SQLException("Erro ao inserir usuÃ¡rio.");
+                throw new SQLException("Erro ao inserir avaliação.");
             }
         }
 	}
 
-	public void atualizar(int id, int idAvaliador, 
+	public void atualizar(int idCarona, int idAvaliador, 
 			int idAvaliado, int nota) 
 			throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.updateId, 
-				this.getTableName(),
-				"avaliador_id = ?, avaliado_id = ?, nota = ?");
+		String sql = String.format(this.updateMany, 
+				this.getTableName(), "nota = ?", 
+				"carona_id = ? and avaliador_id = ? and avaliado_id = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
-		stmt.setInt(1, idAvaliador);
-		stmt.setInt(2, idAvaliado);
-		stmt.setInt(3, nota);
-		stmt.setInt(4, id);
+		stmt.setInt(1, nota);
+		stmt.setInt(2, idAvaliador);
+		stmt.setInt(3, idAvaliado);
+		stmt.setInt(4, idCarona);
 		
 		stmt.executeUpdate();
 	}
 
-	public void excluir(int id) throws SQLException, IndexOutOfBoundsException {
-		String sql = String.format(this.deleteId, this.getTableName());
+	public void excluir(int idCarona, int idAvaliador, int idAvaliado) 
+			throws SQLException, IndexOutOfBoundsException {
+		String sql = String.format(this.deleteMany, this.getTableName(),
+				"carona_id = ? and avaliador_id = ? and avaliado_id = ?");
 		PreparedStatement stmt = 
 				this.getConnection().prepareStatement(sql);
 		
-		stmt.setInt(1, id);
+		stmt.setInt(1, idCarona);
+		stmt.setInt(2, idAvaliador);
+		stmt.setInt(3, idAvaliado);
 		
 		stmt.executeUpdate();
 	}
