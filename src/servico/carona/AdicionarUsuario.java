@@ -41,8 +41,11 @@ public class AdicionarUsuario extends HttpServlet {
 			UsuarioModule um = new UsuarioModule();
 			CaronaModule cm = new CaronaModule();
 			
-			RecordSet carona = um.validarDonoCarona(usuario.get(0).getInt("id"), 
+			RecordSet carona = um.validarCarona(
+					usuario.get(0).getInt("id"), 
 					Integer.parseInt(idCarona));
+			um.validarDonoCarona(usuario.get(0).getInt("id"), 
+				Integer.parseInt(idCarona));
 			
 			RecordSet usuariosCarona = 
 					cm.listarUsuarios(Integer.parseInt(idCarona));
