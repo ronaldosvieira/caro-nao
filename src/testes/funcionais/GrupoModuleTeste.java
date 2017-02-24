@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import dominio.GrupoModule;
 import excecoes.DesativacaoGrupoInvalidaException;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
 import excecoes.GrupoUsuarioNaoExisteException;
@@ -110,7 +111,9 @@ public class GrupoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeInserirGrupo() throws SQLException, ClassNotFoundException, GrupoUsuarioJaExisteException {
+	public void testeInserirGrupo() 
+			throws SQLException, ClassNotFoundException, 
+			GrupoUsuarioJaExisteException, ErroDeValidacao {
 		String nome = "AAAAAAAAA";
 		String descricao = "aaaaaaaaaa";
 		String regras = "Nenhuma";
@@ -131,7 +134,8 @@ public class GrupoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeAtualizarGrupo() throws SQLException, GrupoNaoExisteException {
+	public void testeAtualizarGrupo() 
+			throws SQLException, GrupoNaoExisteException, ErroDeValidacao {
 		String nome = "AAAAA";
 		String descricao = "aaaa";
 		int limite = 10;
@@ -151,7 +155,8 @@ public class GrupoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = GrupoNaoExisteException.class)
-	public void testeAtualizarGrupoNaoExistente() throws SQLException, GrupoNaoExisteException {
+	public void testeAtualizarGrupoNaoExistente() 
+			throws SQLException, GrupoNaoExisteException, ErroDeValidacao {
 		gm.atualizarGrupo(50, "AAAAAA", "aaa", 1);
 	}
 	

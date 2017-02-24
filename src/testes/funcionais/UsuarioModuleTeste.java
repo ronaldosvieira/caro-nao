@@ -12,6 +12,7 @@ import dominio.UsuarioModule;
 import excecoes.CaronaNaoAutorizadaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.EmailJaCadastradoException;
+import excecoes.ErroDeValidacao;
 import excecoes.GrupoNaoAutorizadoException;
 import excecoes.GrupoNaoExisteException;
 import excecoes.GrupoUsuarioJaExisteException;
@@ -178,7 +179,8 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 
 	@Test
-	public void testeInserirUsuario() throws SQLException, EmailJaCadastradoException {
+	public void testeInserirUsuario() 
+			throws SQLException, EmailJaCadastradoException, ErroDeValidacao {
 		String nome = "Fellipe Duarte";
 		String email = "duartefellipe@gmail.com";
 		String telefone = "43243243";
@@ -198,7 +200,8 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = EmailJaCadastradoException.class)
-	public void testeInserirUsuarioJaCadastrado() throws SQLException, EmailJaCadastradoException {
+	public void testeInserirUsuarioJaCadastrado() 
+			throws SQLException, EmailJaCadastradoException, ErroDeValidacao {
 		String nome = "Ronaldo Nutella";
 		String email = "ronaldo.vieira@ufrrj.br";
 		String telefone = "43243243";
@@ -207,7 +210,8 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeAtualizarUsuario() throws SQLException, UsuarioNaoExisteException {
+	public void testeAtualizarUsuario() 
+			throws SQLException, UsuarioNaoExisteException, ErroDeValidacao {
 		String nome = "Ronaldo Nutella";
 		String telefone = "99999999";
 		
@@ -224,7 +228,8 @@ public class UsuarioModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = UsuarioNaoExisteException.class)
-	public void testeAtualizarUsuarioNaoExistente() throws SQLException, UsuarioNaoExisteException {
+	public void testeAtualizarUsuarioNaoExistente() 
+			throws SQLException, UsuarioNaoExisteException, ErroDeValidacao {
 		String nome = "Ronaldo Nutella";
 		String telefone = "99999999";
 		

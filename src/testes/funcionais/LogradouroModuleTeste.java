@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import dominio.LogradouroModule;
 import excecoes.CEPInvalidoException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import util.RecordSet;
@@ -48,7 +49,9 @@ public class LogradouroModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeInserirLogradouro() throws SQLException, ServicoDeEnderecosInacessivelException, CEPInvalidoException {
+	public void testeInserirLogradouro() 
+			throws SQLException, ServicoDeEnderecosInacessivelException, 
+			CEPInvalidoException, ErroDeValidacao {
 		String cep = "26170230";
 		String numero = "71";
 		

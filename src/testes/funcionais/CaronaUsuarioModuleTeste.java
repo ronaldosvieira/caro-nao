@@ -88,7 +88,7 @@ public class CaronaUsuarioModuleTeste extends TesteFuncional {
 		int idUsuario = 2;
 		int idLogradouro = 2;
 		
-		cum.inserirCaronaUsuario(idCarona, idUsuario, idLogradouro);
+		cum.inserirCaronaUsuario(idCarona, idUsuario, idLogradouro, false);
 		
 		String sql = "select * from carona_usuario "
 				+ "where carona_id = 1 and usuario_id = 2;";
@@ -103,7 +103,7 @@ public class CaronaUsuarioModuleTeste extends TesteFuncional {
 	
 	@Test(expected = CaronaUsuarioJaExisteException.class)
 	public void testeInserirCaronasUsuarioJaExistente() throws SQLException, CaronaUsuarioJaExisteException {
-		cum.inserirCaronaUsuario(1, 1, 2);
+		cum.inserirCaronaUsuario(1, 1, 2, false);
 	}
 	
 	@Test

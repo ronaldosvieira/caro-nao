@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import org.junit.Test;
 
 import dominio.VeiculoModule;
+import excecoes.ErroDeValidacao;
 import excecoes.UsuarioNaoExisteException;
 import excecoes.VeiculoNaoExisteException;
 import util.RecordSet;
@@ -136,7 +137,8 @@ public class VeiculoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeInserirVeiculo() throws SQLException, VeiculoNaoExisteException {
+	public void testeInserirVeiculo() 
+			throws SQLException, VeiculoNaoExisteException, ErroDeValidacao {
 		String modelo = "Palio";
 		String placa = "JSD-8743";
 		String cor = "Prata";
@@ -157,7 +159,8 @@ public class VeiculoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeInserirVeiculoCount() throws SQLException, VeiculoNaoExisteException {
+	public void testeInserirVeiculoCount() 
+			throws SQLException, VeiculoNaoExisteException, ErroDeValidacao {
 		String modelo = "Palio";
 		String placa = "JSD-8743";
 		String cor = "Prata";
@@ -177,7 +180,8 @@ public class VeiculoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeAtualizarVeiculo() throws SQLException, VeiculoNaoExisteException {
+	public void testeAtualizarVeiculo() 
+			throws SQLException, VeiculoNaoExisteException, ErroDeValidacao {
 		String cor = "Verde";
 		
 		vm.atualizarVeiculo(1, cor);
@@ -192,7 +196,8 @@ public class VeiculoModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = VeiculoNaoExisteException.class)
-	public void testeAtualizarVeiculoNaoExistente() throws SQLException, VeiculoNaoExisteException {
+	public void testeAtualizarVeiculoNaoExistente() 
+			throws SQLException, VeiculoNaoExisteException, ErroDeValidacao {
 		String cor = "Verde";
 		
 		vm.atualizarVeiculo(50, cor);

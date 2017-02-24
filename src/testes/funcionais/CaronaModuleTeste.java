@@ -10,10 +10,13 @@ import org.junit.Test;
 
 import dominio.CaronaModule;
 import excecoes.CEPInvalidoException;
+import excecoes.CaronaJaContemPassageirosException;
+import excecoes.CaronaNaoAtivaException;
 import excecoes.CaronaNaoExisteException;
 import excecoes.CaronaUsuarioJaExisteException;
 import excecoes.CaronaUsuarioNaoExisteException;
 import excecoes.DataInvalidaException;
+import excecoes.ErroDeValidacao;
 import excecoes.LogradouroNaoExisteException;
 import excecoes.ServicoDeEnderecosInacessivelException;
 import excecoes.UsuarioNaoExisteException;
@@ -86,7 +89,12 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeInserirCarona() throws SQLException, ClassNotFoundException, VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, DataInvalidaException, CEPInvalidoException, VeiculoNaoExisteException, CaronaUsuarioJaExisteException, UsuarioNaoExisteException {
+	public void testeInserirCarona() 
+			throws SQLException, ClassNotFoundException, 
+			VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, 
+			DataInvalidaException, CEPInvalidoException, VeiculoNaoExisteException, 
+			CaronaUsuarioJaExisteException, UsuarioNaoExisteException, 
+			ErroDeValidacao {
 		int idVeiculo = 1;
 		String data = "2018-02-15";
 		String horario = "03:20";
@@ -108,7 +116,12 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = DataInvalidaException.class)
-	public void testeInserirCaronaDataInvalida() throws ClassNotFoundException, SQLException, VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, DataInvalidaException, CEPInvalidoException, VeiculoNaoExisteException, CaronaUsuarioJaExisteException, UsuarioNaoExisteException {
+	public void testeInserirCaronaDataInvalida() 
+			throws ClassNotFoundException, SQLException, 
+			VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, 
+			DataInvalidaException, CEPInvalidoException, 
+			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, 
+			UsuarioNaoExisteException, ErroDeValidacao {
 		int idVeiculo = 1;
 		String data = "2018-02-ds";
 		String horario = "03:20";
@@ -122,7 +135,12 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = CEPInvalidoException.class)
-	public void testeInserirCaronaCEPInvalido() throws ClassNotFoundException, SQLException, VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, DataInvalidaException, CEPInvalidoException, VeiculoNaoExisteException, CaronaUsuarioJaExisteException, UsuarioNaoExisteException {
+	public void testeInserirCaronaCEPInvalido() 
+			throws ClassNotFoundException, SQLException, 
+			VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, 
+			DataInvalidaException, CEPInvalidoException, 
+			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, 
+			UsuarioNaoExisteException, ErroDeValidacao {
 		int idVeiculo = 1;
 		String data = "2018-02-15";
 		String horario = "03:20";
@@ -136,7 +154,12 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = VeiculoNaoExisteException.class)
-	public void testeInserirCaronaVeiculoNaoExistente() throws ClassNotFoundException, SQLException, VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, DataInvalidaException, CEPInvalidoException, VeiculoNaoExisteException, CaronaUsuarioJaExisteException, UsuarioNaoExisteException {
+	public void testeInserirCaronaVeiculoNaoExistente() 
+			throws ClassNotFoundException, SQLException, 
+			VeiculoJaSelecionadoException, ServicoDeEnderecosInacessivelException, 
+			DataInvalidaException, CEPInvalidoException, 
+			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, 
+			UsuarioNaoExisteException, ErroDeValidacao {
 		int idVeiculo = 50;
 		String data = "2018-02-15";
 		String horario = "03:20";
@@ -150,7 +173,13 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeAtualizarVeiculoDaCarona() throws SQLException, ClassNotFoundException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
+	public void testeAtualizarVeiculoDaCarona() 
+			throws SQLException, ClassNotFoundException, 
+			VeiculoNaoExisteException, VeiculoJaSelecionadoException, 
+			CaronaNaoExisteException, VeiculoComMenosVagasException, 
+			CaronaJaContemPassageirosException, LogradouroNaoExisteException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioNaoExisteException, ErroDeValidacao {
 		String sql = "update veiculo set vagas = 50 where id = 2;";
 		PreparedStatement stmt = this.getConnection().prepareStatement(sql);
 		
@@ -158,7 +187,7 @@ public class CaronaModuleTeste extends TesteFuncional {
 		
 		int idVeiculo = 2;
 		
-		cm.atualizarCarona(1, idVeiculo);
+		cm.atualizarCarona(1, idVeiculo, "26170230", "28", "29238237", "s/n");
 		
 		String sql2 = "select * from carona where id = 1;";
 		PreparedStatement stmt2 = this.getConnection().prepareStatement(sql2);
@@ -170,18 +199,34 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = VeiculoComMenosVagasException.class)
-	public void testeAtualizarVeiculoDaCaronaMenosVagas() throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
-		cm.atualizarCarona(1, 2);
+	public void testeAtualizarVeiculoDaCaronaMenosVagas() 
+			throws ClassNotFoundException, SQLException, 
+			VeiculoNaoExisteException, VeiculoJaSelecionadoException, 
+			CaronaNaoExisteException, VeiculoComMenosVagasException, 
+			CaronaJaContemPassageirosException, LogradouroNaoExisteException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioNaoExisteException, ErroDeValidacao {
+		cm.atualizarCarona(1, 2, "26170230", "28", "29238237", "s/n");
+	}
+	
+	@Test(expected = CaronaNaoExisteException.class)
+	public void testeAtualizarVeiculoDaCaronaNaoExistente() 
+			throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, 
+			VeiculoJaSelecionadoException, CaronaNaoExisteException, 
+			VeiculoComMenosVagasException, CaronaJaContemPassageirosException, 
+			LogradouroNaoExisteException, ServicoDeEnderecosInacessivelException, 
+			CEPInvalidoException, CaronaUsuarioNaoExisteException, ErroDeValidacao {
+		cm.atualizarCarona(50, 1, "26170230", "28", "29238237", "s/n");
 	}
 	
 	@Test(expected = VeiculoNaoExisteException.class)
-	public void testeAtualizarVeiculoDaCaronaNaoExistente() throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
-		cm.atualizarCarona(50, 1);
-	}
-	
-	@Test(expected = VeiculoNaoExisteException.class)
-	public void testeAtualizarVeiculoDaCaronaVeiculoNaoExistente() throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, VeiculoJaSelecionadoException, CaronaNaoExisteException, VeiculoComMenosVagasException {
-		cm.atualizarCarona(1, 50);
+	public void testeAtualizarVeiculoDaCaronaVeiculoNaoExistente() 
+			throws ClassNotFoundException, SQLException, VeiculoNaoExisteException, 
+			VeiculoJaSelecionadoException, CaronaNaoExisteException, 
+			VeiculoComMenosVagasException, CaronaJaContemPassageirosException, 
+			LogradouroNaoExisteException, ServicoDeEnderecosInacessivelException, 
+			CEPInvalidoException, CaronaUsuarioNaoExisteException, ErroDeValidacao {
+		cm.atualizarCarona(1, 50, "26170230", "28", "29238237", "s/n");
 	}
 	
 	@Test
@@ -228,7 +273,9 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeConcluirCarona() throws SQLException, CaronaNaoExisteException {
+	public void testeConcluirCarona() 
+			throws SQLException, CaronaNaoExisteException, 
+			ClassNotFoundException {
 		String sql = "update carona set dia_horario = {ts \'2016-02-15 18:00:00.00\'} "
 				+ "where id = 1;";
 		PreparedStatement stmt = this.getConnection().prepareStatement(sql);
@@ -247,7 +294,9 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeConcluirCaronaFutura() throws SQLException, CaronaNaoExisteException {
+	public void testeConcluirCaronaFutura() 
+			throws SQLException, CaronaNaoExisteException, 
+			ClassNotFoundException {
 		String sql = "update carona set dia_horario = {ts \'2118-02-15 18:00:00.00\'} "
 				+ "where id = 1;";
 		PreparedStatement stmt = this.getConnection().prepareStatement(sql);
@@ -266,13 +315,18 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = CaronaNaoExisteException.class)
-	public void testeConcluirCaronaNaoExistente() throws SQLException, CaronaNaoExisteException {
+	public void testeConcluirCaronaNaoExistente() 
+			throws SQLException, CaronaNaoExisteException, 
+			ClassNotFoundException {
 		cm.concluirCarona(50);
 	}
 	
 	@Test
-	public void testeInserirUsuarioNaCaronaComCep() throws ClassNotFoundException, SQLException, ServicoDeEnderecosInacessivelException, CEPInvalidoException, CaronaUsuarioJaExisteException {
-		cm.inserirUsuarioNaCarona(1, 2, "26170230");
+	public void testeConvidarUsuarioComCep() 
+			throws ClassNotFoundException, SQLException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioJaExisteException, ErroDeValidacao {
+		cm.convidarUsuario(1, 2, "26170230");
 		
 		String sql = "select * from carona_usuario where carona_id = 1 and "
 				+ "usuario_id = 2;";
@@ -286,13 +340,19 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test(expected = CEPInvalidoException.class)
-	public void testeInserirUsuarioNaCaronaComCepInvalido() throws ClassNotFoundException, SQLException, ServicoDeEnderecosInacessivelException, CEPInvalidoException, CaronaUsuarioJaExisteException {
-		cm.inserirUsuarioNaCarona(1, 2, "00000000");
+	public void testeConvidarUsuarioComCepInvalido() 
+			throws ClassNotFoundException, SQLException, 
+			ServicoDeEnderecosInacessivelException, CEPInvalidoException, 
+			CaronaUsuarioJaExisteException, ErroDeValidacao {
+		cm.convidarUsuario(1, 2, "00000000");
 	}
 	
 	@Test
-	public void testeInserirUsuarioNaCaronaComIdLogradouro() throws SQLException, ClassNotFoundException, CaronaUsuarioJaExisteException {
-		cm.inserirUsuarioNaCarona(1, 2, 2);
+	public void testeConvidarUsuarioComIdLogradouro() 
+			throws SQLException, ClassNotFoundException, 
+			CaronaUsuarioJaExisteException, ServicoDeEnderecosInacessivelException, 
+			CEPInvalidoException {
+		cm.convidarUsuario(1, 2, 2);
 		
 		String sql = "select * from carona_usuario where carona_id = 1 and "
 				+ "usuario_id = 2;";
@@ -307,7 +367,10 @@ public class CaronaModuleTeste extends TesteFuncional {
 	}
 	
 	@Test
-	public void testeRemoverUsuarioDaCarona() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExisteException {
+	public void testeRemoverUsuarioDaCarona() 
+			throws ClassNotFoundException, SQLException, 
+			CaronaUsuarioNaoExisteException, CaronaNaoAtivaException, 
+			CaronaNaoExisteException {
 		cm.removerUsuarioDaCarona(1, 1);
 		
 		String sql = "select * from carona_usuario where carona_id = 1;";
@@ -317,13 +380,19 @@ public class CaronaModuleTeste extends TesteFuncional {
 		assertFalse(rs.next());
 	}
 	
-	@Test(expected = CaronaUsuarioNaoExisteException.class)
-	public void testeRemoverUsuarioDaCaronaNaoExistente() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExisteException {
+	@Test(expected = CaronaNaoExisteException.class)
+	public void testeRemoverUsuarioDaCaronaNaoExistente() 
+			throws ClassNotFoundException, SQLException, 
+			CaronaUsuarioNaoExisteException, CaronaNaoAtivaException, 
+			CaronaNaoExisteException {
 		cm.removerUsuarioDaCarona(50, 1);
 	}
 	
 	@Test(expected = CaronaUsuarioNaoExisteException.class)
-	public void testeRemoverUsuarioNaoExistenteDaCarona() throws ClassNotFoundException, SQLException, CaronaUsuarioNaoExisteException {
+	public void testeRemoverUsuarioNaoExistenteDaCarona() 
+			throws ClassNotFoundException, SQLException, 
+			CaronaUsuarioNaoExisteException, CaronaNaoAtivaException, 
+			CaronaNaoExisteException {
 		cm.removerUsuarioDaCarona(1, 50);
 	}
 }
