@@ -80,14 +80,6 @@ public class GrupoModule {
 			int limite) 
 				throws SQLException, GrupoNaoExisteException, 
 				ErroDeValidacao {
-		RecordSet jaExiste = gtg.obter(id);
-		
-		if (jaExiste.isEmpty()) {
-			throw new GrupoNaoExisteException();
-		}
-		
-		Row grupo = jaExiste.get(0);
-		
 		if (nome == null || nome.length() == 0)
 			throw new ErroDeValidacao("É necessário informar o "
 					+ "nome do grupo.");
@@ -97,6 +89,14 @@ public class GrupoModule {
 		if (limite < 1 || limite > 1000)
 			throw new ErroDeValidacao("Limite de avaliações "
 					+ "negativas inválido");
+		
+		RecordSet jaExiste = gtg.obter(id);
+		
+		if (jaExiste.isEmpty()) {
+			throw new GrupoNaoExisteException();
+		}
+		
+		Row grupo = jaExiste.get(0);
 		
 		gtg.atualizar(id, nome, descricao, 
 				grupo.getString("regras"), limite, 
