@@ -89,6 +89,9 @@ public class VeiculoModule {
 	public void atualizarVeiculo(int id, String cor) 
 			throws SQLException, VeiculoNaoExisteException, 
 			ErroDeValidacao {
+		if (cor == null || cor.length() == 0) 
+			throw new ErroDeValidacao("É necessário informar a cor.");
+		
 		RecordSet jaExiste = vtg.obter(id);
 		
 		if (jaExiste.isEmpty()) {
@@ -96,9 +99,6 @@ public class VeiculoModule {
 		}
 		
 		Row veiculo = jaExiste.get(0);
-
-		if (cor == null || cor.length() == 0) 
-			throw new ErroDeValidacao("É necessário informar a cor.");
 		
 		vtg.atualizar(id, veiculo.getString("modelo"), 
 				veiculo.getString("placa"), cor, 

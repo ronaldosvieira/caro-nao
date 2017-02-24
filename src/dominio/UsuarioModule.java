@@ -140,10 +140,6 @@ public class UsuarioModule {
 	public int inserirUsuario(String nome, String email, String telefone) 
 			throws EmailJaCadastradoException, SQLException, 
 			ErroDeValidacao {
-		RecordSet jaExiste = utg.obterPeloEmail(email);
-		
-		if (!jaExiste.isEmpty()) throw new EmailJaCadastradoException();
-
 		if (nome == null || nome.equals(""))
 			throw new ErroDeValidacao("Nome não pode ser nulo.");
 		if (email == null || email.equals(""))
@@ -154,19 +150,23 @@ public class UsuarioModule {
 		if (!email.contains("@"))
 			throw new ErroDeValidacao("Email inválido.");
 		
+		RecordSet jaExiste = utg.obterPeloEmail(email);
+		
+		if (!jaExiste.isEmpty()) throw new EmailJaCadastradoException();
+		
 		return utg.inserir(nome, email, telefone);
 	}
 	
 	public void atualizarUsuario(int id, String nome, String telefone) 
 			throws SQLException, UsuarioNaoExisteException, ErroDeValidacao {
-		RecordSet usuario = utg.obter(id);
-		
-		if (usuario.isEmpty()) throw new UsuarioNaoExisteException();
-		
 		if (nome == null || nome.equals(""))
 			throw new ErroDeValidacao("Nome não pode ser nulo.");
 		if (telefone == null || telefone.equals(""))
 			throw new ErroDeValidacao("Telefone não pode ser nulo.");
+		
+		RecordSet usuario = utg.obter(id);
+		
+		if (usuario.isEmpty()) throw new UsuarioNaoExisteException();
 		
 		utg.atualizar(id, nome, usuario.get(0).getString("email"), telefone);
 	}

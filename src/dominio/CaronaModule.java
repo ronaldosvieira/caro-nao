@@ -76,10 +76,6 @@ public class CaronaModule {
 			DataInvalidaException, CEPInvalidoException, 
 			VeiculoNaoExisteException, CaronaUsuarioJaExisteException, 
 			UsuarioNaoExisteException, ErroDeValidacao {
-		VeiculoModule vm = new VeiculoModule();
-		
-		vm.obter(idVeiculo);
-		
 		String[] dataSep = data.split("-");
 		String[] horarioSep = horario.split(":");
 		
@@ -98,25 +94,6 @@ public class CaronaModule {
 		} catch (NumberFormatException e) {
 			throw new DataInvalidaException(data + " " + horario);
 		}
-		
-		RecordSet caronas = this.obterPeloVeiculo(idVeiculo);
-		
-		for (Row carona: caronas) {
-			if (carona.getInt("estado_carona_id") 
-					!= EstadoCarona.Ativa.getId()) {
-				continue;
-			}
-			
-			if (Math.abs(carona.getTimestamp("dia_horario").getTime()
-					- diaHorario.getTime()) <= intervaloMinEntreCaronas) {
-				throw new VeiculoJaSelecionadoException();
-			}
-		}
-		
-		LogradouroModule lm = new LogradouroModule();
-		CaronaUsuarioModule cum = new CaronaUsuarioModule();
-		
-		RecordSet criador = vm.obterDono(idVeiculo);
 		
 		if (cepOrigem == null) 
 			throw new ErroDeValidacao("É necessário inserir o cep de origem.");
@@ -145,6 +122,29 @@ public class CaronaModule {
 		catch (NumberFormatException e) {
 			throw new CEPInvalidoException(cepDestino);
 		}
+		
+		VeiculoModule vm = new VeiculoModule();
+		
+		vm.obter(idVeiculo);
+		
+		RecordSet caronas = this.obterPeloVeiculo(idVeiculo);
+		
+		for (Row carona: caronas) {
+			if (carona.getInt("estado_carona_id") 
+					!= EstadoCarona.Ativa.getId()) {
+				continue;
+			}
+			
+			if (Math.abs(carona.getTimestamp("dia_horario").getTime()
+					- diaHorario.getTime()) <= intervaloMinEntreCaronas) {
+				throw new VeiculoJaSelecionadoException();
+			}
+		}
+		
+		LogradouroModule lm = new LogradouroModule();
+		CaronaUsuarioModule cum = new CaronaUsuarioModule();
+		
+		RecordSet criador = vm.obterDono(idVeiculo);
 		
 		int idLogradouroOrigem = 
 				lm.inserirLogradouro(cepOrigem, numeroOrigem);
@@ -175,6 +175,34 @@ public class CaronaModule {
 		LogradouroModule lm = new LogradouroModule();
 		CaronaUsuarioModule cum = new CaronaUsuarioModule();
 		
+		if (cepOrigem == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de origem.");
+		if (cepDestino == null) 
+			throw new ErroDeValidacao("É necessário inserir o cep de destino.");
+		
+		if (numeroOrigem == null) 
+			throw new ErroDeValidacao("É necessário inserir o número de origem.");
+		if (numeroDestino == null) 
+			throw new ErroDeValidacao("É necessário inserir o número de destino.");
+		
+		cepOrigem = cepOrigem.replace("-", "");
+		cepDestino = cepDestino.replace("-", "");
+		
+		if (cepOrigem.length() != 8) 
+			throw new CEPInvalidoException(cepOrigem);
+		if (cepDestino.length() != 8) 
+			throw new CEPInvalidoException(cepDestino);
+		
+		try {Integer.parseInt(cepOrigem);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cepOrigem);
+		}
+		
+		try {Integer.parseInt(cepDestino);} 
+		catch (NumberFormatException e) {
+			throw new CEPInvalidoException(cepDestino);
+		}
+		
 		RecordSet carona = this.obter(id);
 		RecordSet novoVeiculo = vm.obter(idVeiculo);
 		int idVeiculoAtual = carona.get(0).getInt("veiculo_id");
@@ -204,34 +232,6 @@ public class CaronaModule {
 					<= intervaloMinEntreCaronas) {
 				throw new VeiculoJaSelecionadoException();
 			}
-		}
-		
-		if (cepOrigem == null) 
-			throw new ErroDeValidacao("É necessário inserir o cep de origem.");
-		if (cepDestino == null) 
-			throw new ErroDeValidacao("É necessário inserir o cep de destino.");
-		
-		if (numeroOrigem == null) 
-			throw new ErroDeValidacao("É necessário inserir o número de origem.");
-		if (numeroDestino == null) 
-			throw new ErroDeValidacao("É necessário inserir o número de destino.");
-		
-		cepOrigem = cepOrigem.replace("-", "");
-		cepDestino = cepDestino.replace("-", "");
-		
-		if (cepOrigem.length() != 8) 
-			throw new CEPInvalidoException(cepOrigem);
-		if (cepDestino.length() != 8) 
-			throw new CEPInvalidoException(cepDestino);
-		
-		try {Integer.parseInt(cepOrigem);} 
-		catch (NumberFormatException e) {
-			throw new CEPInvalidoException(cepOrigem);
-		}
-		
-		try {Integer.parseInt(cepDestino);} 
-		catch (NumberFormatException e) {
-			throw new CEPInvalidoException(cepDestino);
 		}
 		
 		RecordSet origem = lm.obter(caronaRow.getInt("logradouro_origem_id"));
